@@ -11,6 +11,6 @@ namespace Card_Enum
     
     public enum CardTypeEnum
     {
-        Attack,Defence,Ability,Strength
+        None,Attack,Defence,Ability,Strength
     }
 }

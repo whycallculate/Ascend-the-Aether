@@ -13,6 +13,10 @@ public class CardScriptableObject : ScriptableObject
     public AbilityCard abilityCard;
 
     public StrengthCard strengthCard;
+
+    public CardLegendary cardCombine;
+
+    
 }
 
 

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Card_Enum;
 using System.IO;
+using UnityEngine.UI;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -10,14 +12,18 @@ using UnityEditor;
 
 namespace CardTypes
 {
+    #region  common features of the cards
+    
     public abstract class CardBase
     {
         protected List<GameObject> cards = new List<GameObject>();
+        protected CardTypeEnum cardType;
         public Sprite cardSprite;
         public string cardName;
         public string cardDescription;
         public CardLegendaryEnum cardLegendary;
-        
+        public CardLegendary cardCombine;
+
         [Range(0,10)]
         public int energyCost;
         
@@ -33,7 +39,9 @@ namespace CardTypes
         public abstract void CardCreated();
 
     }
-   
+    
+    #endregion
+
 
     #region  Attack Card Class
 
@@ -47,24 +55,42 @@ namespace CardTypes
         // value of the card do control null or full
         public override bool IsDataFilled()
         {
-            return cardSprite != null && cardName != ""; 
+            if(cardCombine.combineCardLegendary.Length > 0)
+            {
+                if(cardLegendary != CardLegendaryEnum.LegendaryCard)
+                {
+                    return false;
+                }
+               
+            }
+            return cardSprite != null && cardName != "" && cardLegendary != CardLegendaryEnum.None; 
         }
 
         //the attack card have been creating
         public override void CardCreated()
         {
-            GameObject attackCard = new GameObject(cardName,typeof(SpriteRenderer),typeof(CardController));
+            
+            GameObject attackCard = new GameObject(cardName,typeof(RectTransform),typeof(CanvasRenderer),typeof(Image),typeof(Button),typeof(CardController));
             
             cards.Add(attackCard);
-
 
             string folderPath = "Assets/Prefabs/Cards/AttackCards";
             string prefabPath = Path.Combine(folderPath,attackCard.name + ".prefab");
             
-            attackCard.GetComponent<SpriteRenderer>().sprite = cardSprite;
-            attackCard.GetComponent<CardController>().CardInitialize(cardLegendary,energyCost,duration);
+            cardType = CardTypeEnum.Attack;
+            
+            Image attacCardImage =attackCard.GetComponent<Image>();
+            attacCardImage.sprite = cardSprite;
+            attacCardImage.type = Image.Type.Sliced;
+            
+            Button attackCardButton = attackCard.GetComponent<Button>();
+            attackCardButton.targetGraphic = attacCardImage;
+
+            attackCard.GetComponent<CardController>().CardInitialize(cardType,cardLegendary,energyCost,duration,cardCombine.combineCardLegendary);
 
             cardLegendary = CardLegendaryEnum.None;
+            cardCombine.combineCardLegendary = null;
+            
             cardSprite = null;
             cardName = "";
             energyCost = 0;
@@ -110,21 +136,37 @@ namespace CardTypes
         // value of the card do control null or full
         public override bool IsDataFilled()
         {
-            return cardSprite != null && cardName != "";
+            if(cardCombine.combineCardLegendary.Length > 0)
+            {
+                if(cardLegendary != CardLegendaryEnum.LegendaryCard)
+                {
+                    return false;
+                }
+               
+            }
+            return cardSprite != null && cardName != "" && cardLegendary != CardLegendaryEnum.None; 
         }
 
         //the attack card have been creating
         public override void CardCreated()
         {
-            GameObject defenceCard = new GameObject(cardName, typeof(SpriteRenderer),typeof(CardController));
-
+            GameObject defenceCard = new GameObject(cardName,typeof(RectTransform),typeof(CanvasRenderer),typeof(Image),typeof(Button),typeof(CardController));
+    
             cards.Add(defenceCard);
 
             string folderPath = "Assets/Prefabs/Cards/DefenceCards";
             string prefabPath = Path.Combine(folderPath,defenceCard.name + ".prefab");
             
-            defenceCard.GetComponent<SpriteRenderer>().sprite = cardSprite;
-            defenceCard.GetComponent<CardController>().CardInitialize(cardLegendary,energyCost,duration);
+            cardType = CardTypeEnum.Defence;
+
+            Image defenceCardImage =defenceCard.GetComponent<Image>();
+            defenceCardImage.sprite = cardSprite;
+            defenceCardImage.type = Image.Type.Sliced;
+            
+            Button defenceCardButton = defenceCard.GetComponent<Button>();
+            defenceCardButton.targetGraphic = defenceCardImage;
+
+            defenceCard.GetComponent<CardController>().CardInitialize(cardType,cardLegendary,energyCost,duration,cardCombine.combineCardLegendary);
             
             cardLegendary = CardLegendaryEnum.None;
             cardSprite = null;
@@ -158,17 +200,23 @@ namespace CardTypes
     [System.Serializable]
     public class AbilityCard : CardBase
     {
-        
         public bool targetsEnemy; //Is it targeting the enemy
         public bool targetsSelf; //Is it targeting your own player
         public bool isAoE; //  is the area effective
 
 
-
         // value of the card do control null or full
         public override bool IsDataFilled()
         {
-            return cardSprite != null && cardName != "";
+            if(cardCombine.combineCardLegendary.Length > 0)
+            {
+                if(cardLegendary != CardLegendaryEnum.LegendaryCard)
+                {
+                    return false;
+                }
+               
+            }
+            return cardSprite != null && cardName != "" && cardLegendary != CardLegendaryEnum.None; 
         }
 
         //the attack card have been creating
@@ -180,8 +228,9 @@ namespace CardTypes
             string folderPath = "Assets/Prefabs/Cards/AbilityCards";
             string prefabPath = Path.Combine(folderPath,abilityCard.name + ".prefab");
 
+            cardType = CardTypeEnum.Ability;
             abilityCard.GetComponent<SpriteRenderer>().sprite = cardSprite;
-            abilityCard.GetComponent<CardController>().CardInitialize(cardLegendary,energyCost,duration);
+            abilityCard.GetComponent<CardController>().CardInitialize(cardType,cardLegendary,energyCost,duration,cardCombine.combineCardLegendary);
             
             cardLegendary = CardLegendaryEnum.None;
 
@@ -240,7 +289,15 @@ namespace CardTypes
         // value of the card do control null or full
         public override bool IsDataFilled()
         {
-            return cardSprite != null && cardName != "";
+            if(cardCombine.combineCardLegendary.Length > 0)
+            {
+                if(cardLegendary != CardLegendaryEnum.LegendaryCard)
+                {
+                    return false;
+                }
+               
+            }
+            return cardSprite != null && cardName != "" && cardLegendary != CardLegendaryEnum.None; 
         }
 
         //the attack card have been creating
@@ -252,8 +309,9 @@ namespace CardTypes
             string folderPath = "Assets/Prefabs/Cards/Strength";
             string prefabPath = Path.Combine(folderPath,strengthCard.name + ".prefab");
 
+            cardType = CardTypeEnum.Strength;
             strengthCard.GetComponent<SpriteRenderer>().sprite = cardSprite;
-            strengthCard.GetComponent<CardController>().CardInitialize(cardLegendary,energyCost,duration);
+            strengthCard.GetComponent<CardController>().CardInitialize(cardType,cardLegendary,energyCost,duration,cardCombine.combineCardLegendary);
 
             cardLegendary = CardLegendaryEnum.None;
             cardSprite = null;
@@ -277,5 +335,8 @@ namespace CardTypes
     }
 
     #endregion
+
+
+
 
 }
