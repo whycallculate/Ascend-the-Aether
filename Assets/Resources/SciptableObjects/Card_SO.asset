@@ -17,6 +17,8 @@ MonoBehaviour:
     cardName: 
     cardDescription: 
     cardLegendary: 0
+    cardCombine:
+      combineCardLegendary: 
     energyCost: 0
     duration: 0
     cardIndex: 0
@@ -28,6 +30,8 @@ MonoBehaviour:
     cardName: 
     cardDescription: 
     cardLegendary: 0
+    cardCombine:
+      combineCardLegendary: 
     energyCost: 0
     duration: 0
     cardIndex: 0
@@ -40,7 +44,9 @@ MonoBehaviour:
     cardSprite: {fileID: 0}
     cardName: 
     cardDescription: 
-    cardLegendary: 1
+    cardLegendary: 0
+    cardCombine:
+      combineCardLegendary: 
     energyCost: 0
     duration: 0
     cardIndex: 0
@@ -54,6 +60,8 @@ MonoBehaviour:
     cardName: 
     cardDescription: 
     cardLegendary: 0
+    cardCombine:
+      combineCardLegendary: 
     energyCost: 0
     duration: 0
     cardIndex: 0
@@ -67,3 +75,5 @@ MonoBehaviour:
     TargetsSelf: 0
     IsAoE: 0
     StrengthEffectRadius: 0
+  cardCombine:
+    combineCardLegendary: 

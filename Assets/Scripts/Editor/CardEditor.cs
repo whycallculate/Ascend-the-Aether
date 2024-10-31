@@ -35,6 +35,8 @@ using UnityEditor;
             EditorGUILayout.Space();
             EditorGUILayout.Space();
 
+           
+
             if (GUILayout.Button("Create Card", GUILayout.MinWidth(50), GUILayout.MinHeight(10)))
             {
                 if (card.attackCard.IsDataFilled())
@@ -60,4 +62,5 @@ using UnityEditor;
         }
 
     }
+  
 #endif
