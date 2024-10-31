@@ -44,6 +44,7 @@ namespace CardTypes
         public float ArmorPiercing; //Zırh Delici
 
 
+
         // value of the card do control null or full
         public override bool IsDataFilled()
         {
