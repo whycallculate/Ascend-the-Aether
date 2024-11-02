@@ -49,7 +49,7 @@ namespace CardTypes
     public class AttackCard : CardBase
     {
         [Range(0,10)]
-        public float Damage;
+        public int damage;
 
         [Range(0,10)]
         public float ArmorPiercing; //Zırh Delici
@@ -89,7 +89,7 @@ namespace CardTypes
             attackCardButton.targetGraphic = attacCardImage;
 
 
-            attackCard.GetComponent<AttackCardController>().CardInitialize(cardType,cardLegendary,energyCost,duration,cardCombine.combineCardLegendary);
+            attackCard.GetComponent<AttackCardController>().CardInitialize(cardType,cardLegendary,energyCost,duration,cardCombine.combineCardLegendary,damage);
 
             cardLegendary = CardLegendaryEnum.None;
             cardCombine.combineCardLegendary = null;
@@ -136,7 +136,7 @@ namespace CardTypes
     {
         
         [Range(0,10)]
-        public float defence;
+        public int defence;
 
         public bool targetsEnemy; //Is it targeting the enemy
         public bool targetsSelf; //Is it targeting your own player
@@ -176,7 +176,7 @@ namespace CardTypes
             defenceCardButton.targetGraphic = defenceCardImage;
 
 
-            defenceCard.GetComponent<DefenceCardController>().CardInitialize(cardType,cardLegendary,energyCost,duration,cardCombine.combineCardLegendary);
+            defenceCard.GetComponent<DefenceCardController>().CardInitialize(cardType,cardLegendary,energyCost,duration,cardCombine.combineCardLegendary,defence);
             
             cardCombine.combineCardLegendary = null;
             cardLegendary = CardLegendaryEnum.None;
@@ -219,7 +219,7 @@ namespace CardTypes
     public class AbilityCard : CardBase
     {
         [Range(0,10)]
-        public float ability;
+        public int ability;
 
         public bool targetsEnemy; //Is it targeting the enemy
         public bool targetsSelf; //Is it targeting your own player
@@ -257,7 +257,7 @@ namespace CardTypes
             defenceCardButton.targetGraphic = defenceCardImage;
 
 
-            abilityCard.GetComponent<AbilityCardController>().CardInitialize(cardType,cardLegendary,energyCost,duration,cardCombine.combineCardLegendary);
+            abilityCard.GetComponent<AbilityCardController>().CardInitialize(cardType,cardLegendary,energyCost,duration,cardCombine.combineCardLegendary,ability);
             
             cardLegendary = CardLegendaryEnum.None;
             cardCombine.combineCardLegendary = null;
@@ -301,7 +301,7 @@ namespace CardTypes
     public class StrengthCard : CardBase
     {
         [Range(0,10)]
-        public float strength;
+        public int strength;
 
         public int PowerBoost; // Verilen güç artışı miktarı
         public int HealthBoost; // Sağlık artışı miktarı
@@ -354,7 +354,7 @@ namespace CardTypes
             defenceCardButton.targetGraphic = defenceCardImage;
 
 
-            strengthCard.GetComponent<StrengthCardController>().CardInitialize(cardType,cardLegendary,energyCost,duration,cardCombine.combineCardLegendary);
+            strengthCard.GetComponent<StrengthCardController>().CardInitialize(cardType,cardLegendary,energyCost,duration,cardCombine.combineCardLegendary,strength);
 
             cardLegendary = CardLegendaryEnum.None;
             cardCombine.combineCardLegendary = null;

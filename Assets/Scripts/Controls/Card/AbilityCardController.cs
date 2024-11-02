@@ -14,8 +14,8 @@ public class AbilityCardController : MonoBehaviour
     [SerializeField] private CardLegendaryEnum[] cardCombineLegendary;
     [SerializeField] private int energyCost;
     [SerializeField] private float duration;
+    [SerializeField] private int ability;
     #endregion
-    public AbilityCard abilityCardOptions;
     
     [SerializeField] private AbilityCardController[] abilityCards;
     [SerializeField] private Button cardButton;
@@ -30,7 +30,6 @@ public class AbilityCardController : MonoBehaviour
     private void OnValidate() 
     {
         
-        abilityCardOptions = new AbilityCard();
         cardFolderPath = "Prefabs/Cards/AbilityCards";
         abilityCards = Resources.LoadAll<AbilityCardController>(cardFolderPath);
         cardButton = GetComponent<Button>();    
@@ -59,12 +58,13 @@ public class AbilityCardController : MonoBehaviour
         }
     }
 
-    public void CardInitialize(CardTypeEnum _cardType,CardLegendaryEnum _cardLegendary,int _energyCost,float _duration,CardLegendaryEnum[] _cardCombineLegendary)
+    public void CardInitialize(CardTypeEnum _cardType,CardLegendaryEnum _cardLegendary,int _energyCost,float _duration,CardLegendaryEnum[] _cardCombineLegendary,int _ability)
     {
         cardType = _cardType;
         cardLegendary = _cardLegendary;
         energyCost = _energyCost;
         duration = _duration;
         cardCombineLegendary = _cardCombineLegendary;
+        ability = _ability;
     }
 }

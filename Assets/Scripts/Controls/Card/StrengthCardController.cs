@@ -13,8 +13,8 @@ public class StrengthCardController : MonoBehaviour
     [SerializeField] private CardLegendaryEnum[] cardCombineLegendary;
     [SerializeField] private int energyCost;
     [SerializeField] private float duration;
+    [SerializeField] private int strength;
     #endregion
-    public StrengthCard strengthCardOptions;
     [SerializeField] private StrengthCardController[] strengthCards;
     
     [SerializeField] private Button cardButton;
@@ -28,7 +28,6 @@ public class StrengthCardController : MonoBehaviour
 
     private void OnValidate() 
     {
-        strengthCardOptions = new StrengthCard();
         
         cardFolderPath = "Prefabs/Cards/StrengthCards";
         strengthCards = Resources.LoadAll<StrengthCardController>(cardFolderPath);
@@ -59,12 +58,13 @@ public class StrengthCardController : MonoBehaviour
         }
     }
 
-    public void CardInitialize(CardTypeEnum _cardType,CardLegendaryEnum _cardLegendary,int _energyCost,float _duration,CardLegendaryEnum[] _cardCombineLegendary)
+    public void CardInitialize(CardTypeEnum _cardType,CardLegendaryEnum _cardLegendary,int _energyCost,float _duration,CardLegendaryEnum[] _cardCombineLegendary,int _strength)
     {
         cardType = _cardType;
         cardLegendary = _cardLegendary;
         energyCost = _energyCost;
         duration = _duration;
         cardCombineLegendary = _cardCombineLegendary;
+        strength = _strength;
     }
 }

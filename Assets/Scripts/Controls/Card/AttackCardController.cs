@@ -13,8 +13,8 @@ public class AttackCardController : MonoBehaviour
     [SerializeField] private CardLegendaryEnum[] cardCombineLegendary;
     [SerializeField] private int energyCost;
     [SerializeField] private float duration;
+    [SerializeField] private int damage;
     #endregion
-    public AttackCard attackCardOptions;
     
     [SerializeField] private AttackCardController[] attackCards;
     [SerializeField] private Button cardButton;
@@ -29,7 +29,6 @@ public class AttackCardController : MonoBehaviour
 
     private void OnValidate()
     {
-        attackCardOptions = new AttackCard();
         
         CardLoading();
 
@@ -65,12 +64,13 @@ public class AttackCardController : MonoBehaviour
         }
     }
 
-    public void CardInitialize(CardTypeEnum _cardType,CardLegendaryEnum _cardLegendary,int _energyCost,float _duration,CardLegendaryEnum[] _cardCombineLegendary)
+    public void CardInitialize(CardTypeEnum _cardType,CardLegendaryEnum _cardLegendary,int _energyCost,float _duration,CardLegendaryEnum[] _cardCombineLegendary,int _damage)
     {
         cardType = _cardType;
         cardLegendary = _cardLegendary;
         energyCost = _energyCost;
         duration = _duration;
         cardCombineLegendary = _cardCombineLegendary;
+        damage = _damage;
     }
 }

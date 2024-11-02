@@ -14,8 +14,8 @@ public class DefenceCardController : MonoBehaviour
     [SerializeField] private CardLegendaryEnum[] cardCombineLegendary;
     [SerializeField] private int energyCost;
     [SerializeField] private float duration;
+    [SerializeField] private int defence;
     #endregion
-    public DefenceCard defenceCardOptions;
 
     [SerializeField] private DefenceCardController[] defenceCards;
     [SerializeField] private Button cardButton;
@@ -29,7 +29,6 @@ public class DefenceCardController : MonoBehaviour
 
     private void OnValidate() 
     {
-        defenceCardOptions = new DefenceCard();
 
         cardFolderPath = "Prefabs/Cards/DefenceCards";
         defenceCards = Resources.LoadAll<DefenceCardController>(cardFolderPath);
@@ -60,7 +59,7 @@ public class DefenceCardController : MonoBehaviour
         }
     }
 
-    public void CardInitialize(CardTypeEnum _cardType,CardLegendaryEnum _cardLegendary,int _energyCost,float _duration,CardLegendaryEnum[] _cardCombineLegendary)
+    public void CardInitialize(CardTypeEnum _cardType,CardLegendaryEnum _cardLegendary,int _energyCost,float _duration,CardLegendaryEnum[] _cardCombineLegendary,int _defence)
     {
         cardType = _cardType;
         cardLegendary = _cardLegendary;
