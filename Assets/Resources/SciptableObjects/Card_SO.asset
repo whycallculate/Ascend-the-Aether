@@ -27,7 +27,7 @@ MonoBehaviour:
     cardIndex: 0
     effect: {fileID: 0}
     effectSound: {fileID: 0}
-    damage: 5
+    damage: 0
     ArmorPiercing: 0
   defenceCard:
     cards: []

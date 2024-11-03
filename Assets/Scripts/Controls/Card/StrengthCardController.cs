@@ -24,19 +24,31 @@ public class StrengthCardController : MonoBehaviour
 
     private void Awake() 
     {
+        CardLoading();
     }
 
     private void OnValidate() 
     {
         
-        cardFolderPath = "Prefabs/Cards/StrengthCards";
-        strengthCards = Resources.LoadAll<StrengthCardController>(cardFolderPath);
+        CardLoading();
 
         cardButton = GetComponent<Button>();    
         cardButton.onClick.AddListener(Card_Move);
     }
 
-
+    private void CardLoading()
+    {
+        try
+        {
+            cardFolderPath = "Prefabs/Cards/StrengthCards";
+            strengthCards = Resources.LoadAll<StrengthCardController>(cardFolderPath);
+        }
+        catch (Exception)
+        {
+            
+            throw new Exception();
+        }
+    }
    
     public void Card_Move()
     {

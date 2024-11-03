@@ -25,18 +25,31 @@ public class DefenceCardController : MonoBehaviour
 
     private void Awake() 
     {
+        CardLoading();
     }
 
     private void OnValidate() 
     {
 
-        cardFolderPath = "Prefabs/Cards/DefenceCards";
-        defenceCards = Resources.LoadAll<DefenceCardController>(cardFolderPath);
+        CardLoading();
         
         cardButton = GetComponent<Button>();    
         cardButton.onClick.AddListener(Card_Move);
     }
 
+    private void CardLoading()
+    {
+        try
+        {
+            cardFolderPath = "Prefabs/Cards/DefenceCards";
+            defenceCards = Resources.LoadAll<DefenceCardController>(cardFolderPath);
+        }
+        catch (Exception)
+        {
+            
+            throw new Exception();
+        }
+    }
 
    
     public void Card_Move()
