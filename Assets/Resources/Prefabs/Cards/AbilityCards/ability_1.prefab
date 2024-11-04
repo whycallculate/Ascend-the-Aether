@@ -138,22 +138,8 @@ MonoBehaviour:
   cardCombineLegendary: 
   energyCost: 0
   duration: 0
-  abilityCardOptions:
-    cards: []
-    cardType: 0
-    cardSprite: {fileID: 0}
-    cardName: 
-    cardDescription: 
-    cardLegendary: 0
-    cardCombine:
-      combineCardLegendary: 
-    energyCost: 0
-    duration: 0
-    cardIndex: 0
-    effect: {fileID: 0}
-    effectSound: {fileID: 0}
-    ability: 0
-    targetsEnemy: 0
-    targetsSelf: 0
-    isAoE: 0
+  ability: 0
+  abilityCards:
+  - {fileID: 3488596410525224917, guid: 6974d435b3122bd40b96ed634322c70a, type: 3}
+  - {fileID: 7670468686998276855, guid: 12c4ea8eb98b3bf4b8cfb8b805d21e5e, type: 3}
   cardButton: {fileID: 2825289044102684362}

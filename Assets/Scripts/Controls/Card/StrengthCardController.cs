@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Card_Enum;
-using CardTypes;
 public class StrengthCardController : MonoBehaviour
 {
     #region features of the card
     [SerializeField] private CardTypeEnum cardType;
     [SerializeField] private CardLegendaryEnum cardLegendary;
+    public CardLegendaryEnum CardLegendary { get { return cardLegendary; } }
     [SerializeField] private CardLegendaryEnum[] cardCombineLegendary;
     [SerializeField] private int energyCost;
     [SerializeField] private float duration;

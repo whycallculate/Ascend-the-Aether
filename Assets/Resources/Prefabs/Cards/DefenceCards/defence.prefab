@@ -138,23 +138,7 @@ MonoBehaviour:
   cardCombineLegendary: 
   energyCost: 2
   duration: 2
-  defenceCardOptions:
-    cards: []
-    cardType: 0
-    cardSprite: {fileID: 0}
-    cardName: 
-    cardDescription: 
-    cardLegendary: 0
-    cardCombine:
-      combineCardLegendary: 
-    energyCost: 0
-    duration: 0
-    cardIndex: 0
-    effect: {fileID: 0}
-    effectSound: {fileID: 0}
-    defence: 0
-    targetsEnemy: 0
-    targetsSelf: 0
-    isAoE: 0
-  defenceCards: []
+  defence: 0
+  defenceCards:
+  - {fileID: 528370907803705744, guid: 9e81ab342a1f2034d92b9ea28b519837, type: 3}
   cardButton: {fileID: 4362117586733605761}

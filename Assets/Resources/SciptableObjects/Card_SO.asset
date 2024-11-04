@@ -85,7 +85,7 @@ MonoBehaviour:
     cardIndex: 0
     effect: {fileID: 0}
     effectSound: {fileID: 0}
-    strength: 0
+    strength: 3
     PowerBoost: 0
     HealthBoost: 0
     DefenseBoost: 0
