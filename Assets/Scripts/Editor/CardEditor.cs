@@ -35,6 +35,8 @@ using UnityEditor;
             EditorGUILayout.Space();
             EditorGUILayout.Space();
 
+           
+
             if (GUILayout.Button("Create Card", GUILayout.MinWidth(50), GUILayout.MinHeight(10)))
             {
                 if (card.attackCard.IsDataFilled())
@@ -60,4 +62,49 @@ using UnityEditor;
         }
 
     }
+
+
+[CustomEditor(typeof(AttackCardController))]
+[System.Serializable]
+public class AttackCardControllerEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        AttackCardController attackCardController = (AttackCardController)target;
+        
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("cardLegendary"));
+        
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
+
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("energyCost"));
+
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
+        
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("duration"));
+        
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
+        
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("damage"));
+
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
+        
+        if (attackCardController.CardLegendary == Card_Enum.CardLegendaryEnum.LegendaryCard)
+        {
+            SerializedProperty arrayProperty = serializedObject.FindProperty("cardCombineLegendary");
+            EditorGUILayout.PropertyField(arrayProperty, true);
+        }
+        else
+        {
+            SerializedProperty arrayProperty = serializedObject.FindProperty("cardCombineLegendary");
+            EditorGUILayout.PropertyField(arrayProperty, false);
+        }
+        serializedObject.ApplyModifiedProperties();
+        serializedObject.Update();
+    }
+}
+
 #endif
