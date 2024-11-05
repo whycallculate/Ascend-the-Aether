@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Card_Enum;
-public class StrengthCardController : MonoBehaviour
+using CardObjectCommon_Features;
+public class StrengthCardController : CardObjectCommonFeatures
 {
     #region features of the card
     [SerializeField] private CardTypeEnum cardType;
@@ -20,7 +21,6 @@ public class StrengthCardController : MonoBehaviour
     [SerializeField] private Button cardButton;
     
     private string cardFolderPath;
-    private bool isClickCard = false;
 
     private void Awake() 
     {
@@ -52,24 +52,11 @@ public class StrengthCardController : MonoBehaviour
    
     public void Card_Move()
     {
-        isClickCard = !isClickCard;
+        CardObject_Movement(gameObject);
         
-       
-
-        StartCoroutine(CardMovement());
-
     }
     
-    private IEnumerator CardMovement()
-    {
-        while (isClickCard)
-        {
-            transform.position = Input.mousePosition;
-            
-            yield return null;
-        }
-    }
-
+   
     public void CardInitialize(CardTypeEnum _cardType,CardLegendaryEnum _cardLegendary,int _energyCost,float _duration,CardLegendaryEnum[] _cardCombineLegendary,int _strength)
     {
         cardType = _cardType;

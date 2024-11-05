@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Card_Enum;
-public class AttackCardController : MonoBehaviour
+using CardObjectCommon_Features;
+
+public class AttackCardController : CardObjectCommonFeatures
 {
     #region features of the card
     [SerializeField] private CardTypeEnum cardType;
@@ -25,11 +27,16 @@ public class AttackCardController : MonoBehaviour
     [SerializeField] private Button cardButton;
 
     private string cardFolderPath;
-    private bool isClickCard = false;
 
     private void Awake() 
     {
         CardLoading();
+
+        if(cardButton.onClick == null)
+        {
+            cardButton.onClick.AddListener(Card_Move);
+        }
+
     }
 
     private void OnValidate()
@@ -58,23 +65,10 @@ public class AttackCardController : MonoBehaviour
     //the card do movement 
     public void Card_Move()
     {
-        isClickCard = !isClickCard;
+        CardObject_Movement(gameObject);
         
-       
-
-        StartCoroutine(CardMovement());
-
     }
-    //This controls movement
-    private IEnumerator CardMovement()
-    {
-        while (isClickCard)
-        {
-            transform.position = Input.mousePosition;
-            
-            yield return null;
-        }
-    }
+    
 
     public void CardInitialize(CardTypeEnum _cardType,CardLegendaryEnum _cardLegendary,int _energyCost,float _duration,CardLegendaryEnum[] _cardCombineLegendary,int _damage)
     {
