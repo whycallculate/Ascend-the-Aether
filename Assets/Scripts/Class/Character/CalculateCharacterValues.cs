@@ -62,16 +62,26 @@ public class CalculateCharacterValues : MonoBehaviour
         switch(transaction)
         {
             case "+":
+                currentShield += shieldValue;
                 if (currentShield < maxShield)
                 {
-                    currentShield += shieldValue;
+                    UIManager.Instance.CharacterUI.CharacterShild_Function(currentShield);
+                }
+                else
+                {
+                    currentShield = shieldValue;
                     UIManager.Instance.CharacterUI.CharacterShild_Function(currentShield);
                 }
                 break;
             case "-":
+                currentShield -= shieldValue;
                 if (currentShield > 0)
                 {
-                    currentShield -= shieldValue;
+                    UIManager.Instance.CharacterUI.CharacterShild_Function(currentShield);
+                }
+                else
+                {
+                    currentShield = 0;
                     UIManager.Instance.CharacterUI.CharacterShild_Function(currentShield);
                 }
             break;
@@ -85,16 +95,26 @@ public class CalculateCharacterValues : MonoBehaviour
         switch(transaction)
         {
             case "+":
+                currentEnergy += energyValue;
                 if (currentEnergy < maxEnergy)
                 {
-                    currentEnergy += energyValue;
+                    UIManager.Instance.CharacterUI.CharacterEnergy_Function(currentEnergy);
+                }
+                else
+                {
+                    currentEnergy = maxEnergy;
                     UIManager.Instance.CharacterUI.CharacterEnergy_Function(currentEnergy);
                 }
                 break;
             case "-":
+                currentEnergy -= energyValue;
                 if (currentEnergy > 0)
                 {
-                    currentEnergy -= energyValue;
+                    UIManager.Instance.CharacterUI.CharacterEnergy_Function(currentEnergy);
+                }
+                else
+                {
+                    currentEnergy = 0;
                     UIManager.Instance.CharacterUI.CharacterEnergy_Function(currentEnergy);
                 }
             break;
@@ -115,9 +135,14 @@ public class CalculateCharacterValues : MonoBehaviour
                 }
             break;
             case "-":
+                currentPower -= powerValue;
                 if(currentPower > 0)
                 {
-                    currentPower -= powerValue;
+                    UIManager.Instance.CharacterUI.CharacterPowerUI_Function(currentPower);
+                }
+                else
+                {
+                    currentPower = 0;
                     UIManager.Instance.CharacterUI.CharacterPowerUI_Function(currentPower);
                 }
             break;

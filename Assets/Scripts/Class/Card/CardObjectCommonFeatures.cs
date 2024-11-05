@@ -9,13 +9,18 @@ namespace CardObjectCommon_Features
         private bool _isClickCard = false;
         
         //method to make the card move
-        public bool CardObject_Movement(GameObject card)
+        public bool CardObject_Movement(GameObject card,string characterTraits,string transaction,int value)
         {
-            print("tiklandi");
+            if(!_isClickCard)
+            {
+                GameManager.Instance.CardCharacterInteraction(characterTraits,transaction,value);
+            }
+
             _isClickCard = !_isClickCard;
             StartCoroutine(CardMovementIEnumerator(card));
             return _isClickCard;
         }
+
 
         private IEnumerator CardMovementIEnumerator(GameObject card)
         {
@@ -25,7 +30,11 @@ namespace CardObjectCommon_Features
                 float y = Mathf.Clamp(Input.mousePosition.y,-Screen.height,Screen.height);
 
                     card.transform.position = new Vector2(x,y);
-                
+                Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height/2);
+                if(transform.position == screenCenter)
+                {
+                    print("ortada");
+                }   
                 yield return null;
             }
         }

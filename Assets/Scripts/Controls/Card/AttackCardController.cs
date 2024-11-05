@@ -65,8 +65,7 @@ public class AttackCardController : CardObjectCommonFeatures
     //the card do movement 
     public void Card_Move()
     {
-        CardObject_Movement(gameObject);
-        
+        CardObject_Movement(gameObject,"energy","-",energyCost);
     }
     
 

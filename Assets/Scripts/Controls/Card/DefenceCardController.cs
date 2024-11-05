@@ -54,7 +54,7 @@ public class DefenceCardController : CardObjectCommonFeatures
    
     public void Card_Move()
     {
-        CardObject_Movement(gameObject);
+        CardObject_Movement(gameObject,"energy","-",energyCost);
         
     }
     
