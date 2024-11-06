@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Card_Enum;
-using CardTypes;
-using System.Linq;
-public class AbilityCardController : MonoBehaviour
+using CardObjectCommon_Features;
+public class AbilityCardController : CardObjectCommonFeatures
 {
     #region features of the card
     [SerializeField] private CardTypeEnum cardType;
     [SerializeField] private CardLegendaryEnum cardLegendary;
+    public CardLegendaryEnum CardLegendary { get { return cardLegendary; } }
     [SerializeField] private CardLegendaryEnum[] cardCombineLegendary;
     [SerializeField] private int energyCost;
     [SerializeField] private float duration;
@@ -21,7 +21,6 @@ public class AbilityCardController : MonoBehaviour
     [SerializeField] private Button cardButton;
     
     private string cardFolderPath;
-    private bool isClickCard = false;
 
     private void Awake() 
     {
@@ -53,24 +52,10 @@ public class AbilityCardController : MonoBehaviour
    
     public void Card_Move()
     {
-        isClickCard = !isClickCard;
-        
-       
-
-        StartCoroutine(CardMovement());
-
+        CardObject_Movement(gameObject,"energy","-",energyCost);
     }
     
-    private IEnumerator CardMovement()
-    {
-        while (isClickCard)
-        {
-            transform.position = Input.mousePosition;
-            
-            yield return null;
-        }
-    }
-
+   
     public void CardInitialize(CardTypeEnum _cardType,CardLegendaryEnum _cardLegendary,int _energyCost,float _duration,CardLegendaryEnum[] _cardCombineLegendary,int _ability)
     {
         cardType = _cardType;
@@ -80,4 +65,5 @@ public class AbilityCardController : MonoBehaviour
         cardCombineLegendary = _cardCombineLegendary;
         ability = _ability;
     }
+
 }

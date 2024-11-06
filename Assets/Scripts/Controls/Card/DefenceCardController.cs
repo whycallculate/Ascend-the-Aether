@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Card_Enum;
-using CardTypes;
+using CardObjectCommon_Features;
 
-public class DefenceCardController : MonoBehaviour
+public class DefenceCardController : CardObjectCommonFeatures
 {
     #region features of the card
     [SerializeField] private CardTypeEnum cardType;
     [SerializeField] private CardLegendaryEnum cardLegendary;
+    public CardLegendaryEnum CardLegendary { get { return cardLegendary; } }
     [SerializeField] private CardLegendaryEnum[] cardCombineLegendary;
     [SerializeField] private int energyCost;
     [SerializeField] private float duration;
@@ -21,7 +22,6 @@ public class DefenceCardController : MonoBehaviour
     [SerializeField] private Button cardButton;
 
     private string cardFolderPath;
-    private bool isClickCard = false;
 
     private void Awake() 
     {
@@ -54,23 +54,11 @@ public class DefenceCardController : MonoBehaviour
    
     public void Card_Move()
     {
-        isClickCard = !isClickCard;
+        CardObject_Movement(gameObject,"energy","-",energyCost);
         
-       
-
-        StartCoroutine(CardMovement());
-
     }
     
-    private IEnumerator CardMovement()
-    {
-        while (isClickCard)
-        {
-            transform.position = Input.mousePosition;
-            
-            yield return null;
-        }
-    }
+   
 
     public void CardInitialize(CardTypeEnum _cardType,CardLegendaryEnum _cardLegendary,int _energyCost,float _duration,CardLegendaryEnum[] _cardCombineLegendary,int _defence)
     {
