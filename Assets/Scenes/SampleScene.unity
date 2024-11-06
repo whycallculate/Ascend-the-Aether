@@ -1509,6 +1509,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   character: {fileID: 0}
+  levelsObject: {fileID: 0}
+  levelObjects: []
 --- !u!4 &2002849074
 Transform:
   m_ObjectHideFlags: 0
