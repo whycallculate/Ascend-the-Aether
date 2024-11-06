@@ -5,6 +5,12 @@ TagManager:
   serializedVersion: 2
   tags:
   - Character
+  - Levels
+  - A
+  - B
+  - C
+  - ChangeLevel
+  - BossLevel
   layers:
   - Default
   - TransparentFX
