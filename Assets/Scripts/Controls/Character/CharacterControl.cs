@@ -11,7 +11,7 @@ public class CharacterControl : CalculateCharacterValues
     private const int shield = 100;
     private const int energy = 5;
     private const int power = 5;
-    private int currentHealt;
+    private int currentHealth;
     private int shieldCurrent;
     private int energyCurrent;
     private int powerCurrent;
@@ -19,7 +19,7 @@ public class CharacterControl : CalculateCharacterValues
     
     private void Awake() 
     {
-        currentHealt = healt;   
+        currentHealth = health;   
         energyCurrent = energy;
         uiManager = UIManager.Instance; 
         rb = GetComponent<Rigidbody>();

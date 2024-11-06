@@ -6,8 +6,10 @@ public class EnemyController : MonoBehaviour
 {
     public int HEALTH;
     public int SHIELD;
+    public int DAMAGE;
     public int POWER;
     public int ENERGY;
+    public bool enemyIsAlive;
 
     
     public void SetHealth(int value)
