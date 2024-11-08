@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 5942392173818593826}
   - component: {fileID: 4362117586733605761}
   - component: {fileID: 528370907803705744}
+  - component: {fileID: 2431665505340514031}
   m_Layer: 0
   m_Name: defence
-  m_TagString: Untagged
+  m_TagString: DefenceCard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -138,7 +139,20 @@ MonoBehaviour:
   cardCombineLegendary: 
   energyCost: 2
   duration: 2
-  defence: 0
+  defence: 10
   defenceCards:
   - {fileID: 528370907803705744, guid: 9e81ab342a1f2034d92b9ea28b519837, type: 3}
   cardButton: {fileID: 4362117586733605761}
+--- !u!114 &2431665505340514031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6281530246895064274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9a80458867d4e640b198edfa55fbfb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvas: {fileID: 0}

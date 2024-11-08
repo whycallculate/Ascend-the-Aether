@@ -4,34 +4,31 @@ using UnityEngine;
 
 public class CharacterControl : CalculateCharacterValues
 {
+
+    [SerializeField]public Object[] CardDeck;
+
     private UIManager uiManager;
     private Rigidbody rb;
     [SerializeField] private Transform[] points;
-    private const int healt = 100;
-    private const int shield = 100;
-    private const int energy = 5;
-    private const int power = 5;
-    private int currentHealth;
-    private int shieldCurrent;
-    private int energyCurrent;
-    private int powerCurrent;
+    public const int healt = 100;
+    public const int shield = 100;
+    public const int energy = 5;
+    public const int power = 5;
+    public int currentHealt;
+    public int shieldCurrent;
+    public int energyCurrent;
+    public int powerCurrent;
 
     
     private void Awake() 
     {
-        currentHealth = health;   
+        currentHealt = healt;   
         energyCurrent = energy;
         uiManager = UIManager.Instance; 
         rb = GetComponent<Rigidbody>();
     }
 
-    private void Update() 
-    {
-        
-        
-    }
 
-   
 
     public void CharacterTraits_Function(string traits,string transaction,int value)
     {

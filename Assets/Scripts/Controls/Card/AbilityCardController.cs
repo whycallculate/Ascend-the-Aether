@@ -12,9 +12,9 @@ public class AbilityCardController : CardObjectCommonFeatures
     [SerializeField] private CardLegendaryEnum cardLegendary;
     public CardLegendaryEnum CardLegendary { get { return cardLegendary; } }
     [SerializeField] private CardLegendaryEnum[] cardCombineLegendary;
-    [SerializeField] private int energyCost;
-    [SerializeField] private float duration;
-    [SerializeField] private int ability;
+    [SerializeField] public int energyCost;
+    [SerializeField] public float duration;
+    [SerializeField] public int ability;
     #endregion
     
     [SerializeField] private AbilityCardController[] abilityCards;

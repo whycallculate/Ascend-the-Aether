@@ -19,12 +19,12 @@ public class CharacterUI : MonoBehaviour
         if(tranction == "+")
         {
             characterHealtBar_Image.fillAmount += value;
-            healtbarNumber_Text.text = "%"+characterHealt.ToString();
+            healtbarNumber_Text.text = characterHealt.ToString();
         }
         else if(tranction == "-")
         {
             characterHealtBar_Image.fillAmount -= value;
-            healtbarNumber_Text.text = "%"+characterHealt.ToString();
+            healtbarNumber_Text.text = characterHealt.ToString();
 
         }
 

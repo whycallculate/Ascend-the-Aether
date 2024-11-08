@@ -19,13 +19,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private CharacterUI characterUI;
     public CharacterUI CharacterUI { get { return characterUI; } }
-    void Start()
-    {
-        
-    }
 
-    void Update()
-    {
-        
-    }
+    public RectTransform[] cardPos;
+
 }
