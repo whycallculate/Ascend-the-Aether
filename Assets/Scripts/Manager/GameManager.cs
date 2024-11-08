@@ -31,9 +31,31 @@ public class GameManager : MonoBehaviour
     public EnemyController enemy;
     public bool isPlayerTurn = true;
 
+    #region  Level fields
+    
+    private int characterCurrentLevelIndex =1;
+    public int CharacterCurrentLevelIndex {get {return characterCurrentLevelIndex;} set {characterCurrentLevelIndex = value;}}
+    private string characterCurrentLevelType ;
+    public string CharacterCurrentLevelType {get {return characterCurrentLevelType;} set {characterCurrentLevelType = value;}}
+   
+    [SerializeField] private GameObject levelsObject;
+    [SerializeField] private List<LevelPrefabControl> levelObjects = new List<LevelPrefabControl>();
+
+    #endregion
+
     private void OnValidate()
     {
         character = FindAnyObjectByType<CharacterControl>();
+        
+
+    }
+    private void Awake() 
+    {
+        levelsObject = GameObject.FindGameObjectWithTag("Levels");
+        for (int i = 0; i < levelsObject.transform.childCount; i++)
+        {
+            levelObjects.Add(levelsObject.transform.GetChild(i).GetComponent<LevelPrefabControl>());
+        }
     }
     private void Start()
     {
@@ -98,4 +120,13 @@ public class GameManager : MonoBehaviour
         }
         character.CharacterTraits_Function(characterTraits,transaction,value);
     }
+
+    public void LevelOpening()
+    {
+        for (int i = 0; i < levelObjects.Count; i++)
+        {
+            levelObjects[i].NextBackLevelOpen(characterCurrentLevelIndex);
+        }
+    }
+
 }
