@@ -18,9 +18,9 @@ public class AttackCardController : CardObjectCommonFeatures
     [SerializeField] private CardLegendaryEnum[] cardCombineLegendary;
     public CardLegendaryEnum[] CardCombineLegendary { get { return cardCombineLegendary;}}
     
-    [SerializeField] private int energyCost;
-    [SerializeField] private float duration;
-    [SerializeField] private int damage;
+    [SerializeField] public int energyCost;
+    [SerializeField] public float duration;
+    [SerializeField] public int damage;
     #endregion
     
     [SerializeField] private AttackCardController[] attackCards;

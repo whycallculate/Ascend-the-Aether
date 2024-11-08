@@ -13,9 +13,9 @@ public class DefenceCardController : CardObjectCommonFeatures
     [SerializeField] private CardLegendaryEnum cardLegendary;
     public CardLegendaryEnum CardLegendary { get { return cardLegendary; } }
     [SerializeField] private CardLegendaryEnum[] cardCombineLegendary;
-    [SerializeField] private int energyCost;
-    [SerializeField] private float duration;
-    [SerializeField] private int defence;
+    [SerializeField] public int energyCost;
+    [SerializeField] public float duration;
+    [SerializeField] public int defence;
     #endregion
 
     [SerializeField] private DefenceCardController[] defenceCards;
