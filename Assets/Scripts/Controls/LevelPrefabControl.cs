@@ -8,11 +8,29 @@ using UnityEngine.UI;
 public class LevelPrefabControl : MonoBehaviour
 {
     [SerializeField] private LevelType_Enum levelTypeEnum;
+    public LevelType_Enum LevelType_Enum { get { return levelTypeEnum; } }
     [SerializeField] private Button levelButton;
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private int levelIndex;
 
-    
+    #region  Enemy
+    [SerializeField] private EnemyController levelEnemyPrefab;
+    [SerializeField] private Vector3[]  levelEnemyPosition;
+    [SerializeField] private int levelEnemyCount;
+    [SerializeField] private int Health;
+    [SerializeField] private int Shield;
+    [SerializeField] private int Damage;
+    [SerializeField] private int Power;
+
+    #endregion
+
+    #region  Character
+    [SerializeField] private CharacterControl levelCharacterPrefab;
+    [SerializeField] private int levelCharacterCount;
+    [SerializeField] private Vector3[]  levelCharacterPosition;
+
+    #endregion
+
     private void OnValidate() 
     {
         levelButton = GetComponent<Button>();    
@@ -41,23 +59,27 @@ public class LevelPrefabControl : MonoBehaviour
 
     }
 
-    private void Update() 
-    {
-        
-    }
-
+    //level butonuna basınca düşman ve karakteri üreten method
     private void LevelButtonFunction(bool value)
     {
+        if(levelIndex == 1)
+        {
+            GameManager.Instance.CreatingCharacter(levelCharacterCount,levelCharacterPrefab,levelCharacterPosition);
+        }
+
+
         GameManager.Instance.CharacterCurrentLevelIndex += levelIndex;
         if(value)
         {
             GameManager.Instance.CharacterCurrentLevelType = levelTypeEnum.ToString();
+            GameManager.Instance.CreatingEnemies(levelEnemyCount,levelEnemyPrefab,levelEnemyPosition,Health,Shield,Damage,Power);
         }
         levelButton.interactable  =false;
-        print(GameManager.Instance.CharacterCurrentLevelIndex);
         GameManager.Instance.LevelOpening();
+
     }
     
+    // ileri veya geri level geçişi yapabilip yapamiyacağimizi kontrol ediyor
     public void NextBackLevelOpen(int _levelIndex)
     {
         if(GameManager.Instance.CharacterCurrentLevelType != LevelType_Enum.None.ToString())
@@ -102,6 +124,6 @@ public class LevelPrefabControl : MonoBehaviour
     {
         print("BossLevel seçtiniz");
         levelButton.interactable = false;
+        GameManager.Instance.CreatingEnemies(levelEnemyCount,levelEnemyPrefab,levelEnemyPosition,Health,Shield,Damage,Power);
     }
-
 }

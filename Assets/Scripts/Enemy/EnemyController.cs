@@ -8,7 +8,7 @@ public class EnemyController : MonoBehaviour
     public int SHIELD;
     public int DAMAGE;
     public int POWER;
-    public bool enemyIsAlive;
+    public bool enemyIsAlive = true;
     public float difficultyMultiplier = 1.2f;
     private int spawnCount = 0;
 
@@ -31,6 +31,15 @@ public class EnemyController : MonoBehaviour
         spawnCount++;
     }
 
+    //düşman özellikleri tanımladiğimiz method
+    public void EnemyInitialize(int healt,int shield,int damage,int power)
+    {
+        HEALTH = healt;
+        SHIELD = shield;
+        DAMAGE = damage;
+        POWER = power;
+    }
+
     public void SetHealth(int value) => HEALTH = value;
     public void AddHealth(int value) => HEALTH += value;
     public void TakeDamage(int value) => HEALTH -= value;
@@ -50,11 +59,17 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
+        /*
         if (!enemyIsAlive)
         {
             gameObject.SetActive(false);
         }
-        
+        */
+
+        if(HEALTH <= 0)
+        {
+            GameManager.Instance.IsEnemyAlive();
+        }
     }
 
 

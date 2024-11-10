@@ -33,7 +33,7 @@ public class CardBoard : MonoBehaviour,IDropHandler
         {
             UseStrenghCard(eventData);
         }
-
+        GameManager.Instance.SelectableCard(false);
 
     }
 

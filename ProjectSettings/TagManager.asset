@@ -9,6 +9,12 @@ TagManager:
   - AttackCard
   - DefenceCard
   - StrenghCard
+  - Levels
+  - B
+  - A
+  - ChangeLevel
+  - BossLevel
+  - C
   layers:
   - Default
   - TransparentFX

@@ -13,12 +13,12 @@ public class CalculateCharacterValues : MonoBehaviour
     /// <param name="transaction">İşlem türü</param>
     /// <param name="integerValue">Karakterin tam değerlerinde kullanılan bir alan</param>
     /// <param name="floatValue">Karakterin noktalı değerlerinde kullanılan bir alan</param>
-    public void CharacterValueTransaction_Function(string characterFeature,string transaction,ref int targetFeatureValue,int targetFeatureMaxValue,int integerValue = 0,float floatValue=0)
+    public void CharacterValueTransaction_Function(string characterFeature,string transaction,ref bool isCharacterAlive,ref int targetFeatureValue,int targetFeatureMaxValue,int integerValue = 0,float floatValue=0)
     {
         switch(characterFeature)
         {
             case "healtbar":
-                CharacterHealtBarTransaction_Function(ref targetFeatureValue,targetFeatureMaxValue,integerValue,floatValue,transaction);
+                CharacterHealtBarTransaction_Function(ref targetFeatureValue,ref isCharacterAlive,targetFeatureMaxValue,integerValue,floatValue,transaction);
             break;
             case "shield":
                 CharacterShieldTransaction_Function(ref targetFeatureValue,targetFeatureMaxValue,integerValue,transaction);
@@ -35,7 +35,7 @@ public class CalculateCharacterValues : MonoBehaviour
     }
 
     //Adjusting the character's healtbar
-    public int CharacterHealtBarTransaction_Function(ref int currentHealt,int maxHealt,int healtValue,float healtbarValue,string transaction)
+    public int CharacterHealtBarTransaction_Function(ref int currentHealt,ref bool isCharacterAlive ,int maxHealt,int healtValue,float healtbarValue,string transaction)
     {
         switch(transaction)
         {

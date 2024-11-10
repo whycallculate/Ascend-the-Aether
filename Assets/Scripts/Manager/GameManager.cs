@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -37,33 +38,89 @@ public class GameManager : MonoBehaviour
     public int CharacterCurrentLevelIndex {get {return characterCurrentLevelIndex;} set {characterCurrentLevelIndex = value;}}
     private string characterCurrentLevelType ;
     public string CharacterCurrentLevelType {get {return characterCurrentLevelType;} set {characterCurrentLevelType = value;}}
-   
+    [SerializeField] private GameObject mapPrefab;
     [SerializeField] private GameObject levelsObject;
     [SerializeField] private List<LevelPrefabControl> levelObjects = new List<LevelPrefabControl>();
 
     #endregion
 
+    #region  Enemy
+    
+    [Space]
+    [Space]
+    [Header("Enemy")]
+
+    [SerializeField] private List<EnemyController> enemys = new List<EnemyController>();
+    private int deadEnemyCount = 0;
+        
+    #endregion
+
+    #region  Character
+
+    [Space]
+    [Space]
+    [Header("Character")]
+    
+    [SerializeField] private List<CharacterControl> characters = new List<CharacterControl>();
+
+    #endregion
+
     private void OnValidate()
     {
-        character = FindAnyObjectByType<CharacterControl>();
+        
         
 
     }
     private void Awake() 
     {
         levelsObject = GameObject.FindGameObjectWithTag("Levels");
-        for (int i = 0; i < levelsObject.transform.childCount; i++)
+        if(levelsObject != null)
         {
-            levelObjects.Add(levelsObject.transform.GetChild(i).GetComponent<LevelPrefabControl>());
+            for (int i = 0; i < levelsObject.transform.childCount; i++)
+            {
+                levelObjects.Add(levelsObject.transform.GetChild(i).GetComponent<LevelPrefabControl>());
+            }
         }
+        
     }
     private void Start()
     {
         DrawCards();
     }
+
     public void InitializeDeck()
     {
+        // yeni kart eklme için kullanulıyor
+        //yeni kart oluşturunca oluşturulan kart dect  listesine ekle
+    }
 
+    private void Update() 
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            for (int i = 0; i < enemys.Count; i++)
+            {
+                enemys[i].HEALTH = 0;
+            }
+        }
+
+        
+
+        
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            RaycastHit hit;
+
+            if(Physics.Raycast(ray,out hit))
+            {
+                if(hit.collider.gameObject.GetComponent<EnemyController>() != null)
+                {
+                    enemy = hit.collider.gameObject.GetComponent<EnemyController>();
+                }
+            }          
+        }
     }
 
     public void DrawCards()
@@ -111,6 +168,7 @@ public class GameManager : MonoBehaviour
         CardCharacterInteraction("energy", "+", 5);
         DrawCards();
         isPlayerTurn = true;
+        SelectableCard(true);
     }
     public void CardCharacterInteraction(string characterTraits,string transaction,int value)
     {
@@ -121,6 +179,9 @@ public class GameManager : MonoBehaviour
         character.CharacterTraits_Function(characterTraits,transaction,value);
     }
 
+
+
+    #region  Level Function
     public void LevelOpening()
     {
         for (int i = 0; i < levelObjects.Count; i++)
@@ -129,4 +190,127 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    //karakter ölünce mevcut level index'ni sifirliyor
+    public void LevelReset()
+    {
+        mapPrefab.SetActive(true);
+        characterCurrentLevelType = levelObjects[0].LevelType_Enum.ToString();
+        characterCurrentLevelIndex = 1;
+        LevelOpening();
+        CardCharacterInteraction("energy","+",5);
+        SwitchTurnToPlayer();
+    }
+
+    #endregion
+
+
+
+    #region  Enemy Function
+
+    //Düşman karakteri oluşturmamizi sağliyor
+    public void CreatingEnemies(int enemysCount,EnemyController levelEnemyPrefab,Vector3[] _enemyPosition,int _healt,int _shield,int _damage,int _power)
+    {
+        mapPrefab.SetActive(false);
+        for (int i = 0; i < enemysCount; i++)
+        {
+            EnemyController enemyClone = Instantiate(levelEnemyPrefab, _enemyPosition[i], Quaternion.identity);
+            enemyClone.EnemyInitialize(_healt,_shield,_damage,_power);
+            enemys.Add(enemyClone);
+
+        }
+    }
+
+    //Düşmanlarin yaşamadiğini kontrol edip map haritasını aktif durumunu tetikliyor
+    public  void IsEnemyAlive()
+    {
+        for (int i = 0; i < enemys.Count; i++)
+        {
+            if(enemys[i].HEALTH<=0)
+            {
+                deadEnemyCount++;
+                Destroy(enemys[i].gameObject);
+            }
+        }
+
+        if(deadEnemyCount == enemys.Count)
+        {
+            mapPrefab.SetActive(true);
+            deadEnemyCount = 0;
+            enemys.Clear();
+            CardCharacterInteraction("energy","+",5);
+            SwitchTurnToPlayer();
+        }
+        
+    }
+
+    #endregion 
+    
+
+
+
+    #region  Character
+
+    //karakter oluşturmamizi sağliyor
+    public void CreatingCharacter(int charactersCount,CharacterControl levelCharacterPrefab,Vector3[] _characterPosition)
+    {
+        for (int i = 0; i < charactersCount; i++)
+        {
+            CharacterControl characterClone = Instantiate(levelCharacterPrefab,_characterPosition[i],Quaternion.identity);
+            character = characterClone;
+            characters.Add(characterClone);
+        }
+    }
+
+    #endregion
+
+
+
+    #region  Card
+    //karakterin enerjisine göre elindeki kartlarin görünürlüğünü ayarlamamizi sağliyan method
+    public void SelectableCard(bool value)
+    {
+        for (int i = 0; i < hand.Count; i++)
+        {
+
+            Button button = hand[i].GetComponent<Button>();
+            if(!value)
+            {
+                if(hand[i].GetComponent<AttackCardController>() != null)
+                {
+                    if(hand[i].GetComponent<AttackCardController>().energyCost > character.energyCurrent)
+                    {
+                        button.interactable = false;
+                    }
+                }
+                else if(hand[i].GetComponent<DefenceCardController>() != null)
+                {
+                    if(hand[i].GetComponent<DefenceCardController>().energyCost > character.energyCurrent)
+                    {
+                        button.interactable = false;
+                    }
+                }
+                else if(hand[i].GetComponent<AbilityCardController>() != null)
+                {
+                    if(hand[i].GetComponent<AbilityCardController>().energyCost > character.energyCurrent)
+                    {
+                        button.interactable = false;
+                    }
+                }
+                else if(hand[i].GetComponent<StrengthCardController>() != null)
+                {
+                    if(hand[i].GetComponent<StrengthCardController>().energyCost > character.energyCurrent)
+                    {
+                        button.interactable = false;
+                    }
+                }
+
+            }
+            else
+            {
+                button.interactable = true;
+            }
+        }
+    }
+
+    #endregion
 }
