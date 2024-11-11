@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using EnemyFeatures;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour
@@ -14,7 +15,6 @@ public class EnemyController : MonoBehaviour
 
     public int minDamage = 10; 
     public int maxDamage = 20;
-
     private void SpawnEnemy()
     {
         float currentMultiplier = Mathf.Pow(difficultyMultiplier, spawnCount);
@@ -31,13 +31,13 @@ public class EnemyController : MonoBehaviour
         spawnCount++;
     }
 
-    //düşman özellikleri tanımladiğimiz method
-    public void EnemyInitialize(int healt,int shield,int damage,int power)
+
+    public void EnemyInitialize(EnemyFeature enemies)
     {
-        HEALTH = healt;
-        SHIELD = shield;
-        DAMAGE = damage;
-        POWER = power;
+        HEALTH = enemies.Health;
+        SHIELD = enemies.Shield;
+        DAMAGE = enemies.Damage;
+        POWER = enemies.Power;
     }
 
     public void SetHealth(int value) => HEALTH = value;
@@ -59,16 +59,9 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
-        /*
-        if (!enemyIsAlive)
+        if(HEALTH <= 0 )
         {
-            gameObject.SetActive(false);
-        }
-        */
-
-        if(HEALTH <= 0)
-        {
-            GameManager.Instance.IsEnemyAlive();
+            GameManager.Instance.IsEnemyAlive(gameObject);
         }
     }
 

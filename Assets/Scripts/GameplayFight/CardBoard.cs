@@ -16,22 +16,25 @@ public class CardBoard : MonoBehaviour,IDropHandler
 
     public void OnDrop(PointerEventData eventData)
     {
-        if (eventData.pointerDrag.CompareTag("AbilityCard"))
+        if(GameManager.Instance.enemy != null)
         {
-            UseAbilityCard(eventData);
-        }
-        else if(eventData.pointerDrag.CompareTag("AttackCard"))
-        {
-            UseAttackCard(eventData);
-        }
-        else if (eventData.pointerDrag.CompareTag("DefenceCard"))
-        {
+            if (eventData.pointerDrag.CompareTag("AbilityCard"))
+            {
+                UseAbilityCard(eventData);
+            }
+            else if (eventData.pointerDrag.CompareTag("AttackCard"))
+            {
+                UseAttackCard(eventData);
+            }
+            else if (eventData.pointerDrag.CompareTag("DefenceCard"))
+            {
 
-            UseDefenceCard(eventData);
-        }
-        else if (eventData.pointerDrag.CompareTag("StrenghCard")) 
-        {
-            UseStrenghCard(eventData);
+                UseDefenceCard(eventData);
+            }
+            else if (eventData.pointerDrag.CompareTag("StrenghCard"))
+            {
+                UseStrenghCard(eventData);
+            }
         }
         GameManager.Instance.SelectableCard(false);
 

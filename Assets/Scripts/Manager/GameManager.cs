@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using EnemyFeatures;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -65,48 +66,41 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
-    private void OnValidate()
-    {
-        
-        
-
-    }
-    private void Awake() 
+    
+    private void Awake()
     {
         levelsObject = GameObject.FindGameObjectWithTag("Levels");
-        if(levelsObject != null)
+        if (levelsObject != null)
         {
             for (int i = 0; i < levelsObject.transform.childCount; i++)
             {
                 levelObjects.Add(levelsObject.transform.GetChild(i).GetComponent<LevelPrefabControl>());
             }
         }
-        
+
+        if (enemy == null)
+        {
+            for (int i = 0; i < deck.Count; i++)
+            {
+                deck[i].GetComponent<Button>().interactable = false;
+            }
+        }
+
+        LevelIndexAdjust();
     }
+
+   
+
     private void Start()
     {
         DrawCards();
     }
 
-    public void InitializeDeck()
-    {
-        // yeni kart eklme için kullanulıyor
-        //yeni kart oluşturunca oluşturulan kart dect  listesine ekle
-    }
+    
+
 
     private void Update() 
     {
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            for (int i = 0; i < enemys.Count; i++)
-            {
-                enemys[i].HEALTH = 0;
-            }
-        }
-
-        
-
-        
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -118,9 +112,14 @@ public class GameManager : MonoBehaviour
                 if(hit.collider.gameObject.GetComponent<EnemyController>() != null)
                 {
                     enemy = hit.collider.gameObject.GetComponent<EnemyController>();
+                    for (int i = 0; i < hand.Count; i++)
+                    {
+                        hand[i].GetComponent<Button>().interactable = true;
+                    }
                 }
             }          
         }
+
     }
 
     public void DrawCards()
@@ -197,8 +196,9 @@ public class GameManager : MonoBehaviour
         characterCurrentLevelType = levelObjects[0].LevelType_Enum.ToString();
         characterCurrentLevelIndex = 1;
         LevelOpening();
-        CardCharacterInteraction("energy","+",5);
-        SwitchTurnToPlayer();
+        SwitchTurnToEnemy();
+        CardButtonInteractableControl();
+
     }
 
     #endregion
@@ -208,44 +208,46 @@ public class GameManager : MonoBehaviour
     #region  Enemy Function
 
     //Düşman karakteri oluşturmamizi sağliyor
-    public void CreatingEnemies(int enemysCount,EnemyController levelEnemyPrefab,Vector3[] _enemyPosition,int _healt,int _shield,int _damage,int _power)
+    public void CreatingEnemies(int enemysCount,EnemyController levelEnemyPrefab,Vector3[] _enemyPosition,EnemyFeature[] enemies)
     {
         mapPrefab.SetActive(false);
         for (int i = 0; i < enemysCount; i++)
         {
             EnemyController enemyClone = Instantiate(levelEnemyPrefab, _enemyPosition[i], Quaternion.identity);
-            enemyClone.EnemyInitialize(_healt,_shield,_damage,_power);
+            enemyClone.EnemyInitialize(enemies[i]);
             enemys.Add(enemyClone);
 
         }
     }
 
     //Düşmanlarin yaşamadiğini kontrol edip map haritasını aktif durumunu tetikliyor
-    public  void IsEnemyAlive()
+    public  void IsEnemyAlive(GameObject enemy)
     {
-        for (int i = 0; i < enemys.Count; i++)
-        {
-            if(enemys[i].HEALTH<=0)
-            {
-                deadEnemyCount++;
-                Destroy(enemys[i].gameObject);
-            }
-        }
-
+        InitializeDeck();
+        Destroy(enemy);
+        CardButtonInteractableControl();
+        deadEnemyCount++;
+        
         if(deadEnemyCount == enemys.Count)
         {
             mapPrefab.SetActive(true);
             deadEnemyCount = 0;
             enemys.Clear();
-            CardCharacterInteraction("energy","+",5);
-            SwitchTurnToPlayer();
+            SwitchTurnToEnemy();
+            CardButtonInteractableControl();
         }
-        
+
     }
 
     #endregion 
-    
-
+    //kart objelerin buttonunu tıklanamamasını sağliyor
+    private void CardButtonInteractableControl()
+    {
+        for (int i = 0; i < hand.Count; i++)
+        {
+            hand[i].GetComponent<Button>().interactable = false;
+        }
+    }
 
 
     #region  Character
@@ -308,6 +310,62 @@ public class GameManager : MonoBehaviour
             else
             {
                 button.interactable = true;
+            }
+        }
+    }
+
+    public void InitializeDeck()
+    {
+        print("Karakter yeni kart kazandi");
+        // yeni kart eklme için kullanulıyor
+        //yeni kart oluşturunca oluşturulan kart dect  listesine ekle
+    }
+
+    
+    #endregion
+
+    #region  Map
+    //levelerin indexi otamatik tanımlayan bir method
+    private void LevelIndexAdjust()
+    {
+        int levelIndexResult = 0;
+        for (int i = 0; i < levelObjects.Count; i++)
+        {
+            if (i == 0)
+            {
+                levelObjects[i].LevelIndex = 1;
+            }
+
+            if (levelObjects[i].LevelType_Enum != LevelTypeEnums.LevelType_Enum.Change)
+            {
+
+                if(i % 2 == 1)
+                {
+                    if(i == 1)
+                    {
+                        levelIndexResult = levelObjects[i-1].LevelIndex * 2;
+                        levelObjects[i].LevelIndex = levelIndexResult;
+                        levelObjects[i+1].LevelIndex = levelIndexResult;
+                    }
+                    else
+                    {
+                        levelIndexResult = levelObjects[i-2].LevelIndex *2;
+                        levelObjects[i-1].LevelIndex = levelIndexResult;
+                        levelObjects[i].LevelIndex = levelIndexResult;
+                    }
+                }
+                else
+                {
+                    if(i == levelObjects.Count-1)
+                    {
+                        levelObjects[i].LevelIndex = levelObjects[i-1].LevelIndex * 2;
+                    }
+                }
+                
+            }
+            else
+            {
+                levelObjects[i].LevelIndex = levelObjects[i-1].LevelIndex *2;
             }
         }
     }

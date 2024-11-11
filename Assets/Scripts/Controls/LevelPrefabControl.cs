@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using EnemyFeatures;
 using LevelTypeEnums;
 using TMPro;
 using UnityEngine;
@@ -12,15 +13,13 @@ public class LevelPrefabControl : MonoBehaviour
     [SerializeField] private Button levelButton;
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private int levelIndex;
+    public int LevelIndex { get { return levelIndex; }  set { levelIndex = value; } }
 
     #region  Enemy
     [SerializeField] private EnemyController levelEnemyPrefab;
     [SerializeField] private Vector3[]  levelEnemyPosition;
+    [SerializeField] private EnemyFeature[] enemy;
     [SerializeField] private int levelEnemyCount;
-    [SerializeField] private int Health;
-    [SerializeField] private int Shield;
-    [SerializeField] private int Damage;
-    [SerializeField] private int Power;
 
     #endregion
 
@@ -72,11 +71,10 @@ public class LevelPrefabControl : MonoBehaviour
         if(value)
         {
             GameManager.Instance.CharacterCurrentLevelType = levelTypeEnum.ToString();
-            GameManager.Instance.CreatingEnemies(levelEnemyCount,levelEnemyPrefab,levelEnemyPosition,Health,Shield,Damage,Power);
+            GameManager.Instance.CreatingEnemies(levelEnemyCount,levelEnemyPrefab,levelEnemyPosition,enemy);
         }
         levelButton.interactable  =false;
         GameManager.Instance.LevelOpening();
-
     }
     
     // ileri veya geri level geçişi yapabilip yapamiyacağimizi kontrol ediyor
@@ -124,6 +122,6 @@ public class LevelPrefabControl : MonoBehaviour
     {
         print("BossLevel seçtiniz");
         levelButton.interactable = false;
-        GameManager.Instance.CreatingEnemies(levelEnemyCount,levelEnemyPrefab,levelEnemyPosition,Health,Shield,Damage,Power);
+        GameManager.Instance.CreatingEnemies(levelEnemyCount,levelEnemyPrefab,levelEnemyPosition,enemy);
     }
 }
