@@ -11,6 +11,7 @@ public class CharacterUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI healtbarNumber_Text;
     [SerializeField] private TextMeshProUGUI shieldNumber_Text;
     [SerializeField] private TextMeshProUGUI energyNumber_Text;
+    public TextMeshProUGUI EnergyNumber_Text {get {return energyNumber_Text;} set {energyNumber_Text = value;}}
     [SerializeField] private TextMeshProUGUI powerNumber_Text;
 
     //function that calculates the character's healtbar value and defines healtbara values

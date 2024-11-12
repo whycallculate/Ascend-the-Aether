@@ -48,10 +48,10 @@ namespace CardTypes
     [System.Serializable]
     public class AttackCard : CardBase
     {
-        [Range(0,10)]
+        [Range(0,100)]
         public int damage;
 
-        [Range(0,10)]
+        [Range(0,100)]
         public float ArmorPiercing; //Zırh Delici
 
 
@@ -73,32 +73,36 @@ namespace CardTypes
         public override void CardCreated()
         {
             
-            GameObject attackCard = new GameObject(cardName,typeof(RectTransform),typeof(CanvasRenderer),typeof(Image),typeof(Button),typeof(AttackCardController));
+            GameObject cardPrefab = Resources.Load<GameObject>("Prefabs/Card");
+            GameObject attackCard = GameObject.Instantiate(cardPrefab);
             
+            attackCard.tag = "AttackCard";
+            attackCard.name = cardName; 
+            
+            attackCard.AddComponent(typeof(AttackCardController));
+            attackCard.AddComponent(typeof(CardMovement));
 
             string folderPath = "Assets/Resources/Prefabs/Cards/AttackCards";
             string prefabPath = Path.Combine(folderPath,attackCard.name + ".prefab");
             
             cardType = CardTypeEnum.Attack;
             
-            Image attacCardImage =attackCard.GetComponent<Image>();
-            attacCardImage.sprite = cardSprite;
-            attacCardImage.type = Image.Type.Sliced;
             
-            Button attackCardButton = attackCard.GetComponent<Button>();
-            attackCardButton.targetGraphic = attacCardImage;
+          
 
 
-            attackCard.GetComponent<AttackCardController>().CardInitialize(cardType,cardLegendary,energyCost,duration,cardCombine.combineCardLegendary,damage);
+            attackCard.GetComponent<AttackCardController>().CardInitialize(cardSprite,cardName,cardDescription,cardType,cardLegendary,energyCost,duration,cardCombine.combineCardLegendary,damage);
 
             cardLegendary = CardLegendaryEnum.None;
             cardCombine.combineCardLegendary = null;
             
             cardSprite = null;
             cardName = "";
+            cardDescription = "";
             energyCost = 0;
             duration = 0;
             ArmorPiercing = 0;
+            damage = 0;
 
             try
             {
@@ -135,7 +139,7 @@ namespace CardTypes
     public class DefenceCard : CardBase
     {
         
-        [Range(0,10)]
+        [Range(0,100)]
         public int defence;
 
         public bool targetsEnemy; //Is it targeting the enemy
@@ -161,36 +165,39 @@ namespace CardTypes
         //the attack card have been creating
         public override void CardCreated()
         {
-            GameObject defenceCard = new GameObject(cardName,typeof(RectTransform),typeof(CanvasRenderer),typeof(Image),typeof(Button),typeof(DefenceCardController));
-    
+            GameObject cardPrefab = Resources.Load<GameObject>("Prefabs/Card");
+            GameObject defenceCard = GameObject.Instantiate(cardPrefab);
+
+            defenceCard.tag = "DefenceCard";
+            defenceCard.name = cardName; 
+
+            defenceCard.AddComponent(typeof(DefenceCardController));
+            defenceCard.AddComponent(typeof(CardMovement));
 
             string folderPath = "Assets/Resources/Prefabs/Cards/DefenceCards";
             string prefabPath = Path.Combine(folderPath,defenceCard.name + ".prefab");
             cardType = CardTypeEnum.Defence;
 
-            Image defenceCardImage =defenceCard.GetComponent<Image>();
-            defenceCardImage.sprite = cardSprite;
-            defenceCardImage.type = Image.Type.Sliced;
             
-            Button defenceCardButton = defenceCard.GetComponent<Button>();
-            defenceCardButton.targetGraphic = defenceCardImage;
+            
+            defenceCard.GetComponent<DefenceCardController>().CardInitialize(cardSprite,cardName,cardDescription,cardType,cardLegendary,energyCost,duration,cardCombine.combineCardLegendary,defence);
 
-
-            defenceCard.GetComponent<DefenceCardController>().CardInitialize(cardType,cardLegendary,energyCost,duration,cardCombine.combineCardLegendary,defence);
             
             cardCombine.combineCardLegendary = null;
             cardLegendary = CardLegendaryEnum.None;
+
             cardSprite = null;
             cardName = "";
+            cardDescription = "";
             energyCost = 0;
             duration = 0;
-
+            defence = 0;
 
             try
             {
                 if (!Directory.Exists(folderPath))
                 {
-                    Directory.CreateDirectory(folderPath);
+                    Directory.CreateDirectory(folderPath);  
                 }
 
                 PrefabUtility.SaveAsPrefabAsset(defenceCard, prefabPath);
@@ -218,7 +225,7 @@ namespace CardTypes
     [System.Serializable]
     public class AbilityCard : CardBase
     {
-        [Range(0,10)]
+        [Range(0,100)]
         public int ability;
 
         public bool targetsEnemy; //Is it targeting the enemy
@@ -243,29 +250,33 @@ namespace CardTypes
         //the attack card have been creating
         public override void CardCreated()
         {
-            GameObject abilityCard = new GameObject(cardName,typeof(RectTransform),typeof(CanvasRenderer),typeof(Image),typeof(Button),typeof(AbilityCardController));
+            GameObject abilityCardPrefab = Resources.Load<GameObject>("Prefabs/Card");
+            GameObject abilityCard = GameObject.Instantiate(abilityCardPrefab);
+
+            abilityCard.tag = "AbilityCard";
+            abilityCard.name = cardName; 
+
+            abilityCard.AddComponent(typeof(AbilityCardController));
+            abilityCard.AddComponent(typeof(CardMovement));
+
 
             string folderPath = "Assets/Resources/Prefabs/Cards/AbilityCards";
             string prefabPath = Path.Combine(folderPath,abilityCard.name + ".prefab");
 
             cardType = CardTypeEnum.Ability;
-            Image defenceCardImage =abilityCard.GetComponent<Image>();
-            defenceCardImage.sprite = cardSprite;
-            defenceCardImage.type = Image.Type.Sliced;
-            
-            Button defenceCardButton = abilityCard.GetComponent<Button>();
-            defenceCardButton.targetGraphic = defenceCardImage;
 
 
-            abilityCard.GetComponent<AbilityCardController>().CardInitialize(cardType,cardLegendary,energyCost,duration,cardCombine.combineCardLegendary,ability);
+            abilityCard.GetComponent<AbilityCardController>().CardInitialize(cardSprite,cardName,cardDescription,cardType,cardLegendary,energyCost,duration,cardCombine.combineCardLegendary,ability);
             
             cardLegendary = CardLegendaryEnum.None;
             cardCombine.combineCardLegendary = null;
 
             cardSprite = null;
             cardName = "";
+            cardDescription = "";
             energyCost = 0;
             duration = 0;
+            ability = 0;
 
             try
             {
@@ -300,7 +311,7 @@ namespace CardTypes
     [System.Serializable]
     public class StrengthCard : CardBase
     {
-        [Range(0,10)]
+        [Range(0,100)]
         public int strength;
 
         public int PowerBoost; // Verilen güç artışı miktarı
@@ -339,30 +350,34 @@ namespace CardTypes
         //the attack card have been creating
         public override void CardCreated()
         {
-            GameObject strengthCard = new GameObject(cardName,typeof(RectTransform),typeof(CanvasRenderer),typeof(Image),typeof(Button),typeof(StrengthCardController));
+            GameObject cardPrefab = Resources.Load<GameObject>("Prefabs/Card");
+            GameObject strengthCard = GameObject.Instantiate(cardPrefab);
+
+            strengthCard.tag = "StrenghCard";
+            strengthCard.name = cardName; 
+
+            strengthCard.AddComponent(typeof(StrengthCardController));
+            strengthCard.AddComponent(typeof(CardMovement));
 
             string folderPath = "Assets/Resources/Prefabs/Cards/StrengthCards";
             string prefabPath = Path.Combine(folderPath,strengthCard.name + ".prefab");
 
             cardType = CardTypeEnum.Strength;
 
-            Image defenceCardImage =strengthCard.GetComponent<Image>();
-            defenceCardImage.sprite = cardSprite;
-            defenceCardImage.type = Image.Type.Sliced;
-            
-            Button defenceCardButton = strengthCard.GetComponent<Button>();
-            defenceCardButton.targetGraphic = defenceCardImage;
 
 
-            strengthCard.GetComponent<StrengthCardController>().CardInitialize(cardType,cardLegendary,energyCost,duration,cardCombine.combineCardLegendary,strength);
+            strengthCard.GetComponent<StrengthCardController>().CardInitialize(cardSprite,cardName,cardDescription,cardType,cardLegendary,energyCost,duration,cardCombine.combineCardLegendary,strength);
 
             cardLegendary = CardLegendaryEnum.None;
             cardCombine.combineCardLegendary = null;
 
+            
             cardSprite = null;
+            cardDescription = "";
             cardName = "";
             energyCost = 0;
             duration = 0;
+            strength = 0;
             
             try
             {

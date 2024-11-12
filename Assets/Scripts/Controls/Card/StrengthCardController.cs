@@ -5,35 +5,31 @@ using UnityEngine;
 using UnityEngine.UI;
 using Card_Enum;
 using CardObjectCommon_Features;
+using TMPro;
 public class StrengthCardController : CardObjectCommonFeatures
 {
-    #region features of the card
-    [SerializeField] private CardTypeEnum cardType;
-    [SerializeField] private CardLegendaryEnum cardLegendary;
-    public CardLegendaryEnum CardLegendary { get { return cardLegendary; } }
-    [SerializeField] private CardLegendaryEnum[] cardCombineLegendary;
-    [SerializeField] public int energyCost;
-    [SerializeField] public float duration;
+
     [SerializeField] public int strength;
-    #endregion
     [SerializeField] private StrengthCardController[] strengthCards;
     
     [SerializeField] private Button cardButton;
     
+
     private string cardFolderPath;
 
     private void Awake() 
     {
         CardLoading();
+
     }
 
     private void OnValidate() 
     {
         
         CardLoading();
+        cardUI = GetComponent<CardUI>();
 
-        cardButton = GetComponent<Button>();    
-        cardButton.onClick.AddListener(Card_Move);
+        
     }
 
     private void CardLoading()
@@ -50,20 +46,16 @@ public class StrengthCardController : CardObjectCommonFeatures
         }
     }
    
-    public void Card_Move()
-    {
-        CardObject_Movement(gameObject,"energy","-",energyCost);
-        
-    }
+
     
    
-    public void CardInitialize(CardTypeEnum _cardType,CardLegendaryEnum _cardLegendary,int _energyCost,float _duration,CardLegendaryEnum[] _cardCombineLegendary,int _strength)
+    public void CardInitialize(Sprite cardImage,string cardName,string cardDescription,CardTypeEnum _cardType,CardLegendaryEnum _cardLegendary,int _energyCost,float _duration,CardLegendaryEnum[] _cardCombineLegendary,int _defence)
     {
-        cardType = _cardType;
-        cardLegendary = _cardLegendary;
+        cardUI.CardUIDescription(cardImage,cardName,cardDescription);
+        CardType = _cardType;
+        CardLegendary = _cardLegendary;
         energyCost = _energyCost;
         duration = _duration;
-        cardCombineLegendary = _cardCombineLegendary;
-        strength = _strength;
+        CardCombineLegendary = _cardCombineLegendary;
     }
 }

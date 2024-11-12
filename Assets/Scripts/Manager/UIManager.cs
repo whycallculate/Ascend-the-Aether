@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -18,8 +20,13 @@ public class UIManager : MonoBehaviour
     }
 
     [SerializeField] private CharacterUI characterUI;
-    public CharacterUI CharacterUI { get { return characterUI; } }
+    public CharacterUI CharacterUI { get { return characterUI; }  set { characterUI = value; } }
 
     public RectTransform[] cardPos;
+    [SerializeField] private Button nextTourButton;
+    public Button NextTourButton { get { return nextTourButton;}}
+
+    [SerializeField] private TextMeshProUGUI energyNumber_Text;
+    public TextMeshProUGUI EnergyNumber_Text {get { return energyNumber_Text;}}
 
 }

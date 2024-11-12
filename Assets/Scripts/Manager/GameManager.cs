@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using EnemyFeatures;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -80,12 +79,12 @@ public class GameManager : MonoBehaviour
 
         if (enemy == null)
         {
+            UIManager.Instance.NextTourButton.interactable = false;
             for (int i = 0; i < deck.Count; i++)
             {
                 deck[i].GetComponent<Button>().interactable = false;
             }
         }
-
         LevelIndexAdjust();
     }
 
@@ -112,14 +111,22 @@ public class GameManager : MonoBehaviour
                 if(hit.collider.gameObject.GetComponent<EnemyController>() != null)
                 {
                     enemy = hit.collider.gameObject.GetComponent<EnemyController>();
-                    for (int i = 0; i < hand.Count; i++)
-                    {
-                        hand[i].GetComponent<Button>().interactable = true;
-                    }
+                    UIManager.Instance.NextTourButton.interactable = true;
+                    
+                    SelectableCard(false);
                 }
             }          
         }
 
+        if(Input.GetKeyDown(KeyCode.P))
+        {
+            if(character != null)
+            {
+                CardCharacterInteraction("healtbar","-",20);
+            }
+        }
+
+        print(characterCurrentLevelIndex);
     }
 
     public void DrawCards()
@@ -167,7 +174,6 @@ public class GameManager : MonoBehaviour
         CardCharacterInteraction("energy", "+", 5);
         DrawCards();
         isPlayerTurn = true;
-        SelectableCard(true);
     }
     public void CardCharacterInteraction(string characterTraits,string transaction,int value)
     {
@@ -192,13 +198,33 @@ public class GameManager : MonoBehaviour
     //karakter ölünce mevcut level index'ni sifirliyor
     public void LevelReset()
     {
+        deadEnemyCount = 0;
         mapPrefab.SetActive(true);
         characterCurrentLevelType = levelObjects[0].LevelType_Enum.ToString();
         characterCurrentLevelIndex = 1;
         LevelOpening();
-        SwitchTurnToEnemy();
-        CardButtonInteractableControl();
 
+        CardPositionReset();
+
+        CardButtonInteractableControl();
+        for (int i = 0; i < enemys.Count; i++)
+        {
+            if(enemys[i] != null)
+            {
+                Destroy(enemys[i].gameObject);
+            }
+        }
+        enemys.Clear();
+
+    }
+
+    private void CardPositionReset()
+    {
+        for (int i = 0; i < hand.Count; i++)
+        {
+            hand[i].GetComponent<RectTransform>().anchoredPosition = UIManager.Instance.cardPos[i].anchoredPosition;
+            hand[i].SetActive(true);
+        }
     }
 
     #endregion
@@ -225,24 +251,23 @@ public class GameManager : MonoBehaviour
     {
         InitializeDeck();
         Destroy(enemy);
-        CardButtonInteractableControl();
         deadEnemyCount++;
-        
+        UIManager.Instance.NextTourButton.interactable = false;
         if(deadEnemyCount == enemys.Count)
         {
             mapPrefab.SetActive(true);
             deadEnemyCount = 0;
             enemys.Clear();
             SwitchTurnToEnemy();
-            CardButtonInteractableControl();
         }
-
+        CardButtonInteractableControl();
     }
 
     #endregion 
     //kart objelerin buttonunu tıklanamamasını sağliyor
     private void CardButtonInteractableControl()
     {
+        UIManager.Instance.NextTourButton.interactable = false;
         for (int i = 0; i < hand.Count; i++)
         {
             hand[i].GetComponent<Button>().interactable = false;
@@ -259,6 +284,12 @@ public class GameManager : MonoBehaviour
         {
             CharacterControl characterClone = Instantiate(levelCharacterPrefab,_characterPosition[i],Quaternion.identity);
             character = characterClone;
+
+            CharacterUI characterUI =character.GetComponent<CharacterUI>();
+            
+            UIManager.Instance.CharacterUI = characterUI;
+            characterUI.EnergyNumber_Text = UIManager.Instance.EnergyNumber_Text;
+            
             characters.Add(characterClone);
         }
     }
@@ -283,12 +314,20 @@ public class GameManager : MonoBehaviour
                     {
                         button.interactable = false;
                     }
+                    else
+                    {
+                        button.interactable = true;
+                    }
                 }
                 else if(hand[i].GetComponent<DefenceCardController>() != null)
                 {
                     if(hand[i].GetComponent<DefenceCardController>().energyCost > character.energyCurrent)
                     {
                         button.interactable = false;
+                    }
+                    else
+                    {
+                        button.interactable = true;
                     }
                 }
                 else if(hand[i].GetComponent<AbilityCardController>() != null)
@@ -297,12 +336,20 @@ public class GameManager : MonoBehaviour
                     {
                         button.interactable = false;
                     }
+                    else
+                    {
+                        button.interactable = true;
+                    }
                 }
                 else if(hand[i].GetComponent<StrengthCardController>() != null)
                 {
                     if(hand[i].GetComponent<StrengthCardController>().energyCost > character.energyCurrent)
                     {
                         button.interactable = false;
+                    }
+                    else
+                    {
+                        button.interactable = true;
                     }
                 }
 

@@ -78,6 +78,8 @@ public class AttackCardControllerEditor : Editor
     public override void OnInspectorGUI()
     {
         AttackCardController attackCardController = (AttackCardController)target;
+
+        
         
         EditorGUILayout.PropertyField(serializedObject.FindProperty("cardLegendary"));
         
@@ -98,7 +100,9 @@ public class AttackCardControllerEditor : Editor
 
         EditorGUILayout.Space();
         EditorGUILayout.Space();
-        
+
+
+
         if (attackCardController.CardLegendary == Card_Enum.CardLegendaryEnum.LegendaryCard)
         {
             SerializedProperty arrayProperty = serializedObject.FindProperty("cardCombineLegendary");
@@ -127,6 +131,8 @@ public class AbilityCardControllerEditor : Editor
     public override void OnInspectorGUI()
     {
         AbilityCardController abilityCardController = (AbilityCardController)target;
+
+        
         
         EditorGUILayout.PropertyField(serializedObject.FindProperty("cardLegendary"));
         
@@ -175,6 +181,8 @@ public class DefenceCardControllerEditor : Editor
     public override void OnInspectorGUI()
     {
         DefenceCardController defenceCardController = (DefenceCardController)target;
+
+        
         
         EditorGUILayout.PropertyField(serializedObject.FindProperty("cardLegendary"));
         
@@ -223,6 +231,7 @@ public class StrengthCardControllerEditor : Editor
     public override void OnInspectorGUI()
     {
         StrengthCardController strengthCardController = (StrengthCardController)target;
+
         
         EditorGUILayout.PropertyField(serializedObject.FindProperty("cardLegendary"));
         

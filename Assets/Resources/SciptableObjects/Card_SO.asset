@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: Card_SO
   m_EditorClassIdentifier: 
   attackCard:
-    cards:
-    - {fileID: 0}
+    cards: []
     cardType: 1
     cardSprite: {fileID: 0}
     cardName: 
@@ -48,11 +47,7 @@ MonoBehaviour:
     targetsSelf: 0
     isAoE: 0
   abilityCard:
-    cards:
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
+    cards: []
     cardType: 3
     cardSprite: {fileID: 0}
     cardName: 
@@ -70,10 +65,8 @@ MonoBehaviour:
     targetsSelf: 0
     isAoE: 0
   strengthCard:
-    cards:
-    - {fileID: 0}
-    - {fileID: 0}
-    cardType: 4
+    cards: []
+    cardType: 0
     cardSprite: {fileID: 0}
     cardName: 
     cardDescription: 
@@ -85,7 +78,7 @@ MonoBehaviour:
     cardIndex: 0
     effect: {fileID: 0}
     effectSound: {fileID: 0}
-    strength: 3
+    strength: 0
     PowerBoost: 0
     HealthBoost: 0
     DefenseBoost: 0

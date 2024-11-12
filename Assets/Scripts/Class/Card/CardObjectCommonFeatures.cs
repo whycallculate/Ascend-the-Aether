@@ -1,43 +1,33 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Card_Enum;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace CardObjectCommon_Features 
 {
     public abstract class CardObjectCommonFeatures : MonoBehaviour
     {
-        private bool _isClickCard = false;
+        protected CardUI cardUI;
         
-        //method to make the card move
-        public bool CardObject_Movement(GameObject card,string characterTraits,string transaction,int value)
-        {
-            if(!_isClickCard)
-            {
-                GameManager.Instance.CardCharacterInteraction(characterTraits,transaction,value);
-            }
+        #region features of the card
 
-            _isClickCard = !_isClickCard;
-            StartCoroutine(CardMovementIEnumerator(card));
-            return _isClickCard;
-        }
+        [SerializeField] private CardTypeEnum cardType;
+        public CardTypeEnum CardType { get { return cardType; }  set { cardType = value; } }
 
+        [SerializeField] private CardLegendaryEnum cardLegendary;
+        public CardLegendaryEnum CardLegendary { get { return cardLegendary; } set { cardLegendary = value; } }
 
-        private IEnumerator CardMovementIEnumerator(GameObject card)
-        {
-            while(_isClickCard)
-            {
-                float x = Mathf.Clamp(Input.mousePosition.x,-Screen.width,Screen.width);
-                float y = Mathf.Clamp(Input.mousePosition.y,-Screen.height,Screen.height);
+        [SerializeField] private CardLegendaryEnum[] cardCombineLegendary;
+        public CardLegendaryEnum[] CardCombineLegendary { get { return cardCombineLegendary; }  set {cardCombineLegendary = value;}}
 
-                    card.transform.position = new Vector2(x,y);
-                Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height/2);
-                if(transform.position == screenCenter)
-                {
-                    print("ortada");
-                }   
-                yield return null;
-            }
-        }
+        [SerializeField] public int energyCost;
+        [SerializeField] public float duration;
+
+        #endregion
+
     }
 
 }
