@@ -71,7 +71,7 @@ public class CharacterControl : CalculateCharacterValues
 
     private void CharacterDestroy()
     {
-        if(currentHealt == 0)
+        if(currentHealt <= 0)
         {
             Destroy(gameObject);
             isCharacterAlive = true;

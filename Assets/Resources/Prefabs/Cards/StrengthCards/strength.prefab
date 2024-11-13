@@ -135,13 +135,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f4b9467cb717a94f8dc54c21fa4a3e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardMovement: {fileID: 2646664152900747773}
   cardType: 4
-  cardLegendary: 3
+  cardLegendary: 1
   cardCombineLegendary: 01000000
   energyCost: 4
   duration: 4
   strength: 0
   strengthCards:
+  - {fileID: 6085020466150574515, guid: 9f88686a5cf8a614d85b91696fe7a4c5, type: 3}
   - {fileID: 1636084810330997379, guid: 3527143ef8d207648a052bd53d9c5ee4, type: 3}
   - {fileID: 4877476253641782617, guid: 90ca9dfd701d4e241a3b9c327b746cd8, type: 3}
   cardButton: {fileID: 2909918793264213436}

@@ -15,6 +15,7 @@ TagManager:
   - ChangeLevel
   - BossLevel
   - C
+  - Canvas
   layers:
   - Default
   - TransparentFX

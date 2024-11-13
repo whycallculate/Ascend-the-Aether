@@ -20,7 +20,6 @@ public class GameManager : MonoBehaviour
         }
     }
     #endregion
-
     private int numberCardeUsed = 0;
     public int NumberCardeUsed {get {return numberCardeUsed;} set {numberCardeUsed = value;} }
 
@@ -65,6 +64,12 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
+    #region  Card
+    [SerializeField] private List<GameObject> cards;
+    [SerializeField] private GameObject deckObject;
+    #endregion
+    
+
     
     private void Awake()
     {
@@ -85,17 +90,16 @@ public class GameManager : MonoBehaviour
                 deck[i].GetComponent<Button>().interactable = false;
             }
         }
+        
         LevelIndexAdjust();
-    }
 
-   
+        AllCardLoad();
+    }
 
     private void Start()
     {
         DrawCards();
     }
-
-    
 
 
     private void Update() 
@@ -126,7 +130,6 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        print(characterCurrentLevelIndex);
     }
 
     public void DrawCards()
@@ -166,7 +169,7 @@ public class GameManager : MonoBehaviour
         HandToDeck();
         isPlayerTurn = false;
         enemy.MakeMove();
-        
+        SelectableCard(false);
     }
 
     public void SwitchTurnToPlayer()
@@ -218,6 +221,7 @@ public class GameManager : MonoBehaviour
 
     }
 
+    //kart'ın posizyonunu sıfılıyor
     private void CardPositionReset()
     {
         for (int i = 0; i < hand.Count; i++)
@@ -249,12 +253,12 @@ public class GameManager : MonoBehaviour
     //Düşmanlarin yaşamadiğini kontrol edip map haritasını aktif durumunu tetikliyor
     public  void IsEnemyAlive(GameObject enemy)
     {
-        InitializeDeck();
         Destroy(enemy);
         deadEnemyCount++;
         UIManager.Instance.NextTourButton.interactable = false;
         if(deadEnemyCount == enemys.Count)
         {
+            InitializeDeck();
             mapPrefab.SetActive(true);
             deadEnemyCount = 0;
             enemys.Clear();
@@ -300,6 +304,23 @@ public class GameManager : MonoBehaviour
 
     #region  Card
     //karakterin enerjisine göre elindeki kartlarin görünürlüğünü ayarlamamizi sağliyan method
+    private int allCardCount = 0;
+    private void AllCardLoad()
+    {
+        GameObject[] _cards = Resources.LoadAll<GameObject>("Prefabs/Cards/AbilityCards");
+        cards.AddRange(_cards);
+        GameObject[] _cards1 = Resources.LoadAll<GameObject>("Prefabs/Cards/AttackCards");
+        cards.AddRange(_cards1);
+        GameObject[] _cards2 = Resources.LoadAll<GameObject>("Prefabs/Cards/DefenceCards");
+        cards.AddRange(_cards2);
+        GameObject[] _cards3 = Resources.LoadAll<GameObject>("Prefabs/Cards/StrengthCards");
+        cards.AddRange(_cards3);
+        allCardCount = _cards.Length + _cards1.Length + _cards2.Length + _cards3.Length;
+
+    }
+
+
+    //karakter'in enerjisine göre kartın tıklanabilir tıklanamaz olmasını sağlıyor
     public void SelectableCard(bool value)
     {
         for (int i = 0; i < hand.Count; i++)
@@ -361,17 +382,39 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private int randomNumber = 0;
+    private int  lastRandomNumber = 0;
+
     public void InitializeDeck()
     {
-        print("Karakter yeni kart kazandi");
         // yeni kart eklme için kullanulıyor
         //yeni kart oluşturunca oluşturulan kart dect  listesine ekle
+        
+        randomNumber = Random.Range(0,cards.Count-1);
+        lastRandomNumber = randomNumber;
+        StartCoroutine(RandomNumber());
+        
     }
 
+    //random bir şekilde kart oluşturmaı sağliyor
+    private IEnumerator RandomNumber()
+    {
+        while(lastRandomNumber == randomNumber)
+        {
+            randomNumber = Random.Range(0,cards.Count-1);
+            yield return null;
+        }
+        lastRandomNumber = randomNumber;
+
+        GameObject newCard = Instantiate(cards[randomNumber]);
+        newCard.transform.SetParent(deckObject.transform);
+        newCard.SetActive(false);
+    }
     
     #endregion
 
     #region  Map
+    
     //levelerin indexi otamatik tanımlayan bir method
     private void LevelIndexAdjust()
     {

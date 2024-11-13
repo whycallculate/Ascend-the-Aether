@@ -82,6 +82,7 @@ namespace CardTypes
             attackCard.AddComponent(typeof(AttackCardController));
             attackCard.AddComponent(typeof(CardMovement));
 
+
             string folderPath = "Assets/Resources/Prefabs/Cards/AttackCards";
             string prefabPath = Path.Combine(folderPath,attackCard.name + ".prefab");
             
@@ -174,6 +175,7 @@ namespace CardTypes
             defenceCard.AddComponent(typeof(DefenceCardController));
             defenceCard.AddComponent(typeof(CardMovement));
 
+
             string folderPath = "Assets/Resources/Prefabs/Cards/DefenceCards";
             string prefabPath = Path.Combine(folderPath,defenceCard.name + ".prefab");
             cardType = CardTypeEnum.Defence;
@@ -253,6 +255,7 @@ namespace CardTypes
             GameObject abilityCardPrefab = Resources.Load<GameObject>("Prefabs/Card");
             GameObject abilityCard = GameObject.Instantiate(abilityCardPrefab);
 
+            
             abilityCard.tag = "AbilityCard";
             abilityCard.name = cardName; 
 
@@ -353,12 +356,14 @@ namespace CardTypes
             GameObject cardPrefab = Resources.Load<GameObject>("Prefabs/Card");
             GameObject strengthCard = GameObject.Instantiate(cardPrefab);
 
+
             strengthCard.tag = "StrenghCard";
             strengthCard.name = cardName; 
 
             strengthCard.AddComponent(typeof(StrengthCardController));
             strengthCard.AddComponent(typeof(CardMovement));
 
+            
             string folderPath = "Assets/Resources/Prefabs/Cards/StrengthCards";
             string prefabPath = Path.Combine(folderPath,strengthCard.name + ".prefab");
 

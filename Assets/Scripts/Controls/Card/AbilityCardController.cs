@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using Card_Enum;
 using CardObjectCommon_Features;
-using TMPro;
 
 public class AbilityCardController : CardObjectCommonFeatures
 {
@@ -20,17 +19,17 @@ public class AbilityCardController : CardObjectCommonFeatures
     private void Awake() 
     {
         CardLoading();
+        cardMovement = GetComponent<CardMovement>();
+        if(cardMovement != null)
+        {
+            cardMovement.CombineCardLengendary = CardCombineLegendary;
+            cardMovement.CardType = CardType;
 
+        }
 
     }
 
-    private void OnValidate() 
-    {
-        
-        CardLoading();
-        cardUI = GetComponent<CardUI>();
-       
-    }
+   
 
     private void CardLoading()
     {
@@ -52,6 +51,7 @@ public class AbilityCardController : CardObjectCommonFeatures
    
     public void CardInitialize(Sprite cardImage,string cardName,string cardDescription,CardTypeEnum _cardType,CardLegendaryEnum _cardLegendary,int _energyCost,float _duration,CardLegendaryEnum[] _cardCombineLegendary,int _defence)
     {
+        cardUI = GetComponent<CardUI>();
         cardUI.CardUIDescription(cardImage,cardName,cardDescription);
         CardType = _cardType;
         CardLegendary = _cardLegendary;

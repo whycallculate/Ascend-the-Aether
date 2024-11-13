@@ -204,6 +204,7 @@ public class DefenceCardControllerEditor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.Space();
         
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("cardMovement"));
         if (defenceCardController.CardLegendary == Card_Enum.CardLegendaryEnum.LegendaryCard)
         {
             SerializedProperty arrayProperty = serializedObject.FindProperty("cardCombineLegendary");
@@ -252,6 +253,8 @@ public class StrengthCardControllerEditor : Editor
 
         EditorGUILayout.Space();
         EditorGUILayout.Space();
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("cardMovement"));
+
         
         if (strengthCardController.CardLegendary == Card_Enum.CardLegendaryEnum.LegendaryCard)
         {

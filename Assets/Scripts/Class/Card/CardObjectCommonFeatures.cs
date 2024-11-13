@@ -2,15 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Card_Enum;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace CardObjectCommon_Features 
 {
     public abstract class CardObjectCommonFeatures : MonoBehaviour
     {
         protected CardUI cardUI;
+        public CardMovement cardMovement;
         
         #region features of the card
 

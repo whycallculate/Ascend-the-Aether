@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using Card_Enum;
 using CardObjectCommon_Features;
-using TMPro;
 
 public class AttackCardController : CardObjectCommonFeatures
 {
@@ -19,15 +18,17 @@ public class AttackCardController : CardObjectCommonFeatures
     private void Awake() 
     {
         CardLoading();
+        cardMovement = GetComponent<CardMovement>();
+        if(cardMovement != null)
+        {
+            cardMovement.CombineCardLengendary = CardCombineLegendary;
+            cardMovement.CardType = CardType;
+
+        }
+
     }
 
-    private void OnValidate()
-    {
-        CardLoading();
-        //cardUI = GetComponent<CardUI>();
 
-        
-    }
 
     // Card object allows retrieval from the Sources Folder ; allows : izin verir, retrieval :geri alma
     private void CardLoading()
@@ -48,11 +49,13 @@ public class AttackCardController : CardObjectCommonFeatures
 
     public void CardInitialize(Sprite cardImage,string cardName,string cardDescription,CardTypeEnum _cardType,CardLegendaryEnum _cardLegendary,int _energyCost,float _duration,CardLegendaryEnum[] _cardCombineLegendary,int _defence)
     {
-        //cardUI.CardUIDescription(cardImage,cardName,cardDescription);
+        cardUI = GetComponent<CardUI>();
+        cardUI.CardUIDescription(cardImage,cardName,cardDescription);
         CardType = _cardType;
         CardLegendary = _cardLegendary;
         energyCost = _energyCost;
         duration = _duration;
         CardCombineLegendary = _cardCombineLegendary;
+        
     }
 }
