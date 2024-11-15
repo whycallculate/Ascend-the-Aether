@@ -66,9 +66,8 @@ public class EnemyController : MonoBehaviour
     }
 
 
-    public void MakeMove()
+    public IEnumerator MakeMove()
     {
-        if (!enemyIsAlive) return;
 
         int action = Random.Range(0, 3); // 0 = hasar ver , 1 = kalkan , 2 = guc arttirma
 
@@ -76,7 +75,9 @@ public class EnemyController : MonoBehaviour
         switch (action)
         {
             case 0:
+                yield return new WaitForSeconds(2);
                 int randomDamage = Random.Range(minDamage, maxDamage);
+                randomDamage += POWER;
                 DAMAGE = randomDamage;
                 if (GameManager.Instance.character.shieldCurrent <= 0)
                 {
@@ -92,11 +93,16 @@ public class EnemyController : MonoBehaviour
 
                     }
                 }
+                POWER = 0;
                 break;
             case 1:
+                yield return new WaitForSeconds(2);
+
                 OnShield(10);
                 break;
             case 2:
+                yield return new WaitForSeconds(2);
+
                 AddPower(3);
                 break;
         }

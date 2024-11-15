@@ -12,7 +12,6 @@ public class EnemyUI : MonoBehaviour
     [SerializeField] private Image damageImage;
     [SerializeField] private Image shieldImage;
     [SerializeField] private Image buffImage;
-    [SerializeField] private Image debuffImage;
 
     private void Awake()
     {
@@ -32,6 +31,7 @@ public class EnemyUI : MonoBehaviour
             healthBarImage.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = enemyController.HEALTH.ToString();
             shieldImage.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = enemyController.SHIELD.ToString();
             damageImage.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = enemyController.DAMAGE.ToString();
+            buffImage.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = enemyController.POWER.ToString();
             if (!enemyController.enemyIsAlive)
             {
                 break;
