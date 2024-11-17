@@ -8,7 +8,7 @@ namespace CardObjectCommon_Features
 {
     public abstract class CardObjectCommonFeatures : MonoBehaviour
     {
-        protected CardUI cardUI;
+        [HideInInspector]public CardUI cardUI;
         public CardMovement cardMovement;
         
         #region features of the card
@@ -21,12 +21,16 @@ namespace CardObjectCommon_Features
 
         [SerializeField] private CardLegendaryEnum[] cardCombineLegendary;
         public CardLegendaryEnum[] CardCombineLegendary { get { return cardCombineLegendary; }  set {cardCombineLegendary = value;}}
+        
+        protected RectTransform rectTransform;
+        public Vector2 cardPosition;
 
-        [SerializeField] public int energyCost;
-        [SerializeField] public float duration;
+        public int energyCost;
+        public float duration;
+
 
         #endregion
-
+    
     }
 
 }

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4104977581691519915}
   - component: {fileID: 868788351370113191}
   - component: {fileID: 784210561838661301}
+  - component: {fileID: 3156787088419143770}
   m_Layer: 5
   m_Name: Strengh_1
   m_TagString: StrenghCard
@@ -98,6 +99,7 @@ MonoBehaviour:
   cardImage: {fileID: 2670614442832238789}
   cardNameText: {fileID: 5146578125143385085}
   cardDescription: {fileID: 2789160194109893621}
+  energyNumber_Text: {fileID: 3408713282008361211}
 --- !u!114 &4104977581691519915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -154,13 +156,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f4b9467cb717a94f8dc54c21fa4a3e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardUI: {fileID: 0}
   cardMovement: {fileID: 0}
   cardType: 4
   cardLegendary: 2
   cardCombineLegendary: 
   energyCost: 3
   duration: 3
-  strength: 0
+  strength: 30
   strengthCards:
   - {fileID: 1636084810330997379, guid: 3527143ef8d207648a052bd53d9c5ee4, type: 3}
   - {fileID: 4877476253641782617, guid: 90ca9dfd701d4e241a3b9c327b746cd8, type: 3}
@@ -178,6 +181,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 0}
+  canvasGroup: {fileID: 0}
+--- !u!225 &3156787088419143770
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1044623249289951667}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2847803925177310795
 GameObject:
   m_ObjectHideFlags: 0
@@ -236,7 +252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

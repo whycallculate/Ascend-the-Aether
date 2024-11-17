@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Card_Enum;
 using System.IO;
-using UnityEngine.UI;
 
 
 #if UNITY_EDITOR

@@ -26,6 +26,11 @@ public class DefenceCardController : CardObjectCommonFeatures
             cardMovement.CardType = CardType;
 
         }
+        if(gameObject.tag != "DefenceCard")
+        {
+            gameObject.tag = "DefenceCard";
+        }
+        rectTransform = GetComponent<RectTransform>();
 
 
     }
@@ -53,13 +58,31 @@ public class DefenceCardController : CardObjectCommonFeatures
     public void CardInitialize(Sprite cardImage,string cardName,string cardDescription,CardTypeEnum _cardType,CardLegendaryEnum _cardLegendary,int _energyCost,float _duration,CardLegendaryEnum[] _cardCombineLegendary,int _defence)
     {
         cardUI = GetComponent<CardUI>();
-        cardUI.CardUIDescription(cardImage,cardName,cardDescription);
+        cardUI.CardUIInitialize(cardImage,cardName,cardDescription,_energyCost);
         CardType = _cardType;
         CardLegendary = _cardLegendary;
         energyCost = _energyCost;
         duration = _duration;
         CardCombineLegendary = _cardCombineLegendary;
-        
+        defence = _defence;
         
     }
+
+
+    public void CardUpgradeInitialize(int cardEnergy,int cardDefence)
+    {
+        if(cardUI != null)
+        {
+            cardUI.CardUpgradeInitialize(cardEnergy);
+        }
+        else
+        {
+            cardUI = GetComponent<CardUI>();
+            cardUI.CardUpgradeInitialize(cardEnergy);
+        }
+        energyCost = cardEnergy;
+        defence = cardDefence;
+       
+    }
+   
 }

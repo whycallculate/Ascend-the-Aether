@@ -65,14 +65,22 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region  Card
-    [SerializeField] private List<GameObject> cards;
+    [SerializeField] private List<GameObject> gameAllCards;
+    public List<GameObject> GameAllCards {get {return gameAllCards;}}
+
+    [SerializeField]private List<GameObject> cards = new List<GameObject>();
+    public List<GameObject> Cards {get {return cards;}}
+    
     [SerializeField] private GameObject deckObject;
+    private bool cardCombineStart = false;
+    public bool CardCombineStart {get {return cardCombineStart;} set {cardCombineStart = value;}}
     #endregion
     
 
     
     private void Awake()
     {
+        
         levelsObject = GameObject.FindGameObjectWithTag("Levels");
         if (levelsObject != null)
         {
@@ -88,12 +96,15 @@ public class GameManager : MonoBehaviour
             for (int i = 0; i < deck.Count; i++)
             {
                 deck[i].GetComponent<Button>().interactable = false;
+                deck[i].GetComponent<CardMovement>().enabled = false;
             }
         }
         
         LevelIndexAdjust();
 
         AllCardLoad();
+
+        
     }
 
     private void Start()
@@ -122,14 +133,19 @@ public class GameManager : MonoBehaviour
             }          
         }
 
-        if(Input.GetKeyDown(KeyCode.P))
+
+        if(Input.GetKeyDown(KeyCode.Escape))
         {
-            if(character != null)
+            UIManager.Instance.SetActiveUI(UIManager.Instance.LevelsPanel.name);
+            for (int i = 0; i < cards.Count; i++)
             {
-                CardCharacterInteraction("healtbar","-",20);
+                cards[i].transform.SetParent(UIManager.Instance.EarnedGameObject);
+                cards[i].transform.position = Vector3.zero;
+                cards[i].SetActive(false);
             }
         }
-
+        
+       
     }
 
     public void DrawCards()
@@ -156,6 +172,7 @@ public class GameManager : MonoBehaviour
         }
 
     }
+
     public void HandToDeck()
     {
         foreach(GameObject card  in hand)
@@ -202,7 +219,7 @@ public class GameManager : MonoBehaviour
     public void LevelReset()
     {
         deadEnemyCount = 0;
-        mapPrefab.SetActive(true);
+        UIManager.Instance.MapPrefab.SetActive(true);
         characterCurrentLevelType = levelObjects[0].LevelType_Enum.ToString();
         characterCurrentLevelIndex = 1;
         LevelOpening();
@@ -240,7 +257,7 @@ public class GameManager : MonoBehaviour
     //Düşman karakteri oluşturmamizi sağliyor
     public void CreatingEnemies(int enemysCount,EnemyController levelEnemyPrefab,Vector3[] _enemyPosition,EnemyFeature[] enemies)
     {
-        mapPrefab.SetActive(false);
+        UIManager.Instance.MapPrefab.SetActive(false);
         for (int i = 0; i < enemysCount; i++)
         {
             EnemyController enemyClone = Instantiate(levelEnemyPrefab, _enemyPosition[i], Quaternion.identity);
@@ -259,7 +276,7 @@ public class GameManager : MonoBehaviour
         if(deadEnemyCount == enemys.Count)
         {
             InitializeDeck();
-            mapPrefab.SetActive(true);
+            UIManager.Instance.MapPrefab.SetActive(true);
             deadEnemyCount = 0;
             enemys.Clear();
             SwitchTurnToEnemy();
@@ -268,15 +285,8 @@ public class GameManager : MonoBehaviour
     }
 
     #endregion 
-    //kart objelerin buttonunu tıklanamamasını sağliyor
-    private void CardButtonInteractableControl()
-    {
-        UIManager.Instance.NextTourButton.interactable = false;
-        for (int i = 0; i < hand.Count; i++)
-        {
-            hand[i].GetComponent<Button>().interactable = false;
-        }
-    }
+    
+    
 
 
     #region  Character
@@ -303,23 +313,24 @@ public class GameManager : MonoBehaviour
 
 
     #region  Card
-    //karakterin enerjisine göre elindeki kartlarin görünürlüğünü ayarlamamizi sağliyan method
     private int allCardCount = 0;
+    //dosyada ki bütün kartlari çekmemizi sağliyan fonksiyon
     private void AllCardLoad()
     {
-        GameObject[] _cards = Resources.LoadAll<GameObject>("Prefabs/Cards/AbilityCards");
-        cards.AddRange(_cards);
-        GameObject[] _cards1 = Resources.LoadAll<GameObject>("Prefabs/Cards/AttackCards");
-        cards.AddRange(_cards1);
-        GameObject[] _cards2 = Resources.LoadAll<GameObject>("Prefabs/Cards/DefenceCards");
-        cards.AddRange(_cards2);
-        GameObject[] _cards3 = Resources.LoadAll<GameObject>("Prefabs/Cards/StrengthCards");
-        cards.AddRange(_cards3);
-        allCardCount = _cards.Length + _cards1.Length + _cards2.Length + _cards3.Length;
+        GameObject[] _gameAllCards = Resources.LoadAll<GameObject>("Prefabs/Cards/AbilityCards");
+        gameAllCards.AddRange(_gameAllCards);
+        GameObject[] _gameAllCards1 = Resources.LoadAll<GameObject>("Prefabs/Cards/AttackCards");
+        gameAllCards.AddRange(_gameAllCards1);
+        GameObject[] _gameAllCards2 = Resources.LoadAll<GameObject>("Prefabs/Cards/DefenceCards");
+        gameAllCards.AddRange(_gameAllCards2);
+        GameObject[] _gameAllCards3 = Resources.LoadAll<GameObject>("Prefabs/Cards/StrengthCards");
+        gameAllCards.AddRange(_gameAllCards3);
+        allCardCount = _gameAllCards.Length + _gameAllCards1.Length + _gameAllCards2.Length + _gameAllCards3.Length;
 
     }
 
 
+    //karakterin enerjisine göre elindeki kartlarin görünürlüğünü ayarlamamizi sağliyan method
     //karakter'in enerjisine göre kartın tıklanabilir tıklanamaz olmasını sağlıyor
     public void SelectableCard(bool value)
     {
@@ -333,53 +344,75 @@ public class GameManager : MonoBehaviour
                 {
                     if(hand[i].GetComponent<AttackCardController>().energyCost > character.energyCurrent)
                     {
-                        button.interactable = false;
+                        IsCardMovement(i, button,false);
                     }
                     else
                     {
-                        button.interactable = true;
+                        IsCardMovement(i, button,true);
                     }
                 }
                 else if(hand[i].GetComponent<DefenceCardController>() != null)
                 {
                     if(hand[i].GetComponent<DefenceCardController>().energyCost > character.energyCurrent)
                     {
-                        button.interactable = false;
+                        IsCardMovement(i, button,false);
+
                     }
                     else
                     {
-                        button.interactable = true;
+                        IsCardMovement(i, button,true);
+
                     }
                 }
                 else if(hand[i].GetComponent<AbilityCardController>() != null)
                 {
                     if(hand[i].GetComponent<AbilityCardController>().energyCost > character.energyCurrent)
                     {
-                        button.interactable = false;
+                        IsCardMovement(i, button,false);
+
                     }
                     else
                     {
-                        button.interactable = true;
+                        IsCardMovement(i, button,true);
+
                     }
                 }
                 else if(hand[i].GetComponent<StrengthCardController>() != null)
                 {
                     if(hand[i].GetComponent<StrengthCardController>().energyCost > character.energyCurrent)
                     {
-                        button.interactable = false;
+                        IsCardMovement(i, button,false);
+
                     }
                     else
                     {
-                        button.interactable = true;
+                        IsCardMovement(i, button,true);
+
                     }
                 }
 
             }
             else
             {
-                button.interactable = true;
+                IsCardMovement(i, button,true);
             }
         }
+    }
+
+    //kart objelerin buttonunu tıklanilmamasını sağliyor
+    private void CardButtonInteractableControl()
+    {
+        UIManager.Instance.NextTourButton.interactable = false;
+        for (int i = 0; i < hand.Count; i++)
+        {
+            IsCardMovement(i,hand[i].GetComponent<Button>(),false);
+        }
+    }
+
+    private void IsCardMovement(int i, Button button,bool isCardMovement)
+    {
+        button.interactable = isCardMovement;
+        hand[i].GetComponent<CardMovement>().enabled = isCardMovement;
     }
 
     private int randomNumber = 0;
@@ -390,7 +423,7 @@ public class GameManager : MonoBehaviour
         // yeni kart eklme için kullanulıyor
         //yeni kart oluşturunca oluşturulan kart dect  listesine ekle
         
-        randomNumber = Random.Range(0,cards.Count-1);
+        randomNumber = Random.Range(0,gameAllCards.Count-1);
         lastRandomNumber = randomNumber;
         StartCoroutine(RandomNumber());
         
@@ -401,16 +434,30 @@ public class GameManager : MonoBehaviour
     {
         while(lastRandomNumber == randomNumber)
         {
-            randomNumber = Random.Range(0,cards.Count-1);
+            randomNumber = Random.Range(0,gameAllCards.Count-1);
             yield return null;
         }
         lastRandomNumber = randomNumber;
 
-        GameObject newCard = Instantiate(cards[randomNumber]);
-        newCard.transform.SetParent(deckObject.transform);
+        GameObject newCard = Instantiate(gameAllCards[randomNumber]);
+        newCard.name = gameAllCards[randomNumber].name;
+        newCard.transform.SetParent(UIManager.Instance.EarnedGameObject);
+        newCard.transform.localScale =Vector3.one;
+        newCard.GetComponent<CardMovement>().enabled = false;
+        newCard.GetComponent<Button>().onClick.AddListener(()=>CardDevelopment.Instance.SelectCardDevelopment(newCard));
         newCard.SetActive(false);
+        cards.Add(newCard);
     }
     
+    public void SetActiveCardMovement()
+    {
+        for (int i = 0; i < gameAllCards.Count; i++)
+        {
+            gameAllCards[i].GetComponent<CardMovement>().enabled = true;
+        }
+    }
+
+
     #endregion
 
     #region  Map

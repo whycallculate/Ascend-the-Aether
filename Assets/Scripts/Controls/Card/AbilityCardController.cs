@@ -26,6 +26,11 @@ public class AbilityCardController : CardObjectCommonFeatures
             cardMovement.CardType = CardType;
 
         }
+        if(gameObject.tag != "AbilityCard")
+        {
+            gameObject.tag = "AbilityCard";
+        }
+        rectTransform = GetComponent<RectTransform>();
 
     }
 
@@ -49,14 +54,31 @@ public class AbilityCardController : CardObjectCommonFeatures
    
     
    
-    public void CardInitialize(Sprite cardImage,string cardName,string cardDescription,CardTypeEnum _cardType,CardLegendaryEnum _cardLegendary,int _energyCost,float _duration,CardLegendaryEnum[] _cardCombineLegendary,int _defence)
+    public void CardInitialize(Sprite cardImage,string cardName,string cardDescription,CardTypeEnum _cardType,CardLegendaryEnum _cardLegendary,int _energyCost,float _duration,CardLegendaryEnum[] _cardCombineLegendary,int _ability)
     {
         cardUI = GetComponent<CardUI>();
-        cardUI.CardUIDescription(cardImage,cardName,cardDescription);
+        cardUI.CardUIInitialize(cardImage,cardName,cardDescription,_energyCost);
         CardType = _cardType;
         CardLegendary = _cardLegendary;
         energyCost = _energyCost;
         duration = _duration;
         CardCombineLegendary = _cardCombineLegendary;
+        ability = _ability;
     }
+
+    public void CardUpgradeInitialize(int cardEnergy,int _ability)
+    {
+        if(cardUI != null)
+        {
+            cardUI.CardUpgradeInitialize(cardEnergy);
+        }
+        else
+        {
+            cardUI = GetComponent<CardUI>();
+            cardUI.CardUpgradeInitialize(cardEnergy);
+        }
+        energyCost = cardEnergy;
+        ability = _ability;
+    }
+
 }

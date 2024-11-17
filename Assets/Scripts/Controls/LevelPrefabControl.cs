@@ -72,9 +72,11 @@ public class LevelPrefabControl : MonoBehaviour
         {
             GameManager.Instance.CharacterCurrentLevelType = levelTypeEnum.ToString();
             GameManager.Instance.CreatingEnemies(levelEnemyCount,levelEnemyPrefab,levelEnemyPosition,enemy);
+            UIManager.Instance.MapPrefab.SetActive(false);
         }
         levelButton.interactable  =false;
         GameManager.Instance.LevelOpening();
+        GameManager.Instance.SetActiveCardMovement();
     }
     
     // ileri veya geri level geçişi yapabilip yapamiyacağimizi kontrol ediyor
@@ -116,12 +118,15 @@ public class LevelPrefabControl : MonoBehaviour
     {
         GameManager.Instance.CharacterCurrentLevelType = LevelType_Enum.None.ToString();
         LevelButtonFunction(false);
+        UIManager.Instance.SetActiveUI(UIManager.Instance.CardsScroll.name);
     }
 
     public void BossLevel_Function()
     {
-        print("BossLevel seçtiniz");
         levelButton.interactable = false;
         GameManager.Instance.CreatingEnemies(levelEnemyCount,levelEnemyPrefab,levelEnemyPosition,enemy);
+        GameManager.Instance.SetActiveCardMovement();
+        UIManager.Instance.MapPrefab.SetActive(false);
     }
+
 }

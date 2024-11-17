@@ -133,7 +133,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -141,7 +141,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: 9e09a03aae28cf146b0161894aefb993, type: 3}
-  m_Type: 1
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -165,6 +165,7 @@ GameObject:
   - component: {fileID: 7184015179532494204}
   - component: {fileID: 7450420144258910359}
   - component: {fileID: 6579369658775712840}
+  - component: {fileID: 1225687716178400377}
   m_Layer: 5
   m_Name: Defence_2
   m_TagString: DefenceCard
@@ -248,6 +249,7 @@ MonoBehaviour:
   cardImage: {fileID: 2727881516374904015}
   cardNameText: {fileID: 5421168617562260671}
   cardDescription: {fileID: 2146803146077863676}
+  energyNumber_Text: {fileID: 7443380924829842802}
 --- !u!114 &7184015179532494204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -304,13 +306,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 387a89dbd106e744685a6540265c5a92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardUI: {fileID: 0}
   cardMovement: {fileID: 0}
   cardType: 2
   cardLegendary: 1
   cardCombineLegendary: 
   energyCost: 4
   duration: 4
-  defence: 0
+  defence: 30
   defenceCards:
   - {fileID: 5279802830650860861, guid: 4e8e63a38cdde54409e19627d1a64535, type: 3}
   cardButton: {fileID: 0}
@@ -327,6 +330,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 0}
+  canvasGroup: {fileID: 0}
+--- !u!225 &1225687716178400377
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4450840577112229248}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &4458377426479993114
 GameObject:
   m_ObjectHideFlags: 0
