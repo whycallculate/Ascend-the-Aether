@@ -92,6 +92,7 @@ GameObject:
   - component: {fileID: 3048449702530905369}
   - component: {fileID: 4681144299391677112}
   - component: {fileID: 1992005576442212308}
+  - component: {fileID: 3784747464189387014}
   m_Layer: 5
   m_Name: Ability_2
   m_TagString: AbilityCard
@@ -175,6 +176,7 @@ MonoBehaviour:
   cardImage: {fileID: 170279642521866200}
   cardNameText: {fileID: 7886585686246681443}
   cardDescription: {fileID: 8907448767844352888}
+  energyNumber_Text: {fileID: 8058415519811486588}
 --- !u!114 &3048449702530905369
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -231,17 +233,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5abb22403f823f74ba73b509a2a2fde1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardUI: {fileID: 4026967005590204831}
   cardMovement: {fileID: 0}
   cardType: 3
   cardLegendary: 2
   cardCombineLegendary: 
-  energyCost: 1
+  energyCost: 3
   duration: 1
-  ability: 0
+  ability: 100
   abilityCards:
-  - {fileID: 3488596410525224917, guid: 6974d435b3122bd40b96ed634322c70a, type: 3}
-  - {fileID: 7670468686998276855, guid: 12c4ea8eb98b3bf4b8cfb8b805d21e5e, type: 3}
-  - {fileID: 4681144299391677112, guid: 55ff994ce71de5c42986ab86296d9dda, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 4681144299391677112}
   cardButton: {fileID: 0}
 --- !u!114 &1992005576442212308
 MonoBehaviour:
@@ -256,6 +259,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 0}
+  canvasGroup: {fileID: 0}
+--- !u!225 &3784747464189387014
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1847758943206446360}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2382605166783416436
 GameObject:
   m_ObjectHideFlags: 0
@@ -321,7 +337,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 5
+  m_text: 3
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

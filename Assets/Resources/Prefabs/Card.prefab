@@ -644,6 +644,7 @@ GameObject:
   - component: {fileID: 7864681293787401865}
   - component: {fileID: 8685910503031301816}
   - component: {fileID: 4035376992093245682}
+  - component: {fileID: 8485603702786290987}
   m_Layer: 5
   m_Name: Card
   m_TagString: Untagged
@@ -727,6 +728,7 @@ MonoBehaviour:
   cardImage: {fileID: 1465697803982371760}
   cardNameText: {fileID: 19978801000743354}
   cardDescription: {fileID: 373732228383219899}
+  energyNumber_Text: {fileID: 7492376515684132507}
 --- !u!114 &4035376992093245682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -771,3 +773,15 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!225 &8485603702786290987
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6602198251127517691}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

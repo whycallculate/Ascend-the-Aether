@@ -14,15 +14,24 @@ public class CardUI : MonoBehaviour
     public TextMeshProUGUI CardNameText { get { return cardNameText; } }
     [SerializeField] private TextMeshProUGUI cardDescription;
     public TextMeshProUGUI CardDescription { get { return cardDescription; }}
-
+    [SerializeField] private TextMeshProUGUI energyNumber_Text;
+    public TextMeshProUGUI EnergyNumber_Text { get { return energyNumber_Text;} set { energyNumber_Text = value; }}
 
     #endregion
 
-    public void CardUIDescription(Sprite cardSprite,string cardName,string _cardDescription)
+    public void CardUIInitialize(Sprite cardSprite,string cardName,string _cardDescription,int cardEnery)
     {
         cardImage.sprite = cardSprite;
         cardNameText.text = cardName;
         cardDescription.text = _cardDescription;
+        energyNumber_Text.text = cardEnery.ToString();
     }
 
+    public void CardUpgradeInitialize(int cardEnery)
+    {
+        if(energyNumber_Text != null)
+        {
+            energyNumber_Text.text = cardEnery.ToString();
+        }
+    }
 }

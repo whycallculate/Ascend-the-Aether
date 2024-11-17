@@ -149,6 +149,7 @@ GameObject:
   - component: {fileID: 3634638207772905259}
   - component: {fileID: 9172015659994866834}
   - component: {fileID: 879889633656327375}
+  - component: {fileID: 8592348030943330126}
   m_Layer: 5
   m_Name: Attack_4
   m_TagString: AttackCard
@@ -232,6 +233,7 @@ MonoBehaviour:
   cardImage: {fileID: 3844323032673651151}
   cardNameText: {fileID: 4124265040572877175}
   cardDescription: {fileID: 2235146199445748583}
+  energyNumber_Text: {fileID: 3457342423125661384}
 --- !u!114 &3634638207772905259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -288,18 +290,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b98c5005311303445ab5882a09d0d583, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardUI: {fileID: 0}
   cardMovement: {fileID: 0}
   cardType: 1
   cardLegendary: 3
   cardCombineLegendary: 0100000002000000
   energyCost: 4
   duration: 4
-  damage: 0
+  damage: 30
   attackCards:
-  - {fileID: 5939701278523527151, guid: 3f56f7621e33b77408be75ab64cba1d2, type: 3}
-  - {fileID: 8909847662239941989, guid: e65ff7e9e1d66b447accc1d8ea75c902, type: 3}
-  - {fileID: 5760034046384775040, guid: 99672583774be0a4ea486f01990bef58, type: 3}
-  - {fileID: 1939803859922718744, guid: de4786059a08934469f91bd916cace9f, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   cardButton: {fileID: 0}
 --- !u!114 &879889633656327375
 MonoBehaviour:
@@ -314,6 +317,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 0}
+  canvasGroup: {fileID: 0}
+--- !u!225 &8592348030943330126
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 737095677785603226}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &902387050178313675
 GameObject:
   m_ObjectHideFlags: 0
@@ -372,7 +388,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
