@@ -3,6 +3,17 @@ using System.Collections.Generic;
 using EnemyFeatures;
 using UnityEngine;
 
+public enum EnemyType
+{
+    Slime,
+    Rock,
+    Assassin,
+    Thief,
+    Mage,
+    KingSlime,
+    KingMage
+}
+
 public class EnemyController : MonoBehaviour
 {
     public int HEALTH;
@@ -11,26 +22,11 @@ public class EnemyController : MonoBehaviour
     public int POWER;
     public bool enemyIsAlive = true;
     public float difficultyMultiplier = 1.2f;
-    private int spawnCount = 0;
 
-    public int minDamage = 10; 
+    public int minDamage = 10;
     public int maxDamage = 20;
-    private void SpawnEnemy()
-    {
-        float currentMultiplier = Mathf.Pow(difficultyMultiplier, spawnCount);
 
-        // Yeni düşman özelliklerini çarpanla hesaplayın
-        HEALTH = Mathf.RoundToInt(HEALTH * currentMultiplier);
-        SHIELD = Mathf.RoundToInt(SHIELD * currentMultiplier);
-        DAMAGE = Mathf.RoundToInt(DAMAGE * currentMultiplier);
-        POWER = Mathf.RoundToInt(POWER * currentMultiplier);
-        minDamage = Mathf.RoundToInt(minDamage * currentMultiplier);
-        maxDamage = Mathf.RoundToInt(maxDamage * currentMultiplier);
-
-
-        spawnCount++;
-    }
-
+    EnemyAI EnemyAI;
 
     public void EnemyInitialize(EnemyFeature enemies)
     {
@@ -44,10 +40,10 @@ public class EnemyController : MonoBehaviour
     public void AddHealth(int value) => HEALTH += value;
     public void TakeDamage(int value) => HEALTH -= value;
     public void OnShield(int value) => SHIELD += value;
-    public void TakeShield(int value) 
+    public void TakeShield(int value)
     {
         SHIELD -= value;
-        if(SHIELD < 0)
+        if (SHIELD < 0)
         {
             SHIELD = 0;
         }
@@ -59,13 +55,16 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
-        if(HEALTH <= 0 )
+        if (HEALTH <= 0)
         {
             GameManager.Instance.IsEnemyAlive(gameObject);
         }
     }
+    public void GetEnemyType()
+    {
+        switch() {}
 
-
+    }
     public IEnumerator MakeMove()
     {
 
