@@ -67,7 +67,6 @@ public class EnemyController : MonoBehaviour
     }
     public IEnumerator MakeMove()
     {
-
         int action = Random.Range(0, 3); // 0 = hasar ver , 1 = kalkan , 2 = guc arttirma
 
 
