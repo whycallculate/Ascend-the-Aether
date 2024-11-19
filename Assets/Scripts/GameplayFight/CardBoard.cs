@@ -27,7 +27,7 @@ public class CardBoard : MonoBehaviour,IDropHandler
     public void OnDrop(PointerEventData eventData)
     {
         
-        GameManager.Instance.SelectableCard(false);
+        //GameManager.Instance.SelectableCard(false);
         if(eventData.pointerDrag.GetComponent<CanvasGroup>() != null)
         {
             eventData.pointerDrag.GetComponent<CanvasGroup>().blocksRaycasts = true;
@@ -53,11 +53,9 @@ public class CardBoard : MonoBehaviour,IDropHandler
                 CardImpact(eventData.pointerDrag);
             }
 
-            if(isCardCombine)
-            {
-            }
+            
         }
-        GameManager.Instance.SelectableCard(false);
+        //GameManager.Instance.SelectableCard(false);
     }
 
     private void CardImpact(GameObject card)
@@ -83,6 +81,9 @@ public class CardBoard : MonoBehaviour,IDropHandler
             }
 
         }
+        GameManager.Instance.HandCardPositionAdjust();
+        seasonTicket = null;
+        combineCard = null;
     }
 
     //combine kartı combine edip etmiyeceği kontrol ettiğimiz fonksiyon
@@ -92,7 +93,7 @@ public class CardBoard : MonoBehaviour,IDropHandler
         yield return new WaitForSeconds(5);
 
         
-        if(seasonTicket == null)
+        if(seasonTicket == null && GameManager.Instance.CardCombineStart)
         {
             CardImpact(card);
         }
@@ -158,6 +159,12 @@ public class CardBoard : MonoBehaviour,IDropHandler
         else
         {
             isCardCombine = false;
+        }
+
+        if(isCardCombine)
+        {
+            seasonTicket = null;
+            combineCard = null;
         }
         
         

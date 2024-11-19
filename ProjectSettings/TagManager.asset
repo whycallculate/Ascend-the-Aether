@@ -16,6 +16,7 @@ TagManager:
   - BossLevel
   - C
   - Canvas
+  - CardBoard
   layers:
   - Default
   - TransparentFX

@@ -88,7 +88,8 @@ public class UIManager : MonoBehaviour
 
     #endregion
 
-    public Button CardCancelButton { get { return cardCancelButton;}}
+    [SerializeField] private TextMeshProUGUI crystalCount_Text;
+    public TextMeshProUGUI CrystalCount_Text { get { return crystalCount_Text;}}
 
 
     #endregion
@@ -102,6 +103,13 @@ public class UIManager : MonoBehaviour
         cardsScroll = cardUpgradePanel.transform.GetChild(0).gameObject;
         cardDevelopmentTable = cardUpgradePanel.transform.GetChild(1).gameObject;
         
+
+        if(levelsPanel.activeSelf)
+        {
+            crystalCount_Text.text = GameManager.Instance.CrystalCount.ToString();
+        }
+
+
     }
 
     private void Start() 
@@ -115,6 +123,8 @@ public class UIManager : MonoBehaviour
             cardUpdateButton.onClick.AddListener(CardFeatureUpdateButtonFunction);
         }
     }
+
+
 
     public void CardUpgradeCardsFind()
     {
@@ -152,6 +162,11 @@ public class UIManager : MonoBehaviour
             }
         }
 
+        if(cardDevelopmentTable.activeSelf)
+        {
+            CardFeatureValueButtonClose();
+        }
+
         if(levelsPanel.activeSelf)
         {
             for (int i = 0; i < GameManager.Instance.Cards.Count; i++)
@@ -159,27 +174,85 @@ public class UIManager : MonoBehaviour
                 GameManager.Instance.Cards[i].GetComponent<CardMovement>().enabled = true;
                 GameManager.Instance.Cards[i].GetComponent<Button>().onClick = null;
             }
+            crystalCount_Text.text = GameManager.Instance.CrystalCount.ToString();
         }
     }
 
-  
+    private bool[] bools = new []{false,true,true,false};
+    private int succesNumber = 0;
+    private int failedNumber = 0;
     
-    private List<int> cardFeatureValues = new List<int>();
     public void CardFeatureUpdateButtonFunction()
     {
+        GameManager.Instance.CrystalCount = 20;
         for (int i = 0; i < cardFeatureGameObjects.Count; i++)
         {   
-            int cardFeatureValue = int.Parse(cardFeatureGameObjects[i].CardFeaturValue_InputField.text);
-            cardFeatureValues.Add(cardFeatureValue);
-            cardFeaturesShowGameObjects[i].CardFeatureShow(cardFeatureValue,false);
-        }
-        CardDevelopment.Instance.CardUpgrade(cardFeatureValues);
+            int cardFeatureValue = cardFeatureGameObjects[i].CartFeatureValue;
+            if(cardFeatureValue < 0)
+            {
+                cardFeatureValue *= -1;
+            }
 
-        foreach (CardFeatureControl card in cardFeatureGameObjects)
-        {
-            card.CardFeaturValue_InputField.text = "";
+            int subtractResult = cardFeatureGameObjects[i].FirstCarFeatureValue - cardFeatureValue;
+            
+            print(subtractResult);
+            if(subtractResult < 0)
+            {
+                subtractResult *=-1;
+            }
+            
+            GameManager.Instance.CrystalCoinLose(subtractResult);
+
+            cardFeatureGameObjects[i].CardFeaturValue_InputField.text = "";
+            CardDevelopment.Instance.CardFeatureValues.Add(cardFeatureValue);
+
         }
+
+        CardDevelopmentRate();
         
+        
+        GameManager.Instance.CrystalCount = int.Parse(crystalCount_Text.text);
+
+    }
+
+    private void CardDevelopmentRate()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            bool value = bools[Random.Range(0,bools.Length-1)];
+            if(value)
+            {
+                succesNumber++;
+            }
+            else
+            {
+                failedNumber++;
+            }
+        }
+        if(succesNumber == 3)
+        {
+            CardDevelopment.Instance.CardUpgrade(true);
+        }
+        else
+        {
+            succesNumber = 0;
+            failedNumber = 0;
+            CardFeatureValueButtonClose();
+
+            CardDevelopment.Instance.CardUpgrade(false);
+        }
+    }
+
+    public void CardFeatureValueButtonClose()
+    {
+        if(GameManager.Instance.CrystalCount <= 0)
+        {
+            for (int i = 0; i < cardFeatureGameObjects.Count; i++)
+            {
+                cardFeatureGameObjects[i].PlusButton.interactable = false;
+                cardFeatureGameObjects[i].SubtractButton.interactable = false;
+            }
+        }
     }
 
     public void CardFeatureCancelButtonFunction()
@@ -196,6 +269,10 @@ public class UIManager : MonoBehaviour
         cardFeaturesShowGameObjects.Clear();
         mapPrefab.SetActive(true);
         SetActiveUI(cardsScroll.name);
+
+
+        crystalCount_Text.text = GameManager.Instance.CrystalCount.ToString();
+
     }   
 
     public void CreateCardFeatureShowGameObject(string cardFeatureName,int cardFeatureValue)
@@ -204,13 +281,14 @@ public class UIManager : MonoBehaviour
         newCardFeatureShow.transform.localScale = Vector3.one;
         newCardFeatureShow.CardFeatureShow(cardFeatureValue,true,cardFeatureName);
         cardFeaturesShowGameObjects.Add(newCardFeatureShow); 
-        CreateCardFeatureGameObject(cardFeatureName);
+        CreateCardFeatureGameObject(cardFeatureName,cardFeatureValue);
     }
     
-    public void CreateCardFeatureGameObject(string cardFeatureName)
+    public void CreateCardFeatureGameObject(string cardFeatureName,int cardFeatureValue)
     {
         CardFeatureControl newCardFeatureGameObject = Instantiate(cardFeaturePreafab.GetComponent<CardFeatureControl>(),cardFeatureParent);
-        newCardFeatureGameObject.CardFeatureUIInitialize(cardFeatureName);
+        newCardFeatureGameObject.name = "Card"+cardFeatureName.ToUpper()+"Feature";
+        newCardFeatureGameObject.CardFeatureUIInitialize(cardFeatureName,cardFeatureValue);
         cardFeatureGameObjects.Add(newCardFeatureGameObject);
     }
 }

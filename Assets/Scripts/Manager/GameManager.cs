@@ -37,7 +37,6 @@ public class GameManager : MonoBehaviour
     public int CharacterCurrentLevelIndex {get {return characterCurrentLevelIndex;} set {characterCurrentLevelIndex = value;}}
     private string characterCurrentLevelType ;
     public string CharacterCurrentLevelType {get {return characterCurrentLevelType;} set {characterCurrentLevelType = value;}}
-    [SerializeField] private GameObject mapPrefab;
     [SerializeField] private GameObject levelsObject;
     [SerializeField] private List<LevelPrefabControl> levelObjects = new List<LevelPrefabControl>();
 
@@ -71,12 +70,13 @@ public class GameManager : MonoBehaviour
     [SerializeField]private List<GameObject> cards = new List<GameObject>();
     public List<GameObject> Cards {get {return cards;}}
     
-    [SerializeField] private GameObject deckObject;
     private bool cardCombineStart = false;
     public bool CardCombineStart {get {return cardCombineStart;} set {cardCombineStart = value;}}
+    
     #endregion
     
-
+    [SerializeField] private int crystalCount = 0;
+    public int CrystalCount {get {return crystalCount;} set { crystalCount = value;}}
     
     private void Awake()
     {
@@ -110,6 +110,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         DrawCards();
+        CardTypeFindPositionSet();
     }
 
 
@@ -132,6 +133,8 @@ public class GameManager : MonoBehaviour
                 }
             }          
         }
+
+        
 
 
         if(Input.GetKeyDown(KeyCode.Escape))
@@ -168,7 +171,6 @@ public class GameManager : MonoBehaviour
         for(int i = 0;i < hand.Count;i++)
         {
             hand[i].GetComponent<RectTransform>().anchoredPosition = UIManager.Instance.cardPos[i].anchoredPosition;
-
         }
 
     }
@@ -185,8 +187,8 @@ public class GameManager : MonoBehaviour
     {
         HandToDeck();
         isPlayerTurn = false;
-        enemy.MakeMove();
-        SelectableCard(false);
+        UIManager.Instance.NextTourButton.interactable = false;
+        StartCoroutine(enemy.MakeMove());
     }
 
     public void SwitchTurnToPlayer()
@@ -213,7 +215,10 @@ public class GameManager : MonoBehaviour
         {
             levelObjects[i].NextBackLevelOpen(characterCurrentLevelIndex);
         }
+        CardPositionReset();
+        character.CharacterTraits_Function("energy","+",5);
     }
+
 
     //karakter ölünce mevcut level index'ni sifirliyor
     public void LevelReset()
@@ -279,7 +284,7 @@ public class GameManager : MonoBehaviour
             UIManager.Instance.MapPrefab.SetActive(true);
             deadEnemyCount = 0;
             enemys.Clear();
-            SwitchTurnToEnemy();
+            //SwitchTurnToEnemy();
         }
         CardButtonInteractableControl();
     }
@@ -399,6 +404,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void HandCardPositionAdjust()
+    {
+        for (int i = 0; i < hand.Count; i++)
+        {
+            if(hand[i].activeSelf)
+            {
+                hand[i].GetComponent<RectTransform>().anchoredPosition = UIManager.Instance.cardPos[i].anchoredPosition;
+
+            }
+        }
+        SelectableCard(false);
+    }
+
     //kart objelerin buttonunu tıklanilmamasını sağliyor
     private void CardButtonInteractableControl()
     {
@@ -457,6 +475,28 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void CardTypeFindPositionSet()
+    {
+        for (int i = 0; i < hand.Count; i++)
+        {
+            switch(hand[i].tag)
+            {
+                case "AttackCard":
+                    hand[i].GetComponent<AttackCardController>().cardPosition = hand[i].GetComponent<RectTransform>().anchoredPosition;
+                break;
+                case "DefenceCard":
+                    hand[i].GetComponent<DefenceCardController>().cardPosition = hand[i].GetComponent<RectTransform>().anchoredPosition;
+                break;
+                case "AbilityCard":
+                    hand[i].GetComponent<AbilityCardController>().cardPosition = hand[i].GetComponent<RectTransform>().anchoredPosition;
+                break;
+                case "StrenghCard":
+                    hand[i].GetComponent<StrengthCardController>().cardPosition = hand[i].GetComponent<RectTransform>().anchoredPosition;
+                break;
+            }
+        }
+    }
+
 
     #endregion
 
@@ -508,4 +548,27 @@ public class GameManager : MonoBehaviour
     }
 
     #endregion
+
+    #region  Ekonominest
+
+    public void CrystalCoinWin(int winCrystalCount)
+    {
+        crystalCount += winCrystalCount;
+        UIManager.Instance.CrystalCount_Text.text = crystalCount.ToString();
+    }
+
+    public void CrystalCoinLose(int loseCrystalCount)
+    {
+        if(crystalCount > 0)
+        {
+            crystalCount -= loseCrystalCount;
+        }
+        
+        print(crystalCount);
+        UIManager.Instance.CrystalCount_Text.text = crystalCount.ToString();
+    }
+
+    #endregion
+
+
 }

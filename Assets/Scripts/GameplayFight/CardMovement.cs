@@ -25,7 +25,6 @@ public class CardMovement : MonoBehaviour,IPointerDownHandler,IBeginDragHandler,
         rectTransform = GetComponent<RectTransform>();
         cardButton = GetComponent<Button>();
         canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
-        canvasGroup = GetComponent<CanvasGroup>();
     }
     
 
@@ -47,10 +46,7 @@ public class CardMovement : MonoBehaviour,IPointerDownHandler,IBeginDragHandler,
             {
                 rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
             }
-            if (canvasGroup != null)
-            {
-                canvasGroup.blocksRaycasts = false; // Raycast'i kapat
-            }
+            
         }
        
         eventData.pointerDrag.transform.SetAsLastSibling();
@@ -58,10 +54,7 @@ public class CardMovement : MonoBehaviour,IPointerDownHandler,IBeginDragHandler,
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (canvasGroup != null)
-        {
-            canvasGroup.blocksRaycasts = true; // Raycast'i aç
-        }
+      
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -78,7 +71,12 @@ public class CardMovement : MonoBehaviour,IPointerDownHandler,IBeginDragHandler,
         {
             return;
         }
-        
+
+        if(!eventData.pointerEnter.CompareTag("CardBoard"))
+        {
+            GameObject card = eventData.pointerDrag;
+            CardBackPositionMove(ref card);
+        }
     }
 
     #region 
@@ -150,27 +148,28 @@ public class CardMovement : MonoBehaviour,IPointerDownHandler,IBeginDragHandler,
     */
     #endregion
 
-    //combine etmek istediğimiz kartın hangi kartlarla combine yapılacağını dizi olarak döndüren fonksiyon
-    private CardLegendaryEnum[] CardLegendaryFind(GameObject selectCard)
+    private void CardBackPositionMove(ref GameObject card)
     {
-        switch(selectCard.tag)
+        
+        switch(card.tag)
         {
+
             case "AttackCard":
-                return selectCard.GetComponent<AttackCardController>().CardCombineLegendary;
+                card.GetComponent<RectTransform>().anchoredPosition =  card.GetComponent<AttackCardController>().cardPosition;
+            break;
+
             case "DefenceCard":
-            return selectCard.GetComponent<DefenceCardController>().CardCombineLegendary;
+                card.GetComponent<RectTransform>().anchoredPosition =  card.GetComponent<DefenceCardController>().cardPosition;
+            break;
             
             case "AbilityCard":
-            return selectCard.GetComponent<AbilityCardController>().CardCombineLegendary;
+                card.GetComponent<RectTransform>().anchoredPosition =  card.GetComponent<AbilityCardController>().cardPosition;
+            break;
             
             case "StrenghCard":
-            return selectCard.GetComponent<StrengthCardController>().CardCombineLegendary;
-            
-            default:
-            return null;
+                card.GetComponent<RectTransform>().anchoredPosition =  card.GetComponent<StrengthCardController>().cardPosition;
+            break;
+        
         }
     }
-
-
-
 }
