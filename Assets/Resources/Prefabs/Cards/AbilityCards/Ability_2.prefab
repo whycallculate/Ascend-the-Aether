@@ -238,9 +238,10 @@ MonoBehaviour:
   cardType: 3
   cardLegendary: 2
   cardCombineLegendary: 
+  cardPosition: {x: 0, y: 0}
   energyCost: 3
   duration: 1
-  ability: 100
+  ability: 90
   abilityCards:
   - {fileID: 0}
   - {fileID: 0}

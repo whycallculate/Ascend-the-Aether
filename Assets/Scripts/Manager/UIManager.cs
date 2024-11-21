@@ -123,28 +123,6 @@ public class UIManager : MonoBehaviour
             cardUpdateButton.onClick.AddListener(CardFeatureUpdateButtonFunction);
         }
     }
-
-
-
-    public void CardUpgradeCardsFind()
-    {
-        if(GameManager.Instance.GameAllCards != null)
-        {
-            for (int i = 0; i < GameManager.Instance.GameAllCards.Count; i++)
-            {
-                GameObject card = Instantiate(GameManager.Instance.GameAllCards[i]);
-                card.gameObject.name = GameManager.Instance.GameAllCards[i].name;
-                card.transform.SetParent(earnedGameObject.transform);
-                card.gameObject.SetActive(false);
-                card.transform.SetSiblingIndex(i);
-                card.transform.localScale = Vector3.one;
-                card.GetComponent<CardMovement>().enabled = false;
-                card.GetComponent<Button>().onClick.AddListener(()=>CardDevelopment.Instance.SelectCardDevelopment(card));
-                GameManager.Instance.Cards.Add(card);
-            }
-
-        }
-    }
     
     public void SetActiveUI(string panelName)
     {
@@ -162,10 +140,6 @@ public class UIManager : MonoBehaviour
             }
         }
 
-        if(cardDevelopmentTable.activeSelf)
-        {
-            CardFeatureValueButtonClose();
-        }
 
         if(levelsPanel.activeSelf)
         {
@@ -181,71 +155,94 @@ public class UIManager : MonoBehaviour
     private bool[] bools = new []{false,true,true,false};
     private int succesNumber = 0;
     private int failedNumber = 0;
+    private int subtractResult;
+
+    private int result;
     
+    //Kartin ugrade buttonuna basınca etkileşimi sağliyan method
     public void CardFeatureUpdateButtonFunction()
     {
-        GameManager.Instance.CrystalCount = 20;
-        for (int i = 0; i < cardFeatureGameObjects.Count; i++)
-        {   
-            int cardFeatureValue = cardFeatureGameObjects[i].CartFeatureValue;
-            if(cardFeatureValue < 0)
+
+        if(GameManager.Instance.CrystalCount > 0)
+        {
+            for (int i = 0; i < cardFeatureGameObjects.Count; i++)
             {
-                cardFeatureValue *= -1;
+                if(cardFeatureGameObjects[i].FirstCarFeatureValue > cardFeatureGameObjects[i].Amount)
+                {
+                    result += cardFeatureGameObjects[i].FirstCarFeatureValue - cardFeatureGameObjects[i].Amount;
+                }
+                else if(cardFeatureGameObjects[i].Amount >  cardFeatureGameObjects[i].FirstCarFeatureValue)
+                {
+                    result +=cardFeatureGameObjects[i].Amount- cardFeatureGameObjects[i].FirstCarFeatureValue ;
+                }
+                CardDevelopment.Instance.CardFeatureValues.Add(cardFeatureGameObjects[i].CartFeatureValue);
             }
 
-            int subtractResult = cardFeatureGameObjects[i].FirstCarFeatureValue - cardFeatureValue;
-            
-            print(subtractResult);
-            if(subtractResult < 0)
+          
+            if(result < 0)
             {
-                subtractResult *=-1;
+                result *= -1;
             }
+
+            GameManager.Instance.CrystalCoinLose(result);
             
-            GameManager.Instance.CrystalCoinLose(subtractResult);
 
-            cardFeatureGameObjects[i].CardFeaturValue_InputField.text = "";
-            CardDevelopment.Instance.CardFeatureValues.Add(cardFeatureValue);
-
+            GameManager.Instance.CardDevelopmentRate();
+            
+            result = 0;
         }
-
-        CardDevelopmentRate();
-        
-        
-        GameManager.Instance.CrystalCount = int.Parse(crystalCount_Text.text);
-
+        else if(GameManager.Instance.CrystalCount <= 0)
+        {
+            CardFeatureValueButtonClose("All");
+        }
     }
 
-    private void CardDevelopmentRate()
+
+    public void CardFeatureValueUpdate(bool isUpgrade)
     {
-        for (int i = 0; i < 3; i++)
+        if(isUpgrade)
         {
-            bool value = bools[Random.Range(0,bools.Length-1)];
-            if(value)
+            for (int i = 0; i < cardFeatureGameObjects.Count; i++)
             {
-                succesNumber++;
+                cardFeatureGameObjects[i].Amount = cardFeatureGameObjects[i].CartFeatureValue;
+                cardFeatureGameObjects[i].CartFeatureValue =   cardFeatureGameObjects[i].Amount;
+                cardFeatureGameObjects[i].FirstCarFeatureValue = cardFeatureGameObjects[i].CartFeatureValue;
+                cardFeatureGameObjects[i].CardFeatureValue_Text.text = cardFeatureGameObjects[i].CartFeatureValue.ToString();
+                cardFeaturesShowGameObjects[i].CardFeatureValueShow_Text.text = cardFeatureGameObjects[i].CartFeatureValue.ToString();
             }
-            else
-            {
-                failedNumber++;
-            }
-        }
-        if(succesNumber == 3)
-        {
-            CardDevelopment.Instance.CardUpgrade(true);
         }
         else
         {
-            succesNumber = 0;
-            failedNumber = 0;
-            CardFeatureValueButtonClose();
-
-            CardDevelopment.Instance.CardUpgrade(false);
+            for (int i = 0; i < cardFeatureGameObjects.Count; i++)
+            {
+                CardFeatureControl cardFeatureShowControl = cardFeaturesShowGameObjects[i];
+                int _cardFeatureNumber = int.Parse(cardFeatureShowControl.CardFeatureValueShow_Text.text );
+                CardFeatureControl cardFeatureControl = cardFeatureGameObjects[i];
+                cardFeatureControl.CartFeatureValue = _cardFeatureNumber;
+                cardFeatureControl.CardFeatureValue_Text.text = _cardFeatureNumber.ToString();
+                cardFeatureControl.Amount = cardFeatureControl.CartFeatureValue;
+            }
         }
     }
 
-    public void CardFeatureValueButtonClose()
+
+    //kart geliştirme olayında  butonlari tiklanilebilirliğini kapatiyor
+    public void CardFeatureValueButtonClose(string closeObjectName)
     {
-        if(GameManager.Instance.CrystalCount <= 0)
+        if(closeObjectName == "All")
+        {
+            for (int i = 0; i < cardFeatureGameObjects.Count; i++)
+            {
+                cardFeatureGameObjects[i].PlusButton.interactable = false;
+                cardFeatureGameObjects[i].SubtractButton.interactable = false;
+            }
+            cardUpdateButton.interactable = false;
+        }
+        else if(closeObjectName == "Upgrade")
+        {
+            cardUpdateButton.interactable = false;
+        }
+        else if(closeObjectName == "Feature")
         {
             for (int i = 0; i < cardFeatureGameObjects.Count; i++)
             {
@@ -253,8 +250,12 @@ public class UIManager : MonoBehaviour
                 cardFeatureGameObjects[i].SubtractButton.interactable = false;
             }
         }
+        
     }
 
+    
+
+    //kart geliştirme olayında cancel butonuna basınca etkileşimi sağliyor
     public void CardFeatureCancelButtonFunction()
     {
         
@@ -270,11 +271,11 @@ public class UIManager : MonoBehaviour
         mapPrefab.SetActive(true);
         SetActiveUI(cardsScroll.name);
 
-
         crystalCount_Text.text = GameManager.Instance.CrystalCount.ToString();
 
     }   
 
+    //kart'in özelliklerinin adini ve değerini gösteren prefab'i oluşturuyor
     public void CreateCardFeatureShowGameObject(string cardFeatureName,int cardFeatureValue)
     {
         CardFeatureControl newCardFeatureShow = Instantiate(cardFeatureShowPrefab,cardFeatureShowParent);
@@ -283,7 +284,9 @@ public class UIManager : MonoBehaviour
         cardFeaturesShowGameObjects.Add(newCardFeatureShow); 
         CreateCardFeatureGameObject(cardFeatureName,cardFeatureValue);
     }
-    
+
+
+    //kart özelliklerini artırıp azaltmamızı sağlıyan prefabi oluşturmamizi sağliyor    
     public void CreateCardFeatureGameObject(string cardFeatureName,int cardFeatureValue)
     {
         CardFeatureControl newCardFeatureGameObject = Instantiate(cardFeaturePreafab.GetComponent<CardFeatureControl>(),cardFeatureParent);
@@ -291,4 +294,6 @@ public class UIManager : MonoBehaviour
         newCardFeatureGameObject.CardFeatureUIInitialize(cardFeatureName,cardFeatureValue);
         cardFeatureGameObjects.Add(newCardFeatureGameObject);
     }
+
+   
 }

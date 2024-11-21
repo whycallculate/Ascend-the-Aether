@@ -365,14 +365,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 387a89dbd106e744685a6540265c5a92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardUI: {fileID: 0}
+  cardUI: {fileID: 3804142362592945792}
   cardMovement: {fileID: 0}
   cardType: 2
   cardLegendary: 3
   cardCombineLegendary: 02000000
-  energyCost: 3
+  cardPosition: {x: 0, y: 0}
+  energyCost: 1
   duration: 3
-  defence: 30
+  defence: 36
   defenceCards:
   - {fileID: 5279802830650860861}
   cardButton: {fileID: 0}
@@ -753,7 +754,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 5
+  m_text: 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

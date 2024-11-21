@@ -13,4 +13,10 @@ namespace Card_Enum
     {
         None,Attack,Defence,Ability,Strength
     }
+
+    public enum CardDevelopmentRateEnum
+    {
+        FaceRatio,SeventyFivePercent,FivetyPercent,TwentyFivePercent,ZeroPercent
+    }
+
 }
