@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Card_Enum;
 using EnemyFeatures;
 using UnityEngine;
 using UnityEngine.UI;
@@ -73,10 +74,18 @@ public class GameManager : MonoBehaviour
     private bool cardCombineStart = false;
     public bool CardCombineStart {get {return cardCombineStart;} set {cardCombineStart = value;}}
     
+    private bool[] faceRatio = new bool[4]{true,true,true,true};
+    private bool[] seventyFivePercent = new bool[4]{true,false,true,true};
+    private bool[] fivetyPercent = new bool[4]{true,false,true,false};
+    private bool[] twentyFivePercent = new bool[4]{false,false,true,false};
+    private bool[] zeroFivePercent = new bool[4]{false,false,false,false};
+
     #endregion
     
     [SerializeField] private int crystalCount = 0;
     public int CrystalCount {get {return crystalCount;} set { crystalCount = value;}}
+    private int refCrystalCount;
+    public int RefCrystalCount {get {return refCrystalCount;} set {refCrystalCount = value;}}
     
     private void Awake()
     {
@@ -103,8 +112,13 @@ public class GameManager : MonoBehaviour
         LevelIndexAdjust();
 
         AllCardLoad();
+        if(SaveSystem.DataQuery("crystalCount"))
+        {
+            crystalCount = SaveSystem.DataExtraction("crystalCount",0);
+        }
+        refCrystalCount = crystalCount;
 
-        
+
     }
 
     private void Start()
@@ -133,10 +147,9 @@ public class GameManager : MonoBehaviour
                 }
             }          
         }
-
         
-
-
+       
+    
         if(Input.GetKeyDown(KeyCode.Escape))
         {
             UIManager.Instance.SetActiveUI(UIManager.Instance.LevelsPanel.name);
@@ -150,6 +163,8 @@ public class GameManager : MonoBehaviour
         
        
     }
+
+    #region 
 
     public void DrawCards()
     {
@@ -206,6 +221,7 @@ public class GameManager : MonoBehaviour
         character.CharacterTraits_Function(characterTraits,transaction,value);
     }
 
+    #endregion
 
 
     #region  Level Function
@@ -497,6 +513,96 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private int succesfull = 0;
+    private int failed = 0;
+
+    public void CardDevelopmentRate()
+    {
+        if(crystalCount > 0)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                bool[] percent = CardDevelopmentRatePercentSelect();
+                int _randomNumber = Random.Range(0, percent.Length - 1);
+                bool percentResult = percent[_randomNumber];
+                if (percentResult)
+                {
+                    succesfull++;
+                }
+                else
+                {
+                    failed++;
+                }
+            }
+
+
+            if (succesfull > failed)
+            {
+                print("Geliştirilme Başarili");
+                CardDevelopment.Instance.CardUpgrade();
+                UIManager.Instance.CardFeatureValueUpdate(true);
+            }
+            else if (failed > succesfull)
+            {
+                print("Geliştirileme Başarisiz");
+                UIManager.Instance.CardFeatureValueUpdate(false);
+            }
+            
+            UIManager.Instance.CardFeatureValueButtonClose("Upgrade");
+
+            succesfull = 0;
+            failed = 0;
+        }
+        else if(crystalCount <= 0)
+        {
+            UIManager.Instance.CardFeatureValueUpdate(false);
+            UIManager.Instance.CardFeatureValueButtonClose("All");
+
+        }
+
+    }
+
+    private CardDevelopmentRateEnum CardDevelopmentRatePercentTypeSelect()
+    {
+        int number = Random.Range(0,4);
+        switch(number)
+        {
+            case 0:
+            return CardDevelopmentRateEnum.FaceRatio;
+            
+            case 1:
+            return CardDevelopmentRateEnum.SeventyFivePercent;
+            
+            case 2:
+            return CardDevelopmentRateEnum.FivetyPercent;
+            
+            case 3:
+            return CardDevelopmentRateEnum.TwentyFivePercent;
+            
+            default:
+            return CardDevelopmentRateEnum.ZeroPercent;
+
+        }
+    }
+    public int karaterEnerji = 0;
+    private bool[] CardDevelopmentRatePercentSelect()
+    {
+
+        switch(CardDevelopmentRatePercentTypeSelect())
+        {
+            case CardDevelopmentRateEnum.FaceRatio:
+            return faceRatio;
+            case CardDevelopmentRateEnum.SeventyFivePercent:
+            return seventyFivePercent;
+            case CardDevelopmentRateEnum.FivetyPercent:
+            return fivetyPercent;
+            case CardDevelopmentRateEnum.TwentyFivePercent:
+            return twentyFivePercent;
+            default:
+            return zeroFivePercent;
+        }
+        
+    }
 
     #endregion
 
@@ -555,17 +661,41 @@ public class GameManager : MonoBehaviour
     {
         crystalCount += winCrystalCount;
         UIManager.Instance.CrystalCount_Text.text = crystalCount.ToString();
+        SaveSystem.DataSave("crystalCount",crystalCount);
     }
 
     public void CrystalCoinLose(int loseCrystalCount)
     {
-        if(crystalCount > 0)
+        int numberControl = crystalCount - loseCrystalCount;
+        if(numberControl > 0)
         {
-            crystalCount -= loseCrystalCount;
+            crystalCount-= loseCrystalCount;
+            UIManager.Instance.CrystalCount_Text.text = crystalCount.ToString();
         }
-        
-        print(crystalCount);
-        UIManager.Instance.CrystalCount_Text.text = crystalCount.ToString();
+        else
+        {
+            crystalCount = 0;
+            UIManager.Instance.CrystalCount_Text.text = crystalCount.ToString();
+        }
+
+        SaveSystem.DataSave("crystalCount",crystalCount);
+        refCrystalCount = crystalCount;
+    }
+
+    public int CrystalCoinShow()
+    {
+        if(refCrystalCount > 0)
+        {
+            refCrystalCount--;
+        }
+        else if(refCrystalCount <= 0)
+        {
+            refCrystalCount = 0;
+        }
+
+        UIManager.Instance.CrystalCount_Text.text = refCrystalCount.ToString();
+
+        return refCrystalCount;
     }
 
     #endregion

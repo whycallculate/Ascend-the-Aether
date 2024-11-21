@@ -38,7 +38,14 @@ public class CardDevelopment : MonoBehaviour
         SelectCarInformationFind(_selectCard);
         UIManager.Instance.CardDevelopmentTable.SetActive(true);
         UIManager.Instance.CardsScroll.SetActive(false);
-
+        if(GameManager.Instance.CrystalCount > 0)
+        {
+            UIManager.Instance.CardFeatureValueButtonClose("Upgrade");
+        }
+        else if(GameManager.Instance.CrystalCount <= 0)
+        {
+            UIManager.Instance.CardFeatureValueButtonClose("All");
+        }
     }
 
    
@@ -106,91 +113,59 @@ public class CardDevelopment : MonoBehaviour
         
     }
 
-    
+ 
 
     //kartlari upgrade ettiğimiz fonksiyon
 
     private List<int> cardFeatureValues = new List<int>();
     public List<int> CardFeatureValues {get {return cardFeatureValues;}}
     
-    public void CardUpgrade(bool isCardUpgrade)
+    public void CardUpgrade()
     {
-        if(isCardUpgrade)
+        
+        for (int i = 0; i < cardFeatureValues.Count; i++)
         {
-            switch (selectCard.tag)
-            {
-                case "AttackCard":
-                    attackCard = selectCard.GetComponent<AttackCardController>();
-                    attackCard.CardUpgradeInitialize(cardFeatureValues[0], cardFeatureValues[1]);
-                    _object = Resources.Load<GameObject>($"Prefabs/Cards/AttackCards/{attackCard.name}");
-                    _object.GetComponent<CardUI>().CardUpgradeInitialize(1);
-                    _object.GetComponent<AttackCardController>().CardUpgradeInitialize(cardFeatureValues[0], cardFeatureValues[1]);
-                    break;
+            print(i+"'nci değer : " + cardFeatureValues[i]);
+        } 
 
-                case "DefenceCard":
-                    defenceCard = selectCard.GetComponent<DefenceCardController>();
-                    defenceCard.CardUpgradeInitialize(cardFeatureValues[0], cardFeatureValues[1]);
-                    _object = Resources.Load<GameObject>($"Prefabs/Cards/DefenceCards/{defenceCard.name}");
-                    _object.GetComponent<CardUI>().CardUpgradeInitialize(1);
-                    _object.GetComponent<DefenceCardController>().CardUpgradeInitialize(cardFeatureValues[0], cardFeatureValues[1]);
-                    break;
-
-                case "AbilityCard":
-                    abilityCard = selectCard.GetComponent<AbilityCardController>();
-                    abilityCard.CardUpgradeInitialize(cardFeatureValues[0], cardFeatureValues[1]);
-                    _object = Resources.Load<GameObject>($"Prefabs/Cards/AbilityCards/{abilityCard.name}");
-                    _object.GetComponent<CardUI>().CardUpgradeInitialize(1);
-                    _object.GetComponent<AbilityCardController>().CardUpgradeInitialize(cardFeatureValues[0], cardFeatureValues[1]);
-                    break;
-
-                case "StrenghCard":
-                    strenghCard = selectCard.GetComponent<StrengthCardController>();
-                    strenghCard.CardUpgradeInitialize(cardFeatureValues[0], cardFeatureValues[1]);
-                    _object = Resources.Load<GameObject>($"Prefabs/Cards/StrengthCards/{strenghCard.name}");
-                    _object.GetComponent<CardUI>().CardUpgradeInitialize(1);
-                    _object.GetComponent<StrengthCardController>().CardUpgradeInitialize(cardFeatureValues[0], cardFeatureValues[1]);
-                    break;
-
-                default:
-                    break;
-            }
-
-            for (int i = 0; i < UIManager.Instance.CardFeaturesShowGameObjects.Count; i++)
-            {
-                CardFeatureControl cardFeatureControl = UIManager.Instance.CardFeaturesShowGameObjects[i];
-                cardFeatureControl.CardFeatureShow(cardFeatureValues[i], false);
-
-                UIManager.Instance.CardFeaturesGameObjects[i].CardFeatureValue_Text.text = cardFeatureValues[i].ToString();
-            }
-        }
-        else
+        switch(selectCard.tag)
         {
-            if(attackCard != null)
-            {
-                Deneme(new int[]{attackCard.energyCost,attackCard.damage});
-            }
-            else if(defenceCard != null)
-            {
-                Deneme(new int[]{defenceCard.energyCost,defenceCard.defence});
-            }
-            else if(abilityCard != null)
-            {
-                Deneme(new int[]{abilityCard.energyCost,abilityCard.ability});
-            }
-            else if(strenghCard != null)
-            {
-                Deneme(new int[]{strenghCard.energyCost,strenghCard.strength});
-            }
+            case "AttackCard":
+                attackCard = selectCard.GetComponent<AttackCardController>();
+                attackCard.CardUpgradeInitialize(cardFeatureValues[0],cardFeatureValues[1]);
+                print(attackCard.name);
+                _object = Resources.Load<GameObject>($"Prefabs/Cards/AttackCards/{attackCard.name}");
+                _object.GetComponent<CardUI>().CardUpgradeInitialize(cardFeatureValues[0]);
+                _object.GetComponent<AttackCardController>().CardUpgradeInitialize(cardFeatureValues[0],cardFeatureValues[1]);
+            break;
+            case "DefenceCard":
+                defenceCard = selectCard.GetComponent<DefenceCardController>();
+                defenceCard.CardUpgradeInitialize(cardFeatureValues[0],cardFeatureValues[1]);
+                print(defenceCard.name);
+                _object = Resources.Load<GameObject>($"Prefabs/Cards/DefenceCards/{defenceCard.name}");
+                _object.GetComponent<CardUI>().CardUpgradeInitialize(cardFeatureValues[0]);
+                _object.GetComponent<DefenceCardController>().CardUpgradeInitialize(cardFeatureValues[0],cardFeatureValues[1]);
+            break;
+            case "AbilityCard":
+                abilityCard = selectCard.GetComponent<AbilityCardController>();
+                abilityCard.CardUpgradeInitialize(cardFeatureValues[0],cardFeatureValues[1]);
+                print(abilityCard.name);
+                _object = Resources.Load<GameObject>($"Prefabs/Cards/AbilityCards/{abilityCard.name}");
+                _object.GetComponent<CardUI>().CardUpgradeInitialize(cardFeatureValues[0]);
+                _object.GetComponent<AbilityCardController>().CardUpgradeInitialize(cardFeatureValues[0],cardFeatureValues[1]);
+            break;
+            case "StrenghCard":
+                strenghCard = selectCard.GetComponent<StrengthCardController>();
+                strenghCard.CardUpgradeInitialize(cardFeatureValues[0],cardFeatureValues[1]);
+                print(strenghCard.name);
+                _object = Resources.Load<GameObject>($"Prefabs/Cards/StrengthCards/{strenghCard.name}");
+                _object.GetComponent<CardUI>().CardUpgradeInitialize(cardFeatureValues[0]);
+                _object.GetComponent<StrengthCardController>().CardUpgradeInitialize(cardFeatureValues[0],cardFeatureValues[1]);
+            break;
         }
+        cardFeatureValues.Clear();
     }
 
-    private void Deneme(int[] values)
-    {
-        for (int i = 0; i < UIManager.Instance.CardFeaturesGameObjects.Count; i++)
-        {
-            CardFeatureControl cardFeatureControl  = UIManager.Instance.CardFeaturesGameObjects[i];
-            cardFeatureControl.CardFeatureValue_Text.text =values[i].ToString();
-        }
-    }
+    
     
 }

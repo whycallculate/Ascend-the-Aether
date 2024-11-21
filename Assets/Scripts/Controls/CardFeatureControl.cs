@@ -29,7 +29,10 @@ public class CardFeatureControl : MonoBehaviour
 
     [Header("Card Feature Show UI")]
     [SerializeField] private TextMeshProUGUI cardFeatureNameShow_Text;
+    public TextMeshProUGUI CardFeatureNameShow_Text { get { return cardFeatureNameShow_Text;}}
+
     [SerializeField] private TextMeshProUGUI cardFeatureValueShow_Text; 
+    public TextMeshProUGUI CardFeatureValueShow_Text { get { return cardFeatureValueShow_Text;}}
     
     #endregion
 
@@ -40,22 +43,22 @@ public class CardFeatureControl : MonoBehaviour
     public bool CardFeatureValueDecreasing {get { return cardFeatureValueDecreasing;}}
 
     private int cartFeatureValue;
-    public int CartFeatureValue {get { return cartFeatureValue;}}
+    public int CartFeatureValue {get { return cartFeatureValue;} set { cartFeatureValue = value; } }
 
     private int firstCarFeatureValue = 0;
     public int FirstCarFeatureValue {get { return firstCarFeatureValue;} set { firstCarFeatureValue = value; } }
 
-
+    private int amount;
+    public int Amount { get { return amount;} set { amount = value; } }
     public void CardFeatureUIInitialize(string cardFeatureName,int cardFeatureValue)
     {
         cardFeatureName_Text.text = cardFeatureName;
         cardFeatureValue_Text.text = cardFeatureValue.ToString();
         cartFeatureValue = cardFeatureValue;
+        amount = cardFeatureValue;
         firstCarFeatureValue = cartFeatureValue;
     }
     
-
-
     public void CardFeatureShow(int cardFeatureValue,bool isCardFeatureNameChange,string cardFeatureName="")
     {
         if(isCardFeatureNameChange)
@@ -75,50 +78,59 @@ public class CardFeatureControl : MonoBehaviour
 
     public void PlusButtonFunction()
     {
-        GameManager.Instance.CrystalCount--;
-        if(GameManager.Instance.CrystalCount > 0)
+        UIManager.Instance.CardUpdateButton.interactable = true;
+        
+
+        if(GameManager.Instance.CrystalCoinShow() > 0)
         {
+            amount--;
+            
+            
+            GameManager.Instance.CrystalCoinShow();
             cartFeatureValue++;
 
         }
-        else
+        else if(GameManager.Instance.CrystalCoinShow() <= 0)
         {
-            //NewMethod();
-            UIManager.Instance.CardFeatureValueButtonClose();
+            UIManager.Instance.CardFeatureValueButtonClose("Feature");
+
         }
 
 
         cardFeatureValue_Text.text = cartFeatureValue.ToString();
         cardFeatureValueIncreasing = true;
         cardFeatureValueDecreasing = false;
+
     }
 
-    private static void NewMethod()
-    {
-        for (int i = 0; i < UIManager.Instance.CardFeaturesGameObjects.Count; i++)
-        {
-            UIManager.Instance.CardFeaturesGameObjects[i].plusButton.interactable = false;
-            UIManager.Instance.CardFeaturesGameObjects[i].subtractButton.interactable = false;
-        }
-    }
 
     public void SubtractButtonFunction()
     {
-        GameManager.Instance.CrystalCount--;
-        if(GameManager.Instance.CrystalCount >0)
+        UIManager.Instance.CardUpdateButton.interactable = true;
+
+
+        if(GameManager.Instance.CrystalCount > 0 || GameManager.Instance.CrystalCoinShow() > 0)
         {
+            amount--;
+            
+            GameManager.Instance.CrystalCoinShow();
             if(cartFeatureValue > 0)
             {
                 cartFeatureValue--;
             }
         }
-        else
+        else if(GameManager.Instance.CrystalCount <= 0 || GameManager.Instance.CrystalCoinShow() <= 0)
         {
-            UIManager.Instance.CardFeatureValueButtonClose();
+            UIManager.Instance.CardFeatureValueButtonClose("Feature");
+
         }
+
+
         cardFeatureValue_Text.text = cartFeatureValue.ToString();
         cardFeatureValueIncreasing = false;
         cardFeatureValueDecreasing = true;
+
+    
     }
 
    
