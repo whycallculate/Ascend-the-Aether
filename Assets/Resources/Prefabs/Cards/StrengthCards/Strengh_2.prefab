@@ -501,18 +501,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f4b9467cb717a94f8dc54c21fa4a3e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardUI: {fileID: 0}
+  cardUI: {fileID: 6709960595518238340}
   cardMovement: {fileID: 0}
   cardType: 4
   cardLegendary: 1
   cardCombineLegendary: 
+  cardPosition: {x: 0, y: 0}
   energyCost: 3
   duration: 3
-  strength: 30
+  strength: 33
   strengthCards:
   - {fileID: 868788351370113191, guid: 9f88686a5cf8a614d85b91696fe7a4c5, type: 3}
-  - {fileID: 1636084810330997379, guid: 3527143ef8d207648a052bd53d9c5ee4, type: 3}
-  - {fileID: 4877476253641782617, guid: 90ca9dfd701d4e241a3b9c327b746cd8, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
   cardButton: {fileID: 0}
 --- !u!114 &1087481642239718989
 MonoBehaviour:
@@ -535,7 +536,7 @@ CanvasGroup:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3963717216292308052}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
@@ -605,7 +606,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 5
+  m_text: 3
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

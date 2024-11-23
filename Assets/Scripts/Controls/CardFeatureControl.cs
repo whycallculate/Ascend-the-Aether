@@ -50,6 +50,8 @@ public class CardFeatureControl : MonoBehaviour
 
     private int amount;
     public int Amount { get { return amount;} set { amount = value; } }
+
+    
     public void CardFeatureUIInitialize(string cardFeatureName,int cardFeatureValue)
     {
         cardFeatureName_Text.text = cardFeatureName;
@@ -80,17 +82,20 @@ public class CardFeatureControl : MonoBehaviour
     {
         UIManager.Instance.CardUpdateButton.interactable = true;
         
+        if (isButtonProcessing) return; // Halihazırda çalışıyorsa dur
+        isButtonProcessing = true;
 
-        if(GameManager.Instance.CrystalCoinShow() > 0)
+        if(GameManager.Instance.CrystalCount > 0)
         {
             amount--;
             
             
-            GameManager.Instance.CrystalCoinShow();
+            GameManager.Instance.CrystalCount--;
+            UIManager.Instance.CrystalCount_Text.text = GameManager.Instance.CrystalCount.ToString();
             cartFeatureValue++;
 
         }
-        else if(GameManager.Instance.CrystalCoinShow() <= 0)
+        else if(GameManager.Instance.CrystalCount <= 0)
         {
             UIManager.Instance.CardFeatureValueButtonClose("Feature");
 
@@ -101,25 +106,32 @@ public class CardFeatureControl : MonoBehaviour
         cardFeatureValueIncreasing = true;
         cardFeatureValueDecreasing = false;
 
+        isButtonProcessing = false;
+
     }
 
-
+    private bool isButtonProcessing = false;
     public void SubtractButtonFunction()
     {
         UIManager.Instance.CardUpdateButton.interactable = true;
 
+        if (isButtonProcessing) return; // Halihazırda çalışıyorsa dur
+        isButtonProcessing = true;
 
-        if(GameManager.Instance.CrystalCount > 0 || GameManager.Instance.CrystalCoinShow() > 0)
+
+        if(GameManager.Instance.CrystalCount > 0 )
         {
             amount--;
             
-            GameManager.Instance.CrystalCoinShow();
+            GameManager.Instance.CrystalCount--;
+            UIManager.Instance.CrystalCount_Text.text = GameManager.Instance.CrystalCount.ToString();
+
             if(cartFeatureValue > 0)
             {
                 cartFeatureValue--;
             }
         }
-        else if(GameManager.Instance.CrystalCount <= 0 || GameManager.Instance.CrystalCoinShow() <= 0)
+        else if(GameManager.Instance.CrystalCount <= 0 )
         {
             UIManager.Instance.CardFeatureValueButtonClose("Feature");
 
@@ -130,7 +142,7 @@ public class CardFeatureControl : MonoBehaviour
         cardFeatureValueIncreasing = false;
         cardFeatureValueDecreasing = true;
 
-    
+        isButtonProcessing = false;
     }
 
    

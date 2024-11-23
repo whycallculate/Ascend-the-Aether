@@ -18,6 +18,8 @@ public class UIManager : MonoBehaviour
             return instance;
         }
     }
+    [SerializeField] private GameObject dectGameObject;
+    public GameObject DectGameObject { get { return dectGameObject; } }
 
     [SerializeField] private CharacterUI characterUI;
     public CharacterUI CharacterUI { get { return characterUI; }  set { characterUI = value; } }
@@ -152,46 +154,40 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private bool[] bools = new []{false,true,true,false};
-    private int succesNumber = 0;
-    private int failedNumber = 0;
-    private int subtractResult;
 
     private int result;
     
     //Kartin ugrade buttonuna basınca etkileşimi sağliyan method
     public void CardFeatureUpdateButtonFunction()
     {
-
-        if(GameManager.Instance.CrystalCount > 0)
+        //crystalCount
+        GameManager.Instance.CrystalCount = SaveSystem.DataExtraction("crystalCount", 1);
+        for (int i = 0; i < cardFeatureGameObjects.Count; i++)
         {
-            for (int i = 0; i < cardFeatureGameObjects.Count; i++)
+            if (cardFeatureGameObjects[i].FirstCarFeatureValue > cardFeatureGameObjects[i].Amount)
             {
-                if(cardFeatureGameObjects[i].FirstCarFeatureValue > cardFeatureGameObjects[i].Amount)
-                {
-                    result += cardFeatureGameObjects[i].FirstCarFeatureValue - cardFeatureGameObjects[i].Amount;
-                }
-                else if(cardFeatureGameObjects[i].Amount >  cardFeatureGameObjects[i].FirstCarFeatureValue)
-                {
-                    result +=cardFeatureGameObjects[i].Amount- cardFeatureGameObjects[i].FirstCarFeatureValue ;
-                }
-                CardDevelopment.Instance.CardFeatureValues.Add(cardFeatureGameObjects[i].CartFeatureValue);
+                result += cardFeatureGameObjects[i].FirstCarFeatureValue - cardFeatureGameObjects[i].Amount;
             }
-
-          
-            if(result < 0)
+            else if (cardFeatureGameObjects[i].Amount > cardFeatureGameObjects[i].FirstCarFeatureValue)
             {
-                result *= -1;
+                result += cardFeatureGameObjects[i].Amount - cardFeatureGameObjects[i].FirstCarFeatureValue;
             }
-
-            GameManager.Instance.CrystalCoinLose(result);
-            
-
-            GameManager.Instance.CardDevelopmentRate();
-            
-            result = 0;
+            CardDevelopment.Instance.CardFeatureValues.Add(cardFeatureGameObjects[i].CartFeatureValue);
         }
-        else if(GameManager.Instance.CrystalCount <= 0)
+
+
+        if (result < 0)
+        {
+            result *= -1;
+        }
+
+        GameManager.Instance.CrystalCoinLose(result);
+
+
+        GameManager.Instance.CardDevelopmentRate();
+
+        result = 0;
+        if (GameManager.Instance.CrystalCount <= 0)
         {
             CardFeatureValueButtonClose("All");
         }
@@ -258,7 +254,7 @@ public class UIManager : MonoBehaviour
     //kart geliştirme olayında cancel butonuna basınca etkileşimi sağliyor
     public void CardFeatureCancelButtonFunction()
     {
-        
+        GameManager.Instance.CrystalCount = SaveSystem.DataExtraction("crystalCount",0);   
         for (int i = 0; i < cardFeatureGameObjects.Count; i++)
         {
             cardFeatureGameObjects[i].gameObject.SetActive(false);

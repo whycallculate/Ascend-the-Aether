@@ -70,6 +70,9 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]private List<GameObject> cards = new List<GameObject>();
     public List<GameObject> Cards {get {return cards;}}
+
+    [SerializeField] private List<string> cardsName = new List<string>();
+    public List<string> CardsName {get {return cardsName;}}
     
     private bool cardCombineStart = false;
     public bool CardCombineStart {get {return cardCombineStart;} set {cardCombineStart = value;}}
@@ -87,6 +90,8 @@ public class GameManager : MonoBehaviour
     private int refCrystalCount;
     public int RefCrystalCount {get {return refCrystalCount;} set {refCrystalCount = value;}}
     
+    [SerializeField] private GameObject resourcesCard;
+
     private void Awake()
     {
         
@@ -116,9 +121,24 @@ public class GameManager : MonoBehaviour
         {
             crystalCount = SaveSystem.DataExtraction("crystalCount",0);
         }
+        
+        SaveSystem.DataSave("crystalCount",crystalCount);
         refCrystalCount = crystalCount;
 
+        if(SaveSystem.DataExtraction("cardsName","") != "")
+        {
+            string[] _cardsNames = SaveSystem.DataExtraction("cardsName", "").Split(",");
 
+            for (int i = 0; i < _cardsNames.Length; i++)
+            {
+                cardsName.Add(_cardsNames[i]);
+            }
+
+        }
+
+
+        CreateEarnedCard();
+        
     }
 
     private void Start()
@@ -148,8 +168,16 @@ public class GameManager : MonoBehaviour
             }          
         }
         
-       
-    
+        if(Input.GetKeyDown(KeyCode.V))
+        {
+
+            //print(SaveSystem.DataExtraction("cardsName",""));
+            foreach (var item in cardsName)
+            {
+                print(item);
+            }
+        }
+
         if(Input.GetKeyDown(KeyCode.Escape))
         {
             UIManager.Instance.SetActiveUI(UIManager.Instance.LevelsPanel.name);
@@ -200,10 +228,17 @@ public class GameManager : MonoBehaviour
     }
     public void SwitchTurnToEnemy()
     {
+        for (int i = 0; i < hand.Count; i++)
+        {
+            hand[i].GetComponent<Button>().interactable = false;
+        }
+
         HandToDeck();
         isPlayerTurn = false;
         UIManager.Instance.NextTourButton.interactable = false;
         StartCoroutine(enemy.MakeMove());
+
+        enemy = null;
     }
 
     public void SwitchTurnToPlayer()
@@ -275,6 +310,7 @@ public class GameManager : MonoBehaviour
 
     #region  Enemy Function
 
+
     //Düşman karakteri oluşturmamizi sağliyor
     public void CreatingEnemies(int enemysCount,EnemyController levelEnemyPrefab,Vector3[] _enemyPosition,EnemyFeature[] enemies)
     {
@@ -288,6 +324,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
     //Düşmanlarin yaşamadiğini kontrol edip map haritasını aktif durumunu tetikliyor
     public  void IsEnemyAlive(GameObject enemy)
     {
@@ -296,15 +333,16 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.NextTourButton.interactable = false;
         if(deadEnemyCount == enemys.Count)
         {
-            InitializeDeck();
+            CreateCardWinFromEnemy();
             UIManager.Instance.MapPrefab.SetActive(true);
             deadEnemyCount = 0;
             enemys.Clear();
-            //SwitchTurnToEnemy();
         }
         CardButtonInteractableControl();
     }
 
+
+    
     #endregion 
     
     
@@ -452,7 +490,8 @@ public class GameManager : MonoBehaviour
     private int randomNumber = 0;
     private int  lastRandomNumber = 0;
 
-    public void InitializeDeck()
+    //create the cards we win from the enemy
+    public void CreateCardWinFromEnemy()
     {
         // yeni kart eklme için kullanulıyor
         //yeni kart oluşturunca oluşturulan kart dect  listesine ekle
@@ -462,6 +501,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(RandomNumber());
         
     }
+    
 
     //random bir şekilde kart oluşturmaı sağliyor
     private IEnumerator RandomNumber()
@@ -481,8 +521,65 @@ public class GameManager : MonoBehaviour
         newCard.GetComponent<Button>().onClick.AddListener(()=>CardDevelopment.Instance.SelectCardDevelopment(newCard));
         newCard.SetActive(false);
         cards.Add(newCard);
+
+
+        switch(newCard.tag)
+        {
+            case "AttackCard":
+                string attackCardsName = $"Prefabs/Cards/AttackCards/{newCard.name}";
+                
+                cardsName.Add(attackCardsName);
+            break;
+            case "DefenceCard":
+                string defenceCardsName = $"Prefabs/Cards/DefenceCards/{newCard.name}";
+
+
+                cardsName.Add(defenceCardsName);
+            break;
+            case "AbilityCard":
+                string abilityCardsName = $"Prefabs/Cards/AbilityCards/{newCard.name}";
+
+                cardsName.Add(abilityCardsName);
+            break;
+            case "StrenghCard":
+                string strenghCardsName =$"Prefabs/Cards/StrengthCards/{newCard.name}";
+
+                cardsName.Add(strenghCardsName);
+            break;
+            default:
+            break;
+        }
+        
+        string _cardsName = string.Join(",", cardsName);
+        SaveSystem.DataSave("cardsName", _cardsName);
     }
     
+    public void CreateEarnedCard()
+    {
+        string _a = SaveSystem.DataExtraction("cardsName","");
+        string[] _b = _a.Split(",");
+        for (int i = 0; i < _b.Length; i++)
+        {
+            print(_b[i]);
+            resourcesCard = Resources.Load<GameObject>(_b[i]);
+            if(resourcesCard != null)
+            {
+                GameObject _object = Instantiate(resourcesCard,UIManager.Instance.EarnedGameObject.transform);
+                
+                _object.name = _b[i].Split("/")[3];
+                _object.transform.localScale = Vector3.one;
+                _object.gameObject.SetActive(false);
+                //yeni eklenen kod
+                _object.GetComponent<Button>().onClick.AddListener(()=>CardDevelopment.Instance.SelectCardDevelopment(_object));
+                //deck.Add(_object);
+                cards.Add(_object); 
+            
+            }
+        }   
+    }
+
+
+
     public void SetActiveCardMovement()
     {
         for (int i = 0; i < gameAllCards.Count; i++)
@@ -546,6 +643,7 @@ public class GameManager : MonoBehaviour
             {
                 print("Geliştirileme Başarisiz");
                 UIManager.Instance.CardFeatureValueUpdate(false);
+                CardDevelopment.Instance.CardFeatureValues.Clear();
             }
             
             UIManager.Instance.CardFeatureValueButtonClose("Upgrade");
@@ -681,11 +779,13 @@ public class GameManager : MonoBehaviour
         SaveSystem.DataSave("crystalCount",crystalCount);
         refCrystalCount = crystalCount;
     }
-
+    
     public int CrystalCoinShow()
     {
+        print("çalişiyor");
         if(refCrystalCount > 0)
         {
+            
             refCrystalCount--;
         }
         else if(refCrystalCount <= 0)
@@ -693,6 +793,7 @@ public class GameManager : MonoBehaviour
             refCrystalCount = 0;
         }
 
+        print(refCrystalCount);
         UIManager.Instance.CrystalCount_Text.text = refCrystalCount.ToString();
 
         return refCrystalCount;

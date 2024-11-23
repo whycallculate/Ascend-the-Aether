@@ -371,9 +371,9 @@ MonoBehaviour:
   cardLegendary: 3
   cardCombineLegendary: 0200000001000000
   cardPosition: {x: 0, y: 0}
-  energyCost: 2
+  energyCost: 1
   duration: 4
-  damage: 30
+  damage: 35
   attackCards:
   - {fileID: 0}
   - {fileID: 0}
@@ -758,7 +758,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 2
+  m_text: 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
