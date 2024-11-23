@@ -27,7 +27,6 @@ public class CardBoard : MonoBehaviour,IDropHandler
     public void OnDrop(PointerEventData eventData)
     {
         
-        //GameManager.Instance.SelectableCard(false);
         if(eventData.pointerDrag.GetComponent<CanvasGroup>() != null)
         {
             eventData.pointerDrag.GetComponent<CanvasGroup>().blocksRaycasts = true;
@@ -55,7 +54,6 @@ public class CardBoard : MonoBehaviour,IDropHandler
 
             
         }
-        //GameManager.Instance.SelectableCard(false);
     }
 
     private void CardImpact(GameObject card)
