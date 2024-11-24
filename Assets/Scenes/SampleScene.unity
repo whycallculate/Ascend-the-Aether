@@ -3011,23 +3011,6 @@ PrefabInstance:
       propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
-
-    - target: {fileID: 3514572629133200211, guid: eda89491e1a74a84cb75928e8f0a4c52,
-        type: 3}
-      propertyPath: levelEnemyPrefab
-      value: 
-      objectReference: {fileID: -7627069637890836441, guid: 6012859dddb85964d9ddd61131582326,
-        type: 3}
-    - target: {fileID: 3514572629133200211, guid: eda89491e1a74a84cb75928e8f0a4c52,
-        type: 3}
-      propertyPath: enemy.Array.data[0].Shield
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3514572629133200211, guid: eda89491e1a74a84cb75928e8f0a4c52,
-        type: 3}
-      propertyPath: enemy.Array.data[0].maxHealth
-      value: 30
-
     - target: {fileID: 4378809659660219658, guid: eda89491e1a74a84cb75928e8f0a4c52,
         type: 3}
       propertyPath: m_IsActive
@@ -3037,19 +3020,12 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Interactable
       value: 1
-
       objectReference: {fileID: 0}
     - target: {fileID: 6248392376134214146, guid: eda89491e1a74a84cb75928e8f0a4c52,
         type: 3}
       propertyPath: m_Name
       value: Map_Panel
       objectReference: {fileID: 0}
-
-    - target: {fileID: 7756294198233261902, guid: eda89491e1a74a84cb75928e8f0a4c52,
-        type: 3}
-      propertyPath: enemy.Array.data[0].maxHealth
-      value: 30
-
     - target: {fileID: 6248392376134214146, guid: eda89491e1a74a84cb75928e8f0a4c52,
         type: 3}
       propertyPath: m_IsActive
@@ -3059,7 +3035,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
-
       objectReference: {fileID: 0}
     - target: {fileID: 8012758175073842373, guid: eda89491e1a74a84cb75928e8f0a4c52,
         type: 3}
@@ -3075,27 +3050,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8225087385633213700, guid: eda89491e1a74a84cb75928e8f0a4c52,
-        type: 3}
-      propertyPath: levelEnemyPrefab
-      value: 
-      objectReference: {fileID: -7627069637890836441, guid: 055701e3369471345bb401814bc6672b,
-        type: 3}
-    - target: {fileID: 8225087385633213700, guid: eda89491e1a74a84cb75928e8f0a4c52,
-        type: 3}
-      propertyPath: enemy.Array.data[0].Damage
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8225087385633213700, guid: eda89491e1a74a84cb75928e8f0a4c52,
-        type: 3}
-      propertyPath: enemy.Array.data[0].Shield
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8225087385633213700, guid: eda89491e1a74a84cb75928e8f0a4c52,
-        type: 3}
-      propertyPath: enemy.Array.data[0].maxHealth
-      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 8941743165695367668, guid: eda89491e1a74a84cb75928e8f0a4c52,
         type: 3}
@@ -3363,31 +3317,8 @@ CanvasRenderer:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-
-  m_GameObject: {fileID: 8927222009668390191}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f4b9467cb717a94f8dc54c21fa4a3e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cardUI: {fileID: 0}
-  cardMovement: {fileID: 2646664152675472538}
-  cardType: 4
-  cardLegendary: 1
-  cardCombineLegendary: 01000000
-  cardPosition: {x: 0, y: 0}
-  energyCost: 4
-  duration: 4
-  strength: 0
-  strengthCards:
-  - {fileID: 6085020466150574515, guid: 9f88686a5cf8a614d85b91696fe7a4c5, type: 3}
-  - {fileID: 1636084808425838564}
-  - {fileID: 4877476253641782617, guid: 90ca9dfd701d4e241a3b9c327b746cd8, type: 3}
-  cardButton: {fileID: 2909918794630346971}
-
   m_GameObject: {fileID: 8725559607059403788}
   m_CullTransparentMesh: 1
-
 --- !u!222 &2135959835345356853
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3672,65 +3603,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
-
---- !u!114 &4245259521243126700
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5202949638404581751}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b98c5005311303445ab5882a09d0d583, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cardUI: {fileID: 0}
-  cardMovement: {fileID: 0}
-  cardType: 1
-  cardLegendary: 3
-  cardCombineLegendary: 
-  cardPosition: {x: 0, y: 0}
-  energyCost: 1
-  duration: 5
-  damage: 300
-  attackCards:
-  - {fileID: 5939701278523527151, guid: 3f56f7621e33b77408be75ab64cba1d2, type: 3}
-  - {fileID: 8909847662239941989, guid: e65ff7e9e1d66b447accc1d8ea75c902, type: 3}
-  - {fileID: 5760034046384775040, guid: 99672583774be0a4ea486f01990bef58, type: 3}
-  - {fileID: 1939803859922718744, guid: de4786059a08934469f91bd916cace9f, type: 3}
-  cardButton: {fileID: 6421843271624522708}
---- !u!114 &4370449629486547642
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8927222009668390191}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
-
 --- !u!1 &4650600111145520019
 GameObject:
   m_ObjectHideFlags: 0
