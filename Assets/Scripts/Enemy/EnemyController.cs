@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using EnemyFeatures;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum EnemyType
@@ -16,24 +17,29 @@ public enum EnemyType
 
 public class EnemyController : MonoBehaviour
 {
+    public int maxHealth;
     public int HEALTH;
     public int SHIELD;
     public int DAMAGE;
     public int POWER;
     public bool enemyIsAlive = true;
     public float difficultyMultiplier = 1.2f;
-
     public int minDamage = 10;
     public int maxDamage = 20;
+    public int enemyMech = 0;
 
-    EnemyAI EnemyAI;
+
+    public EnemyType enemyType;
+    public EnemyAI EnemyAI;
 
     public void EnemyInitialize(EnemyFeature enemies)
     {
+        maxHealth = enemies.maxHealth;
         HEALTH = enemies.Health;
         SHIELD = enemies.Shield;
         DAMAGE = enemies.Damage;
         POWER = enemies.Power;
+        EnemyAI.GetEnemyStatInit(maxHealth, HEALTH, SHIELD, DAMAGE, POWER, minDamage, maxDamage, enemyMech);
     }
     public void GetEnemyAiStat()
     {
@@ -43,24 +49,23 @@ public class EnemyController : MonoBehaviour
         POWER = EnemyAI.power;
         minDamage = EnemyAI.minDamage;
         maxDamage = EnemyAI.maxDamage;
-
     }
 
-    public void SetHealth(int value) => HEALTH = value;
-    public void AddHealth(int value) => HEALTH += value;
-    public void TakeDamage(int value) => HEALTH -= value;
-    public void OnShield(int value) => SHIELD += value;
-    public void TakeShield(int value)
+
+    private void Awake()
     {
-        SHIELD -= value;
-        if (SHIELD < 0)
+        GetEnemyType();
+        if (enemyType == EnemyType.Slime)
         {
-            SHIELD = 0;
+            Slime[] slimeComponents = EnemyAI.GetComponents<Slime>();
+            for (int j = 1; j < slimeComponents.Length; j++)
+            {
+                Destroy(slimeComponents[j]);
+            }
         }
-    }
-    public void AddPower(int value) => POWER += value;
-    public void TakePower(int value) => POWER -= value;
 
+        HEALTH = maxHealth;
+    }
 
 
     private void Update()
@@ -72,53 +77,61 @@ public class EnemyController : MonoBehaviour
     }
     public void GetEnemyType()
     {
-        switch() {}
-
-    }
-    public IEnumerator MakeMove()
-    {
-        int action = Random.Range(0, 3); // 0 = hasar ver , 1 = kalkan , 2 = guc arttirma
-
-
-        switch (action)
+        switch(enemyType)
         {
-            case 0:
-                yield return new WaitForSeconds(2);
-                int randomDamage = Random.Range(minDamage, maxDamage);
-                randomDamage += POWER;
-                DAMAGE = randomDamage;
-                if (GameManager.Instance.character.shieldCurrent <= 0)
-                {
-                    GameManager.Instance.CardCharacterInteraction("healtbar", "-", randomDamage);
-                }
-                else if(GameManager.Instance.character.shieldCurrent > 0)
-                {
-                    int newDamage = GameManager.Instance.character.shieldCurrent - randomDamage;
-                    GameManager.Instance.CardCharacterInteraction("shield", "-", randomDamage);
-                    if(GameManager.Instance.character.shieldCurrent <= 0)
-                    {
-                        GameManager.Instance.CardCharacterInteraction("healtbar", "-", -newDamage);
+            case EnemyType.Slime:
 
-                    }
-                }
-                POWER = 0;
-                break;
-            case 1:
-                yield return new WaitForSeconds(2);
+                Slime slime = gameObject.AddComponent<Slime>();
+                EnemyAI = slime;
+                EnemyAI.GetEnemyStatInit(maxHealth, HEALTH, SHIELD, DAMAGE, POWER, minDamage, maxDamage, enemyMech);
 
-                OnShield(10);
                 break;
-            case 2:
-                yield return new WaitForSeconds(2);
 
-                AddPower(3);
+            case EnemyType.Rock:
+                Rock rock = gameObject.AddComponent<Rock>();
+                EnemyAI = rock;
+                EnemyAI.GetEnemyStatInit(maxHealth, HEALTH, SHIELD, DAMAGE, POWER, minDamage, maxDamage, enemyMech);
                 break;
+            case EnemyType.Assassin:
+                Assassin assassin = gameObject.AddComponent<Assassin>();
+                EnemyAI = assassin;
+                EnemyAI.GetEnemyStatInit(maxHealth, HEALTH, SHIELD, DAMAGE, POWER, minDamage, maxDamage, enemyMech);
+                break;
+            case EnemyType.Thief:
+                Thief thief = gameObject.AddComponent<Thief>();
+                EnemyAI = thief;
+                EnemyAI.GetEnemyStatInit(maxHealth, HEALTH, SHIELD, DAMAGE, POWER, minDamage, maxDamage, enemyMech);
+                break;
+            case EnemyType.Mage:
+                Mage mage = gameObject.AddComponent<Mage>();
+                EnemyAI = mage;
+                EnemyAI.GetEnemyStatInit(maxHealth, HEALTH, SHIELD, DAMAGE, POWER, minDamage, maxDamage, enemyMech);
+                break;
+            case EnemyType.KingSlime:
+                KingSlime kingSlime = gameObject.AddComponent<KingSlime>();
+                EnemyAI = kingSlime;
+                EnemyAI.GetEnemyStatInit(maxHealth, HEALTH, SHIELD, DAMAGE, POWER, minDamage, maxDamage, enemyMech);
+                break;
+            case EnemyType.KingMage:
+                KingMage kingMage = gameObject.AddComponent<KingMage>();
+                EnemyAI = kingMage;
+                EnemyAI.GetEnemyStatInit(maxHealth, HEALTH, SHIELD, DAMAGE, POWER, minDamage, maxDamage, enemyMech);
+                break;
+
+
         }
 
-        if (HEALTH <= 0) enemyIsAlive = false;
+    }
+
+    public IEnumerator MakeMove()
+    {
+        yield return new WaitForSeconds(3);
+        EnemyAI.GetMechanic();
+        GetEnemyAiStat();
+
 
         GameManager.Instance.SwitchTurnToPlayer();
     }
-
+    
 
 }
