@@ -49,6 +49,7 @@ public class EnemyController : MonoBehaviour
         POWER = EnemyAI.power;
         minDamage = EnemyAI.minDamage;
         maxDamage = EnemyAI.maxDamage;
+
     }
 
 
