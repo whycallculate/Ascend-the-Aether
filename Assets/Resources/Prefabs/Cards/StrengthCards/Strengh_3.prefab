@@ -571,7 +571,7 @@ CanvasGroup:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5349057251039676452}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
@@ -593,6 +593,7 @@ MonoBehaviour:
   cardType: 4
   cardLegendary: 1
   cardCombineLegendary: 
+  cardPosition: {x: 0, y: 0}
   energyCost: 3
   duration: 3
   strength: 30

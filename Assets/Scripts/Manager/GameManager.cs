@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Card_Enum;
 using EnemyFeatures;
 using UnityEngine;
 using UnityEngine.UI;
@@ -37,7 +38,6 @@ public class GameManager : MonoBehaviour
     public int CharacterCurrentLevelIndex {get {return characterCurrentLevelIndex;} set {characterCurrentLevelIndex = value;}}
     private string characterCurrentLevelType ;
     public string CharacterCurrentLevelType {get {return characterCurrentLevelType;} set {characterCurrentLevelType = value;}}
-    [SerializeField] private GameObject mapPrefab;
     [SerializeField] private GameObject levelsObject;
     [SerializeField] private List<LevelPrefabControl> levelObjects = new List<LevelPrefabControl>();
 
@@ -70,14 +70,28 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]private List<GameObject> cards = new List<GameObject>();
     public List<GameObject> Cards {get {return cards;}}
+
+    [SerializeField] private List<string> cardsName = new List<string>();
+    public List<string> CardsName {get {return cardsName;}}
     
-    [SerializeField] private GameObject deckObject;
     private bool cardCombineStart = false;
     public bool CardCombineStart {get {return cardCombineStart;} set {cardCombineStart = value;}}
+    
+    private bool[] faceRatio = new bool[4]{true,true,true,true};
+    private bool[] seventyFivePercent = new bool[4]{true,false,true,true};
+    private bool[] fivetyPercent = new bool[4]{true,false,true,false};
+    private bool[] twentyFivePercent = new bool[4]{false,false,true,false};
+    private bool[] zeroFivePercent = new bool[4]{false,false,false,false};
+
     #endregion
     
-
+    [SerializeField] private int crystalCount = 0;
+    public int CrystalCount {get {return crystalCount;} set { crystalCount = value;}}
+    private int refCrystalCount;
+    public int RefCrystalCount {get {return refCrystalCount;} set {refCrystalCount = value;}}
     
+    [SerializeField] private GameObject resourcesCard;
+
     private void Awake()
     {
         
@@ -103,13 +117,34 @@ public class GameManager : MonoBehaviour
         LevelIndexAdjust();
 
         AllCardLoad();
+        if(SaveSystem.DataQuery("crystalCount"))
+        {
+            crystalCount = SaveSystem.DataExtraction("crystalCount",0);
+        }
+        
+        SaveSystem.DataSave("crystalCount",crystalCount);
+        refCrystalCount = crystalCount;
 
+        if(SaveSystem.DataExtraction("cardsName","") != "")
+        {
+            string[] _cardsNames = SaveSystem.DataExtraction("cardsName", "").Split(",");
+
+            for (int i = 0; i < _cardsNames.Length; i++)
+            {
+                cardsName.Add(_cardsNames[i]);
+            }
+
+        }
+
+
+        CreateEarnedCard();
         
     }
 
     private void Start()
     {
         DrawCards();
+        CardTypeFindPositionSet();
     }
 
 
@@ -132,7 +167,16 @@ public class GameManager : MonoBehaviour
                 }
             }          
         }
+        
+        if(Input.GetKeyDown(KeyCode.V))
+        {
 
+            //print(SaveSystem.DataExtraction("cardsName",""));
+            foreach (var item in cardsName)
+            {
+                print(item);
+            }
+        }
 
         if(Input.GetKeyDown(KeyCode.Escape))
         {
@@ -147,6 +191,8 @@ public class GameManager : MonoBehaviour
         
        
     }
+
+    #region 
 
     public void DrawCards()
     {
@@ -168,7 +214,6 @@ public class GameManager : MonoBehaviour
         for(int i = 0;i < hand.Count;i++)
         {
             hand[i].GetComponent<RectTransform>().anchoredPosition = UIManager.Instance.cardPos[i].anchoredPosition;
-
         }
 
     }
@@ -183,10 +228,22 @@ public class GameManager : MonoBehaviour
     }
     public void SwitchTurnToEnemy()
     {
+        for (int i = 0; i < hand.Count; i++)
+        {
+            hand[i].GetComponent<Button>().interactable = false;
+        }
+
         HandToDeck();
         isPlayerTurn = false;
+
         StartCoroutine(enemy.MakeMove());
         SelectableCard(false);
+
+        UIManager.Instance.NextTourButton.interactable = false;
+        StartCoroutine(enemy.MakeMove());
+
+        enemy = null;
+
     }
 
     public void SwitchTurnToPlayer()
@@ -204,6 +261,7 @@ public class GameManager : MonoBehaviour
         character.CharacterTraits_Function(characterTraits,transaction,value);
     }
 
+    #endregion
 
 
     #region  Level Function
@@ -213,7 +271,10 @@ public class GameManager : MonoBehaviour
         {
             levelObjects[i].NextBackLevelOpen(characterCurrentLevelIndex);
         }
+        CardPositionReset();
+        character.CharacterTraits_Function("energy","+",5);
     }
+
 
     //karakter ölünce mevcut level index'ni sifirliyor
     public void LevelReset()
@@ -254,6 +315,7 @@ public class GameManager : MonoBehaviour
 
     #region  Enemy Function
 
+
     //Düşman karakteri oluşturmamizi sağliyor
     public void CreatingEnemies(int enemysCount,EnemyController levelEnemyPrefab,Vector3[] _enemyPosition,EnemyFeature[] enemies)
     {
@@ -267,6 +329,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
     //Düşmanlarin yaşamadiğini kontrol edip map haritasını aktif durumunu tetikliyor
     public  void IsEnemyAlive(GameObject enemy)
     {
@@ -275,15 +338,16 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.NextTourButton.interactable = false;
         if(deadEnemyCount == enemys.Count)
         {
-            InitializeDeck();
+            CreateCardWinFromEnemy();
             UIManager.Instance.MapPrefab.SetActive(true);
             deadEnemyCount = 0;
             enemys.Clear();
-            SwitchTurnToEnemy();
         }
         CardButtonInteractableControl();
     }
 
+
+    
     #endregion 
     
     
@@ -399,6 +463,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void HandCardPositionAdjust()
+    {
+        for (int i = 0; i < hand.Count; i++)
+        {
+            if(hand[i].activeSelf)
+            {
+                hand[i].GetComponent<RectTransform>().anchoredPosition = UIManager.Instance.cardPos[i].anchoredPosition;
+
+            }
+        }
+        SelectableCard(false);
+    }
+
     //kart objelerin buttonunu tıklanilmamasını sağliyor
     private void CardButtonInteractableControl()
     {
@@ -418,7 +495,8 @@ public class GameManager : MonoBehaviour
     private int randomNumber = 0;
     private int  lastRandomNumber = 0;
 
-    public void InitializeDeck()
+    //create the cards we win from the enemy
+    public void CreateCardWinFromEnemy()
     {
         // yeni kart eklme için kullanulıyor
         //yeni kart oluşturunca oluşturulan kart dect  listesine ekle
@@ -428,6 +506,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(RandomNumber());
         
     }
+    
 
     //random bir şekilde kart oluşturmaı sağliyor
     private IEnumerator RandomNumber()
@@ -447,8 +526,65 @@ public class GameManager : MonoBehaviour
         newCard.GetComponent<Button>().onClick.AddListener(()=>CardDevelopment.Instance.SelectCardDevelopment(newCard));
         newCard.SetActive(false);
         cards.Add(newCard);
+
+
+        switch(newCard.tag)
+        {
+            case "AttackCard":
+                string attackCardsName = $"Prefabs/Cards/AttackCards/{newCard.name}";
+                
+                cardsName.Add(attackCardsName);
+            break;
+            case "DefenceCard":
+                string defenceCardsName = $"Prefabs/Cards/DefenceCards/{newCard.name}";
+
+
+                cardsName.Add(defenceCardsName);
+            break;
+            case "AbilityCard":
+                string abilityCardsName = $"Prefabs/Cards/AbilityCards/{newCard.name}";
+
+                cardsName.Add(abilityCardsName);
+            break;
+            case "StrenghCard":
+                string strenghCardsName =$"Prefabs/Cards/StrengthCards/{newCard.name}";
+
+                cardsName.Add(strenghCardsName);
+            break;
+            default:
+            break;
+        }
+        
+        string _cardsName = string.Join(",", cardsName);
+        SaveSystem.DataSave("cardsName", _cardsName);
     }
     
+    public void CreateEarnedCard()
+    {
+        string _a = SaveSystem.DataExtraction("cardsName","");
+        string[] _b = _a.Split(",");
+        for (int i = 0; i < _b.Length; i++)
+        {
+            print(_b[i]);
+            resourcesCard = Resources.Load<GameObject>(_b[i]);
+            if(resourcesCard != null)
+            {
+                GameObject _object = Instantiate(resourcesCard,UIManager.Instance.EarnedGameObject.transform);
+                
+                _object.name = _b[i].Split("/")[3];
+                _object.transform.localScale = Vector3.one;
+                _object.gameObject.SetActive(false);
+                //yeni eklenen kod
+                _object.GetComponent<Button>().onClick.AddListener(()=>CardDevelopment.Instance.SelectCardDevelopment(_object));
+                //deck.Add(_object);
+                cards.Add(_object); 
+            
+            }
+        }   
+    }
+
+
+
     public void SetActiveCardMovement()
     {
         for (int i = 0; i < gameAllCards.Count; i++)
@@ -457,6 +593,119 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void CardTypeFindPositionSet()
+    {
+        for (int i = 0; i < hand.Count; i++)
+        {
+            switch(hand[i].tag)
+            {
+                case "AttackCard":
+                    hand[i].GetComponent<AttackCardController>().cardPosition = hand[i].GetComponent<RectTransform>().anchoredPosition;
+                break;
+                case "DefenceCard":
+                    hand[i].GetComponent<DefenceCardController>().cardPosition = hand[i].GetComponent<RectTransform>().anchoredPosition;
+                break;
+                case "AbilityCard":
+                    hand[i].GetComponent<AbilityCardController>().cardPosition = hand[i].GetComponent<RectTransform>().anchoredPosition;
+                break;
+                case "StrenghCard":
+                    hand[i].GetComponent<StrengthCardController>().cardPosition = hand[i].GetComponent<RectTransform>().anchoredPosition;
+                break;
+            }
+        }
+    }
+
+    private int succesfull = 0;
+    private int failed = 0;
+
+    public void CardDevelopmentRate()
+    {
+        if(crystalCount > 0)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                bool[] percent = CardDevelopmentRatePercentSelect();
+                int _randomNumber = Random.Range(0, percent.Length - 1);
+                bool percentResult = percent[_randomNumber];
+                if (percentResult)
+                {
+                    succesfull++;
+                }
+                else
+                {
+                    failed++;
+                }
+            }
+
+
+            if (succesfull > failed)
+            {
+                print("Geliştirilme Başarili");
+                CardDevelopment.Instance.CardUpgrade();
+                UIManager.Instance.CardFeatureValueUpdate(true);
+            }
+            else if (failed > succesfull)
+            {
+                print("Geliştirileme Başarisiz");
+                UIManager.Instance.CardFeatureValueUpdate(false);
+                CardDevelopment.Instance.CardFeatureValues.Clear();
+            }
+            
+            UIManager.Instance.CardFeatureValueButtonClose("Upgrade");
+
+            succesfull = 0;
+            failed = 0;
+        }
+        else if(crystalCount <= 0)
+        {
+            UIManager.Instance.CardFeatureValueUpdate(false);
+            UIManager.Instance.CardFeatureValueButtonClose("All");
+
+        }
+
+    }
+
+    private CardDevelopmentRateEnum CardDevelopmentRatePercentTypeSelect()
+    {
+        int number = Random.Range(0,4);
+        switch(number)
+        {
+            case 0:
+            return CardDevelopmentRateEnum.FaceRatio;
+            
+            case 1:
+            return CardDevelopmentRateEnum.SeventyFivePercent;
+            
+            case 2:
+            return CardDevelopmentRateEnum.FivetyPercent;
+            
+            case 3:
+            return CardDevelopmentRateEnum.TwentyFivePercent;
+            
+            default:
+            return CardDevelopmentRateEnum.ZeroPercent;
+
+        }
+    }
+    public int karaterEnerji = 0;
+    private bool[] CardDevelopmentRatePercentSelect()
+    {
+
+        switch(CardDevelopmentRatePercentTypeSelect())
+        {
+            case CardDevelopmentRateEnum.FaceRatio:
+            return faceRatio;
+            case CardDevelopmentRateEnum.SeventyFivePercent:
+            return seventyFivePercent;
+            case CardDevelopmentRateEnum.FivetyPercent:
+            return fivetyPercent;
+            case CardDevelopmentRateEnum.TwentyFivePercent:
+            return twentyFivePercent;
+            default:
+            return zeroFivePercent;
+        }
+        
+    }
 
     #endregion
 
@@ -508,4 +757,54 @@ public class GameManager : MonoBehaviour
     }
 
     #endregion
+
+    #region  Ekonominest
+
+    public void CrystalCoinWin(int winCrystalCount)
+    {
+        crystalCount += winCrystalCount;
+        UIManager.Instance.CrystalCount_Text.text = crystalCount.ToString();
+        SaveSystem.DataSave("crystalCount",crystalCount);
+    }
+
+    public void CrystalCoinLose(int loseCrystalCount)
+    {
+        int numberControl = crystalCount - loseCrystalCount;
+        if(numberControl > 0)
+        {
+            crystalCount-= loseCrystalCount;
+            UIManager.Instance.CrystalCount_Text.text = crystalCount.ToString();
+        }
+        else
+        {
+            crystalCount = 0;
+            UIManager.Instance.CrystalCount_Text.text = crystalCount.ToString();
+        }
+
+        SaveSystem.DataSave("crystalCount",crystalCount);
+        refCrystalCount = crystalCount;
+    }
+    
+    public int CrystalCoinShow()
+    {
+        print("çalişiyor");
+        if(refCrystalCount > 0)
+        {
+            
+            refCrystalCount--;
+        }
+        else if(refCrystalCount <= 0)
+        {
+            refCrystalCount = 0;
+        }
+
+        print(refCrystalCount);
+        UIManager.Instance.CrystalCount_Text.text = refCrystalCount.ToString();
+
+        return refCrystalCount;
+    }
+
+    #endregion
+
+
 }

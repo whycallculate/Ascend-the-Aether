@@ -38,7 +38,14 @@ public class CardDevelopment : MonoBehaviour
         SelectCarInformationFind(_selectCard);
         UIManager.Instance.CardDevelopmentTable.SetActive(true);
         UIManager.Instance.CardsScroll.SetActive(false);
-
+        if(GameManager.Instance.CrystalCount > 0)
+        {
+            UIManager.Instance.CardFeatureValueButtonClose("Upgrade");
+        }
+        else if(GameManager.Instance.CrystalCount <= 0)
+        {
+            UIManager.Instance.CardFeatureValueButtonClose("All");
+        }
     }
 
    
@@ -51,7 +58,7 @@ public class CardDevelopment : MonoBehaviour
             case "AttackCard":
                 attackCard = _selectCard.GetComponent<AttackCardController>();
 
-                string[] attackCardFeaturesName = {"Energy : ","Damge : "};
+                string[] attackCardFeaturesName = {"Energy","Damge"};
                 int[] attackFeaturesValue = {attackCard.energyCost,attackCard.damage};
                 
                 CardFeaturesUICreate(attackCardFeaturesName, attackFeaturesValue);
@@ -61,7 +68,7 @@ public class CardDevelopment : MonoBehaviour
             case "DefenceCard":
                 defenceCard = _selectCard.GetComponent<DefenceCardController>();
 
-                string[] defenceCardFeaturesName = {"Energy : ","Defence : "};
+                string[] defenceCardFeaturesName = {"Energy","Defence"};
                 int[] defenceFeaturesValue = {defenceCard.energyCost,defenceCard.defence};
 
                 CardFeaturesUICreate(defenceCardFeaturesName,defenceFeaturesValue);
@@ -70,7 +77,7 @@ public class CardDevelopment : MonoBehaviour
             case "AbilityCard":
                 abilityCard = _selectCard.GetComponent<AbilityCardController>();
 
-                string[] abilityCardFeaturesName = {"Energy : ","Ability : "};
+                string[] abilityCardFeaturesName = {"Energy","Ability"};
                 int[] abilityFeaturesValue = {abilityCard.energyCost,abilityCard.ability};
                 
                 CardFeaturesUICreate(abilityCardFeaturesName,abilityFeaturesValue);
@@ -80,7 +87,7 @@ public class CardDevelopment : MonoBehaviour
             case "StrenghCard":
             
                 strenghCard = _selectCard.GetComponent<StrengthCardController>();
-                string[] strenghCardFeaturesName = {"Energy : ","Strengh : "};
+                string[] strenghCardFeaturesName = {"Energy","Strengh"};
                 int[] strenghFeaturesValue = {strenghCard.energyCost,strenghCard.strength};
 
                 CardFeaturesUICreate(strenghCardFeaturesName,strenghFeaturesValue);
@@ -106,48 +113,59 @@ public class CardDevelopment : MonoBehaviour
         
     }
 
+ 
+
     //kartlari upgrade ettiğimiz fonksiyon
-    public void CardUpgrade(List<int> cardFeatureValues)
+
+    private List<int> cardFeatureValues = new List<int>();
+    public List<int> CardFeatureValues {get {return cardFeatureValues;}}
+    
+    public void CardUpgrade()
     {
+        
+        for (int i = 0; i < cardFeatureValues.Count; i++)
+        {
+            print(i+"'nci değer : " + cardFeatureValues[i]);
+        } 
+
         switch(selectCard.tag)
         {
             case "AttackCard":
                 attackCard = selectCard.GetComponent<AttackCardController>();
                 attackCard.CardUpgradeInitialize(cardFeatureValues[0],cardFeatureValues[1]);
+                print(attackCard.name);
                 _object = Resources.Load<GameObject>($"Prefabs/Cards/AttackCards/{attackCard.name}");
-                _object.GetComponent<CardUI>().CardUpgradeInitialize(1);
-                _object.GetComponent<AttackCardController>().CardUpgradeInitialize(cardFeatureValues[0], cardFeatureValues[1]);
+                _object.GetComponent<CardUI>().CardUpgradeInitialize(cardFeatureValues[0]);
+                _object.GetComponent<AttackCardController>().CardUpgradeInitialize(cardFeatureValues[0],cardFeatureValues[1]);
             break;
-            
             case "DefenceCard":
                 defenceCard = selectCard.GetComponent<DefenceCardController>();
                 defenceCard.CardUpgradeInitialize(cardFeatureValues[0],cardFeatureValues[1]);
+                print(defenceCard.name);
                 _object = Resources.Load<GameObject>($"Prefabs/Cards/DefenceCards/{defenceCard.name}");
-                _object.GetComponent<CardUI>().CardUpgradeInitialize(1);
-                _object.GetComponent<DefenceCardController>().CardUpgradeInitialize(cardFeatureValues[0], cardFeatureValues[1]);
+                _object.GetComponent<CardUI>().CardUpgradeInitialize(cardFeatureValues[0]);
+                _object.GetComponent<DefenceCardController>().CardUpgradeInitialize(cardFeatureValues[0],cardFeatureValues[1]);
             break;
-            
             case "AbilityCard":
                 abilityCard = selectCard.GetComponent<AbilityCardController>();
                 abilityCard.CardUpgradeInitialize(cardFeatureValues[0],cardFeatureValues[1]);
+                print(abilityCard.name);
                 _object = Resources.Load<GameObject>($"Prefabs/Cards/AbilityCards/{abilityCard.name}");
-                _object.GetComponent<CardUI>().CardUpgradeInitialize(1);
-                _object.GetComponent<AbilityCardController>().CardUpgradeInitialize(cardFeatureValues[0], cardFeatureValues[1]);
+                _object.GetComponent<CardUI>().CardUpgradeInitialize(cardFeatureValues[0]);
+                _object.GetComponent<AbilityCardController>().CardUpgradeInitialize(cardFeatureValues[0],cardFeatureValues[1]);
             break;
-
             case "StrenghCard":
                 strenghCard = selectCard.GetComponent<StrengthCardController>();
                 strenghCard.CardUpgradeInitialize(cardFeatureValues[0],cardFeatureValues[1]);
+                print(strenghCard.name);
                 _object = Resources.Load<GameObject>($"Prefabs/Cards/StrengthCards/{strenghCard.name}");
-                _object.GetComponent<CardUI>().CardUpgradeInitialize(1);
-                _object.GetComponent<StrengthCardController>().CardUpgradeInitialize(cardFeatureValues[0], cardFeatureValues[1]);
-            break;
-
-            default:
+                _object.GetComponent<CardUI>().CardUpgradeInitialize(cardFeatureValues[0]);
+                _object.GetComponent<StrengthCardController>().CardUpgradeInitialize(cardFeatureValues[0],cardFeatureValues[1]);
             break;
         }
-        
+        cardFeatureValues.Clear();
     }
 
+    
     
 }
