@@ -35,6 +35,16 @@ public class EnemyController : MonoBehaviour
         DAMAGE = enemies.Damage;
         POWER = enemies.Power;
     }
+    public void GetEnemyAiStat()
+    {
+        HEALTH = EnemyAI.health;
+        SHIELD = EnemyAI.shield;
+        DAMAGE = EnemyAI.damage;
+        POWER = EnemyAI.power;
+        minDamage = EnemyAI.minDamage;
+        maxDamage = EnemyAI.maxDamage;
+
+    }
 
     public void SetHealth(int value) => HEALTH = value;
     public void AddHealth(int value) => HEALTH += value;
