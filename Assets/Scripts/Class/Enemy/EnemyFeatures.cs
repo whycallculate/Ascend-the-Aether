@@ -6,6 +6,7 @@ namespace EnemyFeatures
     public class EnemyFeature 
     {
         public string EnemyName;
+        public int maxHealth;
         public int Health;
         public int Shield;
         public int Damage;

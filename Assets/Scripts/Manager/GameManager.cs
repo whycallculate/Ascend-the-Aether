@@ -235,10 +235,15 @@ public class GameManager : MonoBehaviour
 
         HandToDeck();
         isPlayerTurn = false;
+
+        StartCoroutine(enemy.MakeMove());
+        SelectableCard(false);
+
         UIManager.Instance.NextTourButton.interactable = false;
         StartCoroutine(enemy.MakeMove());
 
         enemy = null;
+
     }
 
     public void SwitchTurnToPlayer()

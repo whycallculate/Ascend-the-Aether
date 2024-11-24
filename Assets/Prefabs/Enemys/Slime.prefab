@@ -434,9 +434,8 @@ GameObject:
   - component: {fileID: 7648387541760877217}
   - component: {fileID: -7627069637890836441}
   - component: {fileID: 4520148255693145393}
-  - component: {fileID: 1266774211940340743}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Slime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -543,6 +542,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2322a5b10bda6094fb01e909573e3437, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 0
   HEALTH: 30
   SHIELD: 0
   DAMAGE: 25
@@ -551,6 +551,9 @@ MonoBehaviour:
   difficultyMultiplier: 1.2
   minDamage: 10
   maxDamage: 20
+  enemyMech: 0
+  enemyType: 0
+  EnemyAI: {fileID: 0}
 --- !u!114 &4520148255693145393
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -567,19 +570,6 @@ MonoBehaviour:
   damageImage: {fileID: 1956606343380706829}
   shieldImage: {fileID: 912434177161626960}
   buffImage: {fileID: 7257576574671716689}
-  debuffImage: {fileID: 0}
---- !u!114 &1266774211940340743
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5180039889425856847}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d84b86dfb732ad142998c4a7307b5ba8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7777468313685407437
 GameObject:
   m_ObjectHideFlags: 0

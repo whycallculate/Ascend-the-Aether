@@ -652,8 +652,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7388413412111056698}
   m_HandleRect: {fileID: 3077375340648921480}
   m_Direction: 2
-  m_Value: 0.02565708
-  m_Size: 0.32758257
+  m_Value: 0.025657024
+  m_Size: 0.3275826
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3123,7 +3123,7 @@ PrefabInstance:
         type: 3}
       propertyPath: levelEnemyPrefab
       value: 
-      objectReference: {fileID: -7627069637890836441, guid: 19ab1542df8e6fa49b800d74d9b293f5,
+      objectReference: {fileID: -7627069637890836441, guid: 6012859dddb85964d9ddd61131582326,
         type: 3}
     - target: {fileID: 3136062388487517667, guid: 79d0e591b0956534294d7e83f7b1c867,
         type: 3}
@@ -3133,12 +3133,17 @@ PrefabInstance:
     - target: {fileID: 3136062388487517667, guid: 79d0e591b0956534294d7e83f7b1c867,
         type: 3}
       propertyPath: enemy.Array.data[0].Shield
-      value: 22
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3136062388487517667, guid: 79d0e591b0956534294d7e83f7b1c867,
         type: 3}
       propertyPath: enemy.Array.data[0].EnemyName
       value: Enemy_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3136062388487517667, guid: 79d0e591b0956534294d7e83f7b1c867,
+        type: 3}
+      propertyPath: enemy.Array.data[0].maxHealth
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 3136062388487517667, guid: 79d0e591b0956534294d7e83f7b1c867,
         type: 3}
@@ -3852,6 +3857,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3136062388487517667, guid: 79d0e591b0956534294d7e83f7b1c867,
         type: 3}
+      propertyPath: enemy.Array.data[0].maxHealth
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 3136062388487517667, guid: 79d0e591b0956534294d7e83f7b1c867,
+        type: 3}
       propertyPath: enemy.Array.data[1].EnemyName
       value: Enemy_2
       objectReference: {fileID: 0}
@@ -4197,12 +4207,12 @@ PrefabInstance:
         type: 3}
       propertyPath: levelEnemyPrefab
       value: 
-      objectReference: {fileID: -7627069637890836441, guid: 19ab1542df8e6fa49b800d74d9b293f5,
+      objectReference: {fileID: -7627069637890836441, guid: 055701e3369471345bb401814bc6672b,
         type: 3}
     - target: {fileID: 3136062388487517667, guid: 79d0e591b0956534294d7e83f7b1c867,
         type: 3}
       propertyPath: enemy.Array.data[0].Damage
-      value: 20
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3136062388487517667, guid: 79d0e591b0956534294d7e83f7b1c867,
         type: 3}
@@ -4213,6 +4223,11 @@ PrefabInstance:
         type: 3}
       propertyPath: enemy.Array.data[0].EnemyName
       value: Enemy_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3136062388487517667, guid: 79d0e591b0956534294d7e83f7b1c867,
+        type: 3}
+      propertyPath: enemy.Array.data[0].maxHealth
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 3136062388487517667, guid: 79d0e591b0956534294d7e83f7b1c867,
         type: 3}
