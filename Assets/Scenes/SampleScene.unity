@@ -2499,10 +2499,31 @@ PrefabInstance:
       propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3514572629133200211, guid: eda89491e1a74a84cb75928e8f0a4c52,
+        type: 3}
+      propertyPath: levelEnemyPrefab
+      value: 
+      objectReference: {fileID: -7627069637890836441, guid: 6012859dddb85964d9ddd61131582326,
+        type: 3}
+    - target: {fileID: 3514572629133200211, guid: eda89491e1a74a84cb75928e8f0a4c52,
+        type: 3}
+      propertyPath: enemy.Array.data[0].Shield
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3514572629133200211, guid: eda89491e1a74a84cb75928e8f0a4c52,
+        type: 3}
+      propertyPath: enemy.Array.data[0].maxHealth
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 6248392376134214146, guid: eda89491e1a74a84cb75928e8f0a4c52,
         type: 3}
       propertyPath: m_Name
       value: Map_Panel
+      objectReference: {fileID: 0}
+    - target: {fileID: 7756294198233261902, guid: eda89491e1a74a84cb75928e8f0a4c52,
+        type: 3}
+      propertyPath: enemy.Array.data[0].maxHealth
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 8012758175073842373, guid: eda89491e1a74a84cb75928e8f0a4c52,
         type: 3}
@@ -2518,6 +2539,27 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8225087385633213700, guid: eda89491e1a74a84cb75928e8f0a4c52,
+        type: 3}
+      propertyPath: levelEnemyPrefab
+      value: 
+      objectReference: {fileID: -7627069637890836441, guid: 055701e3369471345bb401814bc6672b,
+        type: 3}
+    - target: {fileID: 8225087385633213700, guid: eda89491e1a74a84cb75928e8f0a4c52,
+        type: 3}
+      propertyPath: enemy.Array.data[0].Damage
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8225087385633213700, guid: eda89491e1a74a84cb75928e8f0a4c52,
+        type: 3}
+      propertyPath: enemy.Array.data[0].Shield
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8225087385633213700, guid: eda89491e1a74a84cb75928e8f0a4c52,
+        type: 3}
+      propertyPath: enemy.Array.data[0].maxHealth
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 8941743165695367668, guid: eda89491e1a74a84cb75928e8f0a4c52,
         type: 3}
@@ -2812,6 +2854,7 @@ MonoBehaviour:
   cardType: 4
   cardLegendary: 1
   cardCombineLegendary: 01000000
+  cardPosition: {x: 0, y: 0}
   energyCost: 4
   duration: 4
   strength: 0
@@ -3179,6 +3222,7 @@ MonoBehaviour:
   cardType: 1
   cardLegendary: 3
   cardCombineLegendary: 
+  cardPosition: {x: 0, y: 0}
   energyCost: 1
   duration: 5
   damage: 300
@@ -3356,6 +3400,7 @@ MonoBehaviour:
   cardType: 1
   cardLegendary: 3
   cardCombineLegendary: 
+  cardPosition: {x: 0, y: 0}
   energyCost: 1
   duration: 2
   damage: 500
@@ -3797,6 +3842,7 @@ MonoBehaviour:
   cardType: 3
   cardLegendary: 3
   cardCombineLegendary: 
+  cardPosition: {x: 0, y: 0}
   energyCost: 0
   duration: 0
   ability: 0

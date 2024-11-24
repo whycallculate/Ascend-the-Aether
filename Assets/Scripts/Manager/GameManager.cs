@@ -185,7 +185,7 @@ public class GameManager : MonoBehaviour
     {
         HandToDeck();
         isPlayerTurn = false;
-        enemy.MakeMove();
+        StartCoroutine(enemy.MakeMove());
         SelectableCard(false);
     }
 
