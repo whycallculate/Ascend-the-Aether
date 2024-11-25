@@ -28,16 +28,13 @@ public class CharacterControl : CalculateCharacterValues
         isCharacterAlive = false;
     }
 
-    private void Update() 
-    {
-    }
 
     public void CharacterTraits_Function(string traits,string transaction,int value)
     {
         switch(traits)
         {
             case "healtbar":
-                float _healt = 20;
+                float _healt = value;
                 float Healt = _healt / 100;
                 StartCoroutine(CharacterAliveControl());
                 CharacterValueTransaction_Function(traits,transaction,ref isCharacterAlive,ref currentHealt,healt,value,Healt);

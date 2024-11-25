@@ -62,7 +62,7 @@ public class EnemyController : MonoBehaviour
     }
     public void GetEnemyType()
     {
-        switch() {}
+        //switch() {}
 
     }
     public IEnumerator MakeMove()
