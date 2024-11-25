@@ -26,7 +26,8 @@ public class CardBoard : MonoBehaviour,IDropHandler
 
     public void OnDrop(PointerEventData eventData)
     {
-        
+        GameManager.Instance.enemy.GetEnemyAiStat();
+        GameManager.Instance.SelectableCard(false);
         if(eventData.pointerDrag.GetComponent<CanvasGroup>() != null)
         {
             eventData.pointerDrag.GetComponent<CanvasGroup>().blocksRaycasts = true;
@@ -207,7 +208,7 @@ public class CardBoard : MonoBehaviour,IDropHandler
         if(GameManager.Instance.character.energyCurrent >= abilityCardController.energyCost)
         {
             GameManager.Instance.CardCharacterInteraction("energy", "-", abilityCardController.energyCost);
-            GameManager.Instance.enemy.TakePower(abilityCardController.ability);
+            GameManager.Instance.enemy.EnemyAI.TakePower(abilityCardController.ability);
             abilityCardController.gameObject.SetActive(false);
             abilityCardController = null;
         }
@@ -226,7 +227,7 @@ public class CardBoard : MonoBehaviour,IDropHandler
             if(GameManager.Instance.enemy.SHIELD <= 0)
             {
                 GameManager.Instance.CardCharacterInteraction("energy", "-", attackCardController.energyCost);
-                GameManager.Instance.enemy.TakeDamage(attackCardController.damage);
+                GameManager.Instance.enemy.EnemyAI.TakeDamage(attackCardController.damage);
                 attackCardController.gameObject.SetActive(false);
                 attackCardController = null;
             }
@@ -235,10 +236,10 @@ public class CardBoard : MonoBehaviour,IDropHandler
                 int newDamage = GameManager.Instance.enemy.SHIELD - attackCardController.damage;
 
                 GameManager.Instance.CardCharacterInteraction("energy", "-", attackCardController.energyCost);
-                GameManager.Instance.enemy.TakeShield(attackCardController.damage);
+                GameManager.Instance.enemy.EnemyAI.TakeShield(attackCardController.damage);
                 if (GameManager.Instance.enemy.SHIELD <= 0)
                 {
-                    GameManager.Instance.enemy.TakeDamage(-newDamage);
+                    GameManager.Instance.enemy.EnemyAI.TakeDamage(-newDamage);
                 }
 
                 attackCardController.gameObject.SetActive(false);
