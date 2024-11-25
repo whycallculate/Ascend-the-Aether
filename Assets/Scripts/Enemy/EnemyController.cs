@@ -77,8 +77,9 @@ public class EnemyController : MonoBehaviour
     }
     public void GetEnemyType()
     {
-
-
+        switch (enemyType)
+        {
+            case EnemyType.Slime:
                 Slime slime = gameObject.AddComponent<Slime>();
                 EnemyAI = slime;
                 EnemyAI.GetEnemyStatInit(maxHealth, HEALTH, SHIELD, DAMAGE, POWER, minDamage, maxDamage, enemyMech);
@@ -115,9 +116,11 @@ public class EnemyController : MonoBehaviour
                 EnemyAI = kingMage;
                 EnemyAI.GetEnemyStatInit(maxHealth, HEALTH, SHIELD, DAMAGE, POWER, minDamage, maxDamage, enemyMech);
                 break;
-
-
         }
+
+
+
+        
 
     }
 
