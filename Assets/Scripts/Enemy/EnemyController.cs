@@ -77,9 +77,7 @@ public class EnemyController : MonoBehaviour
     }
     public void GetEnemyType()
     {
-        switch(enemyType)
-        {
-            case EnemyType.Slime:
+
 
                 Slime slime = gameObject.AddComponent<Slime>();
                 EnemyAI = slime;

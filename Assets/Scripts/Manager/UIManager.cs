@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using LevelTypeEnums;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -96,6 +98,20 @@ public class UIManager : MonoBehaviour
 
     #endregion
 
+    #region  Map
+
+    [SerializeField] private Button cardDevelopmenButton;
+    [SerializeField] private Button characterHealtRenewalButton;
+
+
+    #endregion
+
+    #region 
+
+    [SerializeField] private Button backReturnButton;
+
+    #endregion
+
 
     private void Awake() 
     {
@@ -125,6 +141,9 @@ public class UIManager : MonoBehaviour
             cardUpdateButton.onClick.AddListener(CardFeatureUpdateButtonFunction);
         }
     }
+
+    
+    //tanimli olan ui objelerini aktifleştilme veya aktifleştirilmemesini sağliyor
     
     public void SetActiveUI(string panelName)
     {
@@ -140,11 +159,14 @@ public class UIManager : MonoBehaviour
                 GameManager.Instance.Cards[i].transform.SetParent(cardUpgradeContent.transform);
                 GameManager.Instance.Cards[i].SetActive(true);
             }
+            backReturnButton.gameObject.SetActive(true);
         }
-
+        
 
         if(levelsPanel.activeSelf)
         {
+            backReturnButton.gameObject.SetActive(false);
+
             for (int i = 0; i < GameManager.Instance.Cards.Count; i++)
             {
                 GameManager.Instance.Cards[i].GetComponent<CardMovement>().enabled = true;
@@ -152,9 +174,12 @@ public class UIManager : MonoBehaviour
             }
             crystalCount_Text.text = GameManager.Instance.CrystalCount.ToString();
         }
+
+
     }
 
 
+    #region  Card
     private int result;
     
     //Kartin ugrade buttonuna basınca etkileşimi sağliyan method
@@ -193,7 +218,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-
+    //kart geliştirme buttonu
     public void CardFeatureValueUpdate(bool isUpgrade)
     {
         if(isUpgrade)
@@ -291,5 +316,81 @@ public class UIManager : MonoBehaviour
         cardFeatureGameObjects.Add(newCardFeatureGameObject);
     }
 
-   
+    #endregion
+
+    #region 
+    
+    //change level buttonuna basinca karakter caninin yenimlem buttonu için method
+    public void CharacterHealtRenewal_Function()
+    {
+        if(GameManager.Instance.character != null)
+        {
+            print("boş değil");
+            if(GameManager.Instance.character.currentHealt < 100)
+            {
+                print("100'den küçük");
+                double lifeValueAdd =GameManager.Instance.character.currentHealt * 0.25;    
+                if((lifeValueAdd + GameManager.Instance.character.currentHealt) < 100)
+                {
+                    GameManager.Instance.CardCharacterInteraction("healtbar","+",Convert.ToInt32(lifeValueAdd));
+                    print("doğru hesap : " + lifeValueAdd);
+                }
+                else if( (lifeValueAdd + GameManager.Instance.character.currentHealt) >= 100)
+                {
+                    double subtract =0d;
+                    subtract = (GameManager.Instance.character.currentHealt + lifeValueAdd) - GameManager.Instance.character.currentHealt;
+
+                   
+                    print(subtract);
+                    
+                    GameManager.Instance.CardCharacterInteraction("healtbar","+",Convert.ToInt32(subtract));
+                
+                }
+                print(GameManager.Instance.character.currentHealt);
+            }
+            else
+            {
+                print("100'den küçük değil");
+            }
+        }
+        
+        CardAndHealtButtonUIOpenOrClose(false);
+        
+        GameManager.Instance.CharacterCurrentLevelIndex += GameManager.Instance.CurrentLevelIndex;
+        SaveSystem.DataSave("levelIndex",GameManager.Instance.CharacterCurrentLevelIndex);
+        GameManager.Instance.levelProgress(false);
+    }
+
+    //kart geliştirme buttonu için method
+    public void CardDevelopment_Function()
+    {
+        CardAndHealtButtonUIOpenOrClose(false);
+        SetActiveUI(cardsScroll.name);
+        GameManager.Instance.CharacterCurrentLevelIndex += GameManager.Instance.CurrentLevelIndex;
+        SaveSystem.DataSave("levelIndex",GameManager.Instance.CharacterCurrentLevelIndex);
+        GameManager.Instance.levelProgress(false);
+    }
+
+    //kart geliştirme ve can yenileme buttonlarini aktifleştirmek veya aktif dişi bırakmamizi sağliyan method
+    public void CardAndHealtButtonUIOpenOrClose(bool openOrClose)
+    {
+        cardDevelopmenButton.gameObject.SetActive(openOrClose);
+        characterHealtRenewalButton.gameObject.SetActive(openOrClose);
+        
+    }
+
+    //geri dönme buttonu kazandiğimiz kartları gösterilen yerde kullanılıyor
+    public void BackReturnButton_Function()
+    {
+        SetActiveUI(levelsPanel.name);
+        for (int i = 0; i < GameManager.Instance.Cards.Count; i++)
+        {
+            GameManager.Instance.Cards[i].transform.SetParent(earnedGameObject);
+            GameManager.Instance.Cards[i].transform.position = Vector3.zero;
+            GameManager.Instance.Cards[i].SetActive(false);
+        }
+    }
+
+    #endregion
+
 }

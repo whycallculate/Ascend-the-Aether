@@ -56,6 +56,7 @@ public class LevelPrefabControl : MonoBehaviour
             levelButton.onClick.AddListener(BossLevel_Function);
         }
 
+        
     }
 
     //level butonuna basınca düşman ve karakteri üreten method
@@ -65,15 +66,29 @@ public class LevelPrefabControl : MonoBehaviour
         {
             GameManager.Instance.CreatingCharacter(levelCharacterCount,levelCharacterPrefab,levelCharacterPosition);
         }
+        else
+        {
+            if(GameManager.Instance.character == null)
+            {
+                GameManager.Instance.CreatingCharacter(levelCharacterCount,levelCharacterPrefab,levelCharacterPosition);
+            }
+        }
 
 
-        GameManager.Instance.CharacterCurrentLevelIndex += levelIndex;
+
+        GameManager.Instance.CurrentLevelIndex = levelIndex;
+
         if(value)
         {
             GameManager.Instance.CharacterCurrentLevelType = levelTypeEnum.ToString();
+            
+            SaveSystem.DataSave("levelType",GameManager.Instance.CharacterCurrentLevelType);
+
             GameManager.Instance.CreatingEnemies(levelEnemyCount,levelEnemyPrefab,levelEnemyPosition,enemy);
             UIManager.Instance.MapPrefab.SetActive(false);
+            UIManager.Instance.CardAndHealtButtonUIOpenOrClose(false);
         }
+
         levelButton.interactable  =false;
         GameManager.Instance.LevelOpening();
         GameManager.Instance.SetActiveCardMovement();
@@ -114,19 +129,37 @@ public class LevelPrefabControl : MonoBehaviour
            
         }
     }
+
+    //this function for change level button 
     public void ChangeLevelType()
     {
         GameManager.Instance.CharacterCurrentLevelType = LevelType_Enum.None.ToString();
-        LevelButtonFunction(false);
-        UIManager.Instance.SetActiveUI(UIManager.Instance.CardsScroll.name);
+
+        SaveSystem.DataSave("levelType",GameManager.Instance.CharacterCurrentLevelType);
+
+        levelButton.interactable =false;
+        UIManager.Instance.CardAndHealtButtonUIOpenOrClose(true);
+
+        GameManager.Instance.CurrentLevelIndex = levelIndex;
+
+        GameManager.Instance.levelProgress += LevelButtonFunction;
     }
 
+    //this function for boss level button 
     public void BossLevel_Function()
     {
+        GameManager.Instance.FinishLevel = true;
         levelButton.interactable = false;
+
+        if (GameManager.Instance.character == null)
+        {
+            GameManager.Instance.CreatingCharacter(levelCharacterCount, levelCharacterPrefab, levelCharacterPosition);
+        }
+
         GameManager.Instance.CreatingEnemies(levelEnemyCount,levelEnemyPrefab,levelEnemyPosition,enemy);
         GameManager.Instance.SetActiveCardMovement();
         UIManager.Instance.MapPrefab.SetActive(false);
+    
     }
 
 }

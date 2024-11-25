@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Card_Enum;
 using EnemyFeatures;
+using LevelTypeEnums;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,6 +41,16 @@ public class GameManager : MonoBehaviour
     public string CharacterCurrentLevelType {get {return characterCurrentLevelType;} set {characterCurrentLevelType = value;}}
     [SerializeField] private GameObject levelsObject;
     [SerializeField] private List<LevelPrefabControl> levelObjects = new List<LevelPrefabControl>();
+
+    public delegate void LevelProgressDelegate(bool value);
+
+    public LevelProgressDelegate levelProgress; 
+
+    private bool finishLevel = false;
+    public bool FinishLevel {get {return finishLevel;} set {finishLevel = value;}}
+
+    private int currentLevelIndex;
+    public int CurrentLevelIndex {get {return currentLevelIndex;} set {currentLevelIndex = value;}}
 
     #endregion
 
@@ -136,6 +147,12 @@ public class GameManager : MonoBehaviour
 
         }
 
+        if(SaveSystem.DataQuery("levelIndex") && SaveSystem.DataQuery("levelType"))
+        {
+            characterCurrentLevelType = SaveSystem.DataExtraction("levelType","");
+            characterCurrentLevelIndex = SaveSystem.DataExtraction("levelIndex",0);
+            LevelOpening();
+        }
 
         CreateEarnedCard();
         
@@ -170,13 +187,15 @@ public class GameManager : MonoBehaviour
         
         if(Input.GetKeyDown(KeyCode.V))
         {
+            CardCharacterInteraction("healtbar","-",20);
 
-            //print(SaveSystem.DataExtraction("cardsName",""));
-            foreach (var item in cardsName)
-            {
-                print(item);
-            }
         }
+
+        if(Input.GetKeyDown(KeyCode.C))
+        {
+            CardCharacterInteraction("healtbar","+",20);
+        }
+        
 
         if(Input.GetKeyDown(KeyCode.Escape))
         {
@@ -267,7 +286,10 @@ public class GameManager : MonoBehaviour
             levelObjects[i].NextBackLevelOpen(characterCurrentLevelIndex);
         }
         CardPositionReset();
-        character.CharacterTraits_Function("energy","+",5);
+        if(character != null)
+        {
+            character.CharacterTraits_Function("energy","+",5);
+        }
     }
 
 
@@ -304,6 +326,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
     #endregion
 
 
@@ -333,11 +356,28 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.NextTourButton.interactable = false;
         if(deadEnemyCount == enemys.Count)
         {
+            if(finishLevel)
+            {
+                characterCurrentLevelIndex = levelObjects[0].LevelIndex;
+                SaveSystem.DataSave("levelIndex",characterCurrentLevelIndex);
+                characterCurrentLevelType = levelObjects[0].LevelType_Enum.ToString();
+                SaveSystem.DataSave("levelType",characterCurrentLevelType);
+            }
+            else
+            {
+                characterCurrentLevelIndex += currentLevelIndex;
+                SaveSystem.DataSave("levelIndex",characterCurrentLevelIndex);
+            }
+            
+            
+            LevelOpening();
             CreateCardWinFromEnemy();
             UIManager.Instance.MapPrefab.SetActive(true);
             deadEnemyCount = 0;
             enemys.Clear();
         }
+        
+
         CardButtonInteractableControl();
     }
 
@@ -553,7 +593,9 @@ public class GameManager : MonoBehaviour
         string _cardsName = string.Join(",", cardsName);
         SaveSystem.DataSave("cardsName", _cardsName);
     }
-    
+
+
+    //düşman yok edildiğinde kazanilan kartlari oluşturan method    
     public void CreateEarnedCard()
     {
         string _a = SaveSystem.DataExtraction("cardsName","");
@@ -588,6 +630,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    //kartlarin posizyonlarini sifirlayan method
     private void CardTypeFindPositionSet()
     {
         for (int i = 0; i < hand.Count; i++)
@@ -612,7 +655,7 @@ public class GameManager : MonoBehaviour
 
     private int succesfull = 0;
     private int failed = 0;
-
+    //kazandiğimiz kartlari geliştirilmesini sağliyan method
     public void CardDevelopmentRate()
     {
         if(crystalCount > 0)
@@ -660,6 +703,7 @@ public class GameManager : MonoBehaviour
 
     }
 
+    //geliştirmek istediğimiz kartin türünü bulan method
     private CardDevelopmentRateEnum CardDevelopmentRatePercentTypeSelect()
     {
         int number = Random.Range(0,4);
@@ -682,7 +726,8 @@ public class GameManager : MonoBehaviour
 
         }
     }
-    public int karaterEnerji = 0;
+
+    //kart geliştirme yüzdesi
     private bool[] CardDevelopmentRatePercentSelect()
     {
 
@@ -755,12 +800,15 @@ public class GameManager : MonoBehaviour
 
     #region  Ekonominest
 
+    //oyun kristalini artmasini sağliyan method
     public void CrystalCoinWin(int winCrystalCount)
     {
         crystalCount += winCrystalCount;
         UIManager.Instance.CrystalCount_Text.text = crystalCount.ToString();
         SaveSystem.DataSave("crystalCount",crystalCount);
     }
+
+    //oyun kristalini azalmasini sağliyan method
 
     public void CrystalCoinLose(int loseCrystalCount)
     {
@@ -780,24 +828,6 @@ public class GameManager : MonoBehaviour
         refCrystalCount = crystalCount;
     }
     
-    public int CrystalCoinShow()
-    {
-        print("çalişiyor");
-        if(refCrystalCount > 0)
-        {
-            
-            refCrystalCount--;
-        }
-        else if(refCrystalCount <= 0)
-        {
-            refCrystalCount = 0;
-        }
-
-        print(refCrystalCount);
-        UIManager.Instance.CrystalCount_Text.text = refCrystalCount.ToString();
-
-        return refCrystalCount;
-    }
 
     #endregion
 
