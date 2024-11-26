@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
     [Space]
     [Header("Enemy")]
 
-    [SerializeField] private List<EnemyController> enemys = new List<EnemyController>();
+    [SerializeField] public List<EnemyController> enemys = new List<EnemyController>();
     private int deadEnemyCount = 0;
         
     #endregion

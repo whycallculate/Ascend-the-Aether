@@ -26,7 +26,6 @@ public class EnemyController : MonoBehaviour
     public float difficultyMultiplier = 1.2f;
     public int minDamage = 10;
     public int maxDamage = 20;
-    public int enemyMech = 0;
 
 
     public EnemyType enemyType;
@@ -39,7 +38,7 @@ public class EnemyController : MonoBehaviour
         SHIELD = enemies.Shield;
         DAMAGE = enemies.Damage;
         POWER = enemies.Power;
-        EnemyAI.GetEnemyStatInit(maxHealth, HEALTH, SHIELD, DAMAGE, POWER, minDamage, maxDamage, enemyMech);
+        EnemyAI.GetEnemyStatInit(maxHealth, HEALTH, SHIELD, DAMAGE, POWER, minDamage, maxDamage);
     }
     public void GetEnemyAiStat()
     {
@@ -82,39 +81,39 @@ public class EnemyController : MonoBehaviour
             case EnemyType.Slime:
                 Slime slime = gameObject.AddComponent<Slime>();
                 EnemyAI = slime;
-                EnemyAI.GetEnemyStatInit(maxHealth, HEALTH, SHIELD, DAMAGE, POWER, minDamage, maxDamage, enemyMech);
+                EnemyAI.GetEnemyStatInit(maxHealth, HEALTH, SHIELD, DAMAGE, POWER, minDamage, maxDamage);
 
                 break;
 
             case EnemyType.Rock:
                 Rock rock = gameObject.AddComponent<Rock>();
                 EnemyAI = rock;
-                EnemyAI.GetEnemyStatInit(maxHealth, HEALTH, SHIELD, DAMAGE, POWER, minDamage, maxDamage, enemyMech);
+                EnemyAI.GetEnemyStatInit(maxHealth, HEALTH, SHIELD, DAMAGE, POWER, minDamage, maxDamage);
                 break;
             case EnemyType.Assassin:
                 Assassin assassin = gameObject.AddComponent<Assassin>();
                 EnemyAI = assassin;
-                EnemyAI.GetEnemyStatInit(maxHealth, HEALTH, SHIELD, DAMAGE, POWER, minDamage, maxDamage, enemyMech);
+                EnemyAI.GetEnemyStatInit(maxHealth, HEALTH, SHIELD, DAMAGE, POWER, minDamage, maxDamage);
                 break;
             case EnemyType.Thief:
                 Thief thief = gameObject.AddComponent<Thief>();
                 EnemyAI = thief;
-                EnemyAI.GetEnemyStatInit(maxHealth, HEALTH, SHIELD, DAMAGE, POWER, minDamage, maxDamage, enemyMech);
+                EnemyAI.GetEnemyStatInit(maxHealth, HEALTH, SHIELD, DAMAGE, POWER, minDamage, maxDamage);
                 break;
             case EnemyType.Mage:
                 Mage mage = gameObject.AddComponent<Mage>();
                 EnemyAI = mage;
-                EnemyAI.GetEnemyStatInit(maxHealth, HEALTH, SHIELD, DAMAGE, POWER, minDamage, maxDamage, enemyMech);
+                EnemyAI.GetEnemyStatInit(maxHealth, HEALTH, SHIELD, DAMAGE, POWER, minDamage, maxDamage);
                 break;
             case EnemyType.KingSlime:
                 KingSlime kingSlime = gameObject.AddComponent<KingSlime>();
                 EnemyAI = kingSlime;
-                EnemyAI.GetEnemyStatInit(maxHealth, HEALTH, SHIELD, DAMAGE, POWER, minDamage, maxDamage, enemyMech);
+                EnemyAI.GetEnemyStatInit(maxHealth, HEALTH, SHIELD, DAMAGE, POWER, minDamage, maxDamage);
                 break;
             case EnemyType.KingMage:
                 KingMage kingMage = gameObject.AddComponent<KingMage>();
                 EnemyAI = kingMage;
-                EnemyAI.GetEnemyStatInit(maxHealth, HEALTH, SHIELD, DAMAGE, POWER, minDamage, maxDamage, enemyMech);
+                EnemyAI.GetEnemyStatInit(maxHealth, HEALTH, SHIELD, DAMAGE, POWER, minDamage, maxDamage);
                 break;
         }
 

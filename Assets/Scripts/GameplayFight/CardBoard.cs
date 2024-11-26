@@ -26,7 +26,7 @@ public class CardBoard : MonoBehaviour,IDropHandler
 
     public void OnDrop(PointerEventData eventData)
     {
-        GameManager.Instance.enemy.GetEnemyAiStat();
+
         GameManager.Instance.SelectableCard(false);
         if(eventData.pointerDrag.GetComponent<CanvasGroup>() != null)
         {
@@ -217,6 +217,7 @@ public class CardBoard : MonoBehaviour,IDropHandler
             abilityCardController = null;
         }
 
+        GameManager.Instance.enemy.GetEnemyAiStat();
 
     }
     public void UseAttackCard(GameObject card)
@@ -246,7 +247,7 @@ public class CardBoard : MonoBehaviour,IDropHandler
                 attackCardController = null;
 
             }
-
+            GameManager.Instance.enemy.GetEnemyAiStat();
         }
         else
         {
@@ -264,6 +265,7 @@ public class CardBoard : MonoBehaviour,IDropHandler
             GameManager.Instance.CardCharacterInteraction("shield", "+", defenceCardController.defence);
             defenceCardController.gameObject.SetActive(false);
             defenceCardController = null;
+            GameManager.Instance.enemy.GetEnemyAiStat();
         }
         else
         {
@@ -280,6 +282,7 @@ public class CardBoard : MonoBehaviour,IDropHandler
             GameManager.Instance.CardCharacterInteraction("power", "+", strenghCardController.strength);
             strenghCardController.gameObject.SetActive(false);
             strenghCardController = null;
+            GameManager.Instance.enemy.GetEnemyAiStat();
         }
         else
         {

@@ -13,7 +13,7 @@ public  class EnemyAI : MonoBehaviour
 
     public int minDamage;
     public int maxDamage;
-    public int enemyMech = 0;
+    public bool enemyMech = false;
 
     public float enemyDiff = 1.2f;
 
@@ -70,7 +70,7 @@ public  class EnemyAI : MonoBehaviour
     }
     public void AddPower(int value) => power += value;
     public void TakePower(int value) => power -= value;
-    public void GetEnemyStatInit(int maxHealth ,int health,int shield,int damage,int power,int minDamage,int maxDamage,int enemyMech)
+    public void GetEnemyStatInit(int maxHealth ,int health,int shield,int damage,int power,int minDamage,int maxDamage)
     {
         this.maxHealth = maxHealth;
         this.health = health;
@@ -79,7 +79,6 @@ public  class EnemyAI : MonoBehaviour
         this.power = power;
         this.minDamage = minDamage;
         this.maxDamage = maxDamage;
-        this.enemyMech = enemyMech;
     }
     public virtual void GetMechanic()
     {
