@@ -938,6 +938,9 @@ MonoBehaviour:
   shieldCurrent: 0
   energyCurrent: 0
   powerCurrent: 0
+  characterTypeEnum: 4
+  characterType: {fileID: 0}
+  characterDamage: 20
 --- !u!114 &755682997884664763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -955,6 +958,7 @@ MonoBehaviour:
   shieldNumber_Text: {fileID: 7767503947537632861}
   energyNumber_Text: {fileID: 0}
   powerNumber_Text: {fileID: 8706716070046747654}
+  characterDamage_Text: {fileID: 5022760661756303336}
 --- !u!1 &8176975165812979688
 GameObject:
   m_ObjectHideFlags: 0

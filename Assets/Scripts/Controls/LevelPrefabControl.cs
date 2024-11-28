@@ -87,6 +87,7 @@ public class LevelPrefabControl : MonoBehaviour
             GameManager.Instance.CreatingEnemies(levelEnemyCount,levelEnemyPrefab,levelEnemyPosition,enemy);
             UIManager.Instance.MapPrefab.SetActive(false);
             UIManager.Instance.CardAndHealtButtonUIOpenOrClose(false);
+            GameManager.Instance.IsLevelOver =false;
         }
 
         levelButton.interactable  =false;

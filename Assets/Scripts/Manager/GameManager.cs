@@ -33,12 +33,9 @@ public class GameManager : MonoBehaviour
     public EnemyController enemy;
     public bool isPlayerTurn = true;
 
+
     #region  Level fields
     
-    private int characterCurrentLevelIndex =1;
-    public int CharacterCurrentLevelIndex {get {return characterCurrentLevelIndex;} set {characterCurrentLevelIndex = value;}}
-    private string characterCurrentLevelType ;
-    public string CharacterCurrentLevelType {get {return characterCurrentLevelType;} set {characterCurrentLevelType = value;}}
     [SerializeField] private GameObject levelsObject;
     [SerializeField] private List<LevelPrefabControl> levelObjects = new List<LevelPrefabControl>();
 
@@ -46,13 +43,25 @@ public class GameManager : MonoBehaviour
 
     public LevelProgressDelegate levelProgress; 
 
+
     private bool finishLevel = false;
     public bool FinishLevel {get {return finishLevel;} set {finishLevel = value;}}
 
+    private bool isLevelOver = false;
+    public bool IsLevelOver {get {return isLevelOver;} set {isLevelOver = value;}}
+
+    private int characterCurrentLevelIndex =1;
+    public int CharacterCurrentLevelIndex {get {return characterCurrentLevelIndex;} set {characterCurrentLevelIndex = value;}}
+    private string characterCurrentLevelType ;
+    public string CharacterCurrentLevelType {get {return characterCurrentLevelType;} set {characterCurrentLevelType = value;}}
     private int currentLevelIndex;
     public int CurrentLevelIndex {get {return currentLevelIndex;} set {currentLevelIndex = value;}}
 
+
+
+
     #endregion
+
 
     #region  Enemy
     
@@ -62,8 +71,12 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] public List<EnemyController> enemys = new List<EnemyController>();
     private int deadEnemyCount = 0;
-        
+    
+    [SerializeField] private bool isEnemysStan = false;
+    public bool IsEnemysStan {get {return isEnemysStan;} set {isEnemysStan = value;}}
+
     #endregion
+
 
     #region  Character
 
@@ -74,6 +87,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<CharacterControl> characters = new List<CharacterControl>();
 
     #endregion
+
 
     #region  Card
     [SerializeField] private List<GameObject> gameAllCards;
@@ -185,16 +199,7 @@ public class GameManager : MonoBehaviour
             }          
         }
         
-        if(Input.GetKeyDown(KeyCode.V))
-        {
-            CardCharacterInteraction("healtbar","-",20);
-
-        }
-
-        if(Input.GetKeyDown(KeyCode.C))
-        {
-            CardCharacterInteraction("healtbar","+",20);
-        }
+        
         
 
         if(Input.GetKeyDown(KeyCode.Escape))
@@ -369,6 +374,7 @@ public class GameManager : MonoBehaviour
                 SaveSystem.DataSave("levelIndex",characterCurrentLevelIndex);
             }
             
+            isLevelOver = true;
             
             LevelOpening();
             CreateCardWinFromEnemy();
@@ -655,6 +661,8 @@ public class GameManager : MonoBehaviour
 
     private int succesfull = 0;
     private int failed = 0;
+
+    //düzeltme yapılabilir
     //kazandiğimiz kartlari geliştirilmesini sağliyan method
     public void CardDevelopmentRate()
     {
@@ -706,7 +714,7 @@ public class GameManager : MonoBehaviour
     //geliştirmek istediğimiz kartin türünü bulan method
     private CardDevelopmentRateEnum CardDevelopmentRatePercentTypeSelect()
     {
-        int number = Random.Range(0,4);
+        int number = Random.Range(0,5);
         switch(number)
         {
             case 0:

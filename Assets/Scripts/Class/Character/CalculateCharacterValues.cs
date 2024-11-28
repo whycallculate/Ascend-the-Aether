@@ -37,24 +37,53 @@ public class CalculateCharacterValues : MonoBehaviour
     //Adjusting the character's healtbar
     public int CharacterHealtBarTransaction_Function(ref int currentHealt,ref bool isCharacterAlive ,int maxHealt,int healtValue,float healtbarValue,string transaction)
     {
-        switch(transaction)
+        switch (transaction)
         {
             case "+":
-                if(currentHealt < maxHealt)
+                if ((currentHealt + healtbarValue) < maxHealt)
                 {
                     currentHealt += healtValue;
-                    UIManager.Instance.CharacterUI.CharacterHealtBar_Function(healtbarValue,"+",currentHealt);
+                    
+                    if(currentHealt >= maxHealt)
+                    {
+                        currentHealt = maxHealt;
+                    }
+                    
+                    UIManager.Instance.CharacterUI.CharacterHealtBar_Function(healtbarValue, "+", currentHealt);
                 }
-            break;
+                else
+                {
+                    currentHealt = maxHealt;
+                    UIManager.Instance.CharacterUI.CharacterHealtBar_Function(maxHealt, "", currentHealt);
+                }
+                break;
+
             case "-":
-                if(currentHealt > 0)
+                if ((currentHealt - healtbarValue) > 0)
                 {
                     currentHealt -= healtValue;
+                    if(currentHealt < 0)
+                    {
+                        currentHealt = 0;
+                    }
                     UIManager.Instance.CharacterUI.CharacterHealtBar_Function(healtbarValue, "-", currentHealt);
+                }
+                else if ((currentHealt - healtbarValue) < 0)
+                {
+                    currentHealt = 0;
+                    UIManager.Instance.CharacterUI.CharacterHealtBar_Function(0, "", 0);
                 }
                 break;
         }
-        return currentHealt;
+
+        if (currentHealt > 0)
+        {
+            return currentHealt;
+        }
+        else 
+        {
+            return 0;
+        }
     }
     //Adjusting the character's shield
     public void CharacterShieldTransaction_Function(ref int currentShield,int maxShield,int shieldValue,string transaction)
@@ -62,24 +91,36 @@ public class CalculateCharacterValues : MonoBehaviour
         switch(transaction)
         {
             case "+":
-                currentShield += shieldValue;
-                if (currentShield < maxShield)
+                if ((currentShield + shieldValue) < maxShield)
                 {
+                    currentShield += shieldValue;
+                    
+                    if(currentShield >= maxShield)
+                    {
+                        currentShield = maxShield;
+                    }
+
                     UIManager.Instance.CharacterUI.CharacterShild_Function(currentShield);
                 }
-                else
+                else if((currentShield + shieldValue) >= maxShield)
                 {
-                    currentShield = shieldValue;
+                    currentShield = maxShield;
                     UIManager.Instance.CharacterUI.CharacterShild_Function(currentShield);
                 }
                 break;
             case "-":
-                currentShield -= shieldValue;
-                if (currentShield > 0)
+                if ((currentShield - shieldValue) > 0)
                 {
+                    currentShield -= shieldValue;
+
+                    if(currentShield < 0)
+                    {
+                        currentShield = 0;
+                    }
+
                     UIManager.Instance.CharacterUI.CharacterShild_Function(currentShield);
                 }
-                else
+                else if((currentShield - shieldValue) <= 0)
                 {
                     currentShield = 0;
                     UIManager.Instance.CharacterUI.CharacterShild_Function(currentShield);
@@ -95,24 +136,36 @@ public class CalculateCharacterValues : MonoBehaviour
         switch(transaction)
         {
             case "+":
-                currentEnergy += energyValue;
-                if (currentEnergy < maxEnergy)
+                if ((currentEnergy + energyValue ) < maxEnergy)
                 {
+                    currentEnergy += energyValue;
+
+                    if(currentEnergy >= maxEnergy)
+                    {
+                        currentEnergy = maxEnergy;
+                    }
+
                     UIManager.Instance.CharacterUI.CharacterEnergy_Function(currentEnergy);
                 }
-                else
+                else if((currentEnergy + energyValue) >= maxEnergy)
                 {
                     currentEnergy = maxEnergy;
                     UIManager.Instance.CharacterUI.CharacterEnergy_Function(currentEnergy);
                 }
                 break;
             case "-":
-                currentEnergy -= energyValue;
-                if (currentEnergy > 0)
+                if ((currentEnergy - energyValue) > 0)
                 {
+                    currentEnergy -= energyValue;
+
+                    if(currentEnergy < 0)
+                    {
+                        currentEnergy = 0;
+                    }
+
                     UIManager.Instance.CharacterUI.CharacterEnergy_Function(currentEnergy);
                 }
-                else
+                else if((currentEnergy - energyValue) <= 0)
                 {
                     currentEnergy = 0;
                     UIManager.Instance.CharacterUI.CharacterEnergy_Function(currentEnergy);
@@ -128,19 +181,36 @@ public class CalculateCharacterValues : MonoBehaviour
         switch (transaction)
         {
             case "+":
-                if(currentPower < 5)
+                if((currentPower + powerValue) < maxPower)
                 {
                     currentPower += powerValue;
+
+                    if(currentPower >= maxPower)
+                    {
+                        currentPower = maxPower;
+                    }
+                    
+                    UIManager.Instance.CharacterUI.CharacterPowerUI_Function(currentPower);
+                }
+                else if((currentPower + powerValue ) <= maxPower)
+                {
+                    currentPower = maxPower;
                     UIManager.Instance.CharacterUI.CharacterPowerUI_Function(currentPower);
                 }
             break;
             case "-":
-                currentPower -= powerValue;
-                if(currentPower > 0)
+                if((currentPower - powerValue) > 0)
                 {
+                    currentPower -= powerValue;
+
+                    if(currentPower < 0)
+                    {
+                        currentPower = 0;
+                    }
+
                     UIManager.Instance.CharacterUI.CharacterPowerUI_Function(currentPower);
                 }
-                else
+                else if((currentPower - powerValue) <= 0)
                 {
                     currentPower = 0;
                     UIManager.Instance.CharacterUI.CharacterPowerUI_Function(currentPower);

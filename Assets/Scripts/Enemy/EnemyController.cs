@@ -126,11 +126,15 @@ public class EnemyController : MonoBehaviour
     public IEnumerator MakeMove()
     {
         yield return new WaitForSeconds(3);
-        EnemyAI.GetMechanic();
-        GetEnemyAiStat();
+        if(!GameManager.Instance.IsEnemysStan)
+        {
+            EnemyAI.GetMechanic();
+            GetEnemyAiStat();
 
 
+        }
         GameManager.Instance.SwitchTurnToPlayer();
+
     }
     
 

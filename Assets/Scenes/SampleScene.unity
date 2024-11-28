@@ -2572,13 +2572,13 @@ MonoBehaviour:
   levelsObject: {fileID: 0}
   levelObjects: []
   enemys: []
+  isEnemysStan: 0
   characters: []
   gameAllCards: []
   cards: []
   cardsName: []
   crystalCount: 20
   resourcesCard: {fileID: 0}
-  karaterEnerji: 0
 --- !u!4 &1173944745
 Transform:
   m_ObjectHideFlags: 0
@@ -3714,6 +3714,16 @@ PrefabInstance:
         type: 3}
       propertyPath: levelCharacterPosition.Array.data[0].z
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8419663472760457484, guid: eda89491e1a74a84cb75928e8f0a4c52,
+        type: 3}
+      propertyPath: m_Size
+      value: 0.32758257
+      objectReference: {fileID: 0}
+    - target: {fileID: 8419663472760457484, guid: eda89491e1a74a84cb75928e8f0a4c52,
+        type: 3}
+      propertyPath: m_Value
+      value: 0.02565708
       objectReference: {fileID: 0}
     - target: {fileID: 8941743165695367668, guid: eda89491e1a74a84cb75928e8f0a4c52,
         type: 3}

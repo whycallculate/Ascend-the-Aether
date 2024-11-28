@@ -13,6 +13,17 @@ public class CharacterUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI energyNumber_Text;
     public TextMeshProUGUI EnergyNumber_Text {get {return energyNumber_Text;} set {energyNumber_Text = value;}}
     [SerializeField] private TextMeshProUGUI powerNumber_Text;
+    [SerializeField] private TextMeshProUGUI characterDamage_Text;
+
+
+    public void CharacterInitialize(int healt,int shield,int power,int characterDamage)
+    {
+        healtbarNumber_Text.text = healt.ToString();
+        shieldNumber_Text.text = shield.ToString();
+        powerNumber_Text.text = power.ToString();
+        characterDamage_Text.text = characterDamage.ToString();
+        
+    }
 
     //function that calculates the character's healtbar value and defines healtbara values
     public void CharacterHealtBar_Function(float value,string tranction,int characterHealt)
@@ -27,6 +38,11 @@ public class CharacterUI : MonoBehaviour
             characterHealtBar_Image.fillAmount -= value;
             healtbarNumber_Text.text = characterHealt.ToString();
 
+        }
+        else
+        {
+            characterHealtBar_Image.fillAmount = value;
+            healtbarNumber_Text.text = characterHealt.ToString();
         }
 
     }
