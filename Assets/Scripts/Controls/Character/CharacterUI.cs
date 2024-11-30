@@ -64,4 +64,8 @@ public class CharacterUI : MonoBehaviour
         powerNumber_Text.text = characterPower.ToString();
     }
 
+    public void CharacterDamageUI_Function(int characterDamage)
+    {
+        characterDamage_Text.text = characterDamage.ToString();
+    }
 }

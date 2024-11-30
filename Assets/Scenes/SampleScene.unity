@@ -2571,6 +2571,7 @@ MonoBehaviour:
   isPlayerTurn: 0
   levelsObject: {fileID: 0}
   levelObjects: []
+  isLevelOver: 0
   enemys: []
   isEnemysStan: 0
   characters: []

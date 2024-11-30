@@ -13,6 +13,7 @@ public class CharacterControl : CalculateCharacterValues
     private Rigidbody rb;
     public const int healt = 100;
     public const int shield = 100;
+    public const int damage = 100;
     public const int energy = 5;
     public const int power = 5;
     
@@ -20,15 +21,16 @@ public class CharacterControl : CalculateCharacterValues
     public int shieldCurrent;
     public int energyCurrent;
     public int powerCurrent;
+    [SerializeField] private int characterDamage;
+    public int CharacterDamage {get {return characterDamage;} set {characterDamage = value;}}
     
     
     [SerializeField]private CharacterTypeEnum characterTypeEnum;
+    public CharacterTypeEnum CharacterTypeEnum {get {return characterTypeEnum;}}
     
     [SerializeField] private CharacterType characterType;
     public CharacterType CharacterType { get { return characterType;}}
     
-    [SerializeField] private int characterDamage;
-    public int CharacterDamage {get {return characterDamage;} set {characterDamage = value;}}
     private int toursCount = 0;
 
     [SerializeField] private bool isCharacterAlive = false;
@@ -54,51 +56,20 @@ public class CharacterControl : CalculateCharacterValues
 
     }
 
+    private void Start() 
+    {
+        print("Is it used character feature : " + characterType.FeatureUsed);    
+    }
+
     private void Update()
     {
-        //Deneme();
-
-    }
-
-    private void Deneme()
-    {
-        if (Input.GetKeyDown(KeyCode.W))
+        if(Input.GetKeyDown(KeyCode.P))
         {
-            if (characterTypeEnum == CharacterTypeEnum.AttackCharacter)
-            {
-                characterType.CharacterSpecialFeature(ref currentHealt, ref shieldCurrent, ref energyCurrent, ref powerCurrent, ref characterDamage, ref toursCount);
-                print("characterDamage : " + characterDamage + " - " + "shieldCurrent : " + shieldCurrent);
-            }
-            if (characterTypeEnum == CharacterTypeEnum.DampingCharacter)
-            {
-                characterType.CharacterSpecialFeature(ref currentHealt, ref shieldCurrent, ref energyCurrent, ref powerCurrent, ref characterDamage, ref toursCount);
-                print("current healt : " + currentHealt + " - " + "character damage : " + characterDamage);
-            }
-
-            if (characterTypeEnum == CharacterTypeEnum.TankCharacter)
-            {
-                //characterType.CharacterSpecialFeature(ref currentHealt,ref shieldCurrent,ref powerCurrent,ref isHalfImmortal);
-                int value = 30;
-                characterType.CharacterSpecialFeature(ref currentHealt, ref shieldCurrent, ref energyCurrent, ref powerCurrent, ref value, ref toursCount);
-                print("current shield : " + shieldCurrent);
-            }
-
-            if (characterTypeEnum == CharacterTypeEnum.SorcererCharacter)
-            {
-                characterType.CharacterSpecialFeature(ref currentHealt, ref shieldCurrent, ref energyCurrent, ref powerCurrent, ref toursCount);
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            CharacterTraits_Function("healtbar", "-", 15);
-        }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            CharacterTraits_Function("healtbar", "+", 15);
+            characterType.FeatureUsed = false;
         }
     }
 
+    //karakter'in değerlerini veya özelliklerini artımamizi ve azaltmamizi sağlayan methodlar
     public void CharacterTraits_Function(string traits,string transaction,int value)
     {
         switch(traits)
@@ -114,7 +85,7 @@ public class CharacterControl : CalculateCharacterValues
             
                 if(transaction == "-" && shieldCurrent > 0 && characterTypeEnum == CharacterTypeEnum.TankCharacter)
                 {
-                    characterType.CharacterSpecialFeature(ref currentHealt,ref shieldCurrent,ref energyCurrent,ref powerCurrent,ref value,ref toursCount);
+                    characterType.CharacterSpecialFeature(ref currentHealt,ref shieldCurrent,ref energyCurrent,ref powerCurrent,ref toursCount,value);
                 }
 
                 CharacterValueTransaction_Function(traits,transaction,ref isCharacterAlive,ref shieldCurrent,shield,value);
@@ -128,11 +99,16 @@ public class CharacterControl : CalculateCharacterValues
                 CharacterValueTransaction_Function(traits,transaction,ref isCharacterAlive,ref powerCurrent,power,value);
             break;
 
+            case "damage":
+                CharacterValueTransaction_Function(traits,transaction,ref isCharacterAlive,ref characterDamage,damage,value);
+            break;
+
             default:
             break;
         }
     }
 
+    //karakter'in yaşayip yaşamadiğini kontrol eden method
     private IEnumerator CharacterAliveControl()
     {
         while(!isCharacterAlive && gameObject.activeSelf)
@@ -142,6 +118,7 @@ public class CharacterControl : CalculateCharacterValues
         }
     }
 
+    //karakter'in healt değeri 0 olduğunda çalişicak method
     private void CharacterDestroy()
     {
         if(currentHealt <= 0)
@@ -154,13 +131,13 @@ public class CharacterControl : CalculateCharacterValues
             }
             if(characterTypeEnum == CharacterTypeEnum.HalfImmortalCharacter) 
             {
-                characterType.CharacterSpecialFeature(ref isCharacterAlive);
+                characterType.CharacterSpecialFeature();
             }
 
         }
     }
     
-    
+    //karakter'in türünü bulup belirlediğimiz method    
     public void CharacterTypeScriptAdd()
     {
         switch(characterTypeEnum)
@@ -196,5 +173,39 @@ public class CharacterControl : CalculateCharacterValues
         }
     }
 
+    //karakter'in özel özelliği
+    public void UseCharacterFeature(int enemyDamage)
+    {
+        switch(characterTypeEnum)
+        {
+            case CharacterTypeEnum.AttackCharacter:
+                characterType.CharacterSpecialFeature(ref currentHealt,ref shieldCurrent,ref energyCurrent,ref powerCurrent,ref toursCount,characterDamage);
+            break;
+            
+            case CharacterTypeEnum.TankCharacter:
+                characterType.CharacterSpecialFeature(ref currentHealt,ref shieldCurrent,ref energyCurrent,ref powerCurrent,ref toursCount,enemyDamage);
+            break;
+            
+            case CharacterTypeEnum.DampingCharacter:
+                characterType.CharacterSpecialFeature(ref currentHealt,ref shieldCurrent,ref energyCurrent,ref powerCurrent,ref toursCount,characterDamage);
+            break;
+            
+            case CharacterTypeEnum.SorcererCharacter : 
+                characterType.CharacterSpecialFeature();
+            break;
 
+            default:
+            break;
+
+        }
+    }
+
+    public void CharacterRegisteredFeature(int healt,int shield,int energy,int power,int damage)
+    {
+        currentHealt = healt;
+        shieldCurrent = shield;
+        energyCurrent = energy;
+        powerCurrent = power;
+        characterDamage = damage;
+    }
 }

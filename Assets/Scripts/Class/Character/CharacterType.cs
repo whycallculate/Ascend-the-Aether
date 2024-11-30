@@ -9,17 +9,23 @@ public class CharacterType : MonoBehaviour
 
     protected bool featureUsed = false;
     public bool FeatureUsed { get { return featureUsed; }  set { featureUsed = value; } }
+    public virtual void CharacterSpecialFeature()
+    {
+
+    }
     public virtual void CharacterSpecialFeature(ref int healt, ref int shield,ref int energy,ref int power,ref int toursCount)
     {
 
     }
+
+    public virtual void CharacterSpecialFeature(ref int healt, ref int shield,ref int energy,ref int power,ref int toursCount,int damage)
+    {
+
+    }
+    
     public virtual void CharacterSpecialFeature(ref int healt, ref int shield,ref int energy,ref int power,ref int damage,ref int toursCount)
     {
 
     }
 
-    public virtual void CharacterSpecialFeature(ref bool isCharacterAlive)
-    {
-
-    }
 }

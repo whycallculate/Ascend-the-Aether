@@ -5,7 +5,7 @@ using UnityEngine;
 public class TankCharacter : CharacterType
 {
     double increaseRate = .10;
-    public override void CharacterSpecialFeature(ref int healt, ref int shield,ref int energy,ref int power,ref int damage,ref int toursCount)
+    public override void CharacterSpecialFeature(ref int healt, ref int shield,ref int energy,ref int power,ref int toursCount,int damage)
     {
         toursCount++;
         if(toursCount % 2 == 0)

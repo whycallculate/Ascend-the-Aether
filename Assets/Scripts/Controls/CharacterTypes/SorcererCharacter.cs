@@ -5,7 +5,7 @@ using UnityEngine;
 public class SorcererCharacter : CharacterType
 {
     
-    public override void CharacterSpecialFeature(ref int healt, ref int shield, ref int energy, ref int power, ref int toursCount)
+    public override void CharacterSpecialFeature()
     {
         if(!featureDisables)
         {

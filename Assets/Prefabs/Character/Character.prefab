@@ -938,9 +938,10 @@ MonoBehaviour:
   shieldCurrent: 0
   energyCurrent: 0
   powerCurrent: 0
+  characterDamage: 20
   characterTypeEnum: 4
   characterType: {fileID: 0}
-  characterDamage: 20
+  isCharacterAlive: 0
 --- !u!114 &755682997884664763
 MonoBehaviour:
   m_ObjectHideFlags: 0

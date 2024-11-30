@@ -6,7 +6,7 @@ public class HalfImmortalCharacter : CharacterType
 {
     
 
-    public override void CharacterSpecialFeature(ref bool isCharacterAlive)
+    public override void CharacterSpecialFeature()
     {
 
         if(GameManager.Instance.CharacterCurrentLevelIndex == 1 && !featureUsed)
@@ -43,6 +43,7 @@ public class HalfImmortalCharacter : CharacterType
         }
         Deneme(true);
 
+        SaveSystem.DataSave("characterFeatureUsed",featureUsed.ToString());
         featureUsed = true;
     }
     

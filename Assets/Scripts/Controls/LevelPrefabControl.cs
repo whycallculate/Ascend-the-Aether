@@ -62,7 +62,7 @@ public class LevelPrefabControl : MonoBehaviour
     //level butonuna basınca düşman ve karakteri üreten method
     private void LevelButtonFunction(bool value)
     {
-        if(levelIndex == 1)
+        if(levelIndex == 1 && GameManager.Instance.character == null)
         {
             GameManager.Instance.CreatingCharacter(levelCharacterCount,levelCharacterPrefab,levelCharacterPosition);
         }

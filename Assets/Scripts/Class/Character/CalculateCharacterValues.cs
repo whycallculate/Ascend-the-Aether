@@ -29,6 +29,11 @@ public class CalculateCharacterValues : MonoBehaviour
             case "power":
                 CharacterPowerTransaction_Function(ref targetFeatureValue,targetFeatureMaxValue,integerValue,transaction);
             break;
+
+            case "damage":
+                CharacterDamageTransaction_Function(ref targetFeatureValue,targetFeatureMaxValue,integerValue,transaction);
+            break;
+
             default:
             break;
         }
@@ -216,6 +221,52 @@ public class CalculateCharacterValues : MonoBehaviour
                     UIManager.Instance.CharacterUI.CharacterPowerUI_Function(currentPower);
                 }
             break;
+        }
+    }
+
+    public void CharacterDamageTransaction_Function(ref int currentDamage,int maxDamage,int damageValue,string transaction)
+    {
+        switch(transaction)
+        {
+            case "+":
+                
+                if((currentDamage + damageValue) < maxDamage)
+                {
+                    currentDamage += damageValue;
+                    if(currentDamage >= maxDamage)
+                    {
+                        currentDamage = maxDamage;
+                    }
+                    UIManager.Instance.CharacterUI.CharacterDamageUI_Function(currentDamage);
+                }
+                else if((currentDamage + damageValue) >= maxDamage)
+                {
+                    currentDamage = maxDamage;
+                    UIManager.Instance.CharacterUI.CharacterDamageUI_Function(currentDamage);
+                }
+
+            break;
+
+            case "-":
+                if((currentDamage - damageValue) > 0)
+                {
+                    currentDamage -= damageValue;
+                    if(currentDamage <= 0)
+                    {
+                        currentDamage = 0;
+                    }
+                    UIManager.Instance.CharacterUI.CharacterDamageUI_Function(currentDamage);
+                }
+                else if((currentDamage - damageValue) <= 0)
+                {
+                    currentDamage = 0;
+                    UIManager.Instance.CharacterUI.CharacterDamageUI_Function(currentDamage);
+                }
+            break;
+
+            default:
+            break;
+
         }
     }
 }

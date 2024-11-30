@@ -7,7 +7,7 @@ public class DampingCharacter : CharacterType
     double increaseHealtRate = .10;
     double increaseDamageRate = .10;
 
-    public override void CharacterSpecialFeature(ref int healt, ref int shield,ref int energy,ref int power,ref int damage,ref int toursCount)
+    public override void CharacterSpecialFeature(ref int healt, ref int shield,ref int energy,ref int power,ref int toursCount,int damage)
     {
         toursCount++;
         if(toursCount % 2 == 0)
@@ -26,7 +26,8 @@ public class DampingCharacter : CharacterType
             }
 
             double increaseAmount = damage * increaseDamageRate;
-            damage += (int)increaseAmount;
+            //damage += (int)increaseAmount;
+            GameManager.Instance.character.CharacterTraits_Function("damage","+",(int)increaseAmount);
 
             increaseHealtRate += .10;
             increaseDamageRate += .10f;

@@ -4,23 +4,33 @@ using UnityEngine;
 
 public class AttackCharacter : CharacterType
 {
-    double increaseRate = .20;
+    double increaseRate = .10;
     double decreaseRate = .10;
-
-    public override void CharacterSpecialFeature(ref int healt, ref int shield,ref int energy,ref int power,ref int damage,ref int toursCount)
+    
+    public override void CharacterSpecialFeature(ref int healt, ref int shield,ref int energy,ref int power,ref int toursCount,int damage)
     {
         toursCount++;
-        if(toursCount % 2 == 0)
+        if(toursCount % 2 == 0 )
         {
             double increaseAmount = damage * increaseRate;
-            damage +=  (int)increaseAmount;
+            
+            GameManager.Instance.character.CharacterTraits_Function("damage","+",(int)increaseAmount);
             
             double decreaseAmount = shield * decreaseRate;
-            shield -= (int)decreaseAmount;
+            if(shield == 1)
+            {
+                GameManager.Instance.character.CharacterTraits_Function("shield","-",1); 
+            }
+            else
+            {
+                GameManager.Instance.character.CharacterTraits_Function("shield","-",(int)decreaseAmount);
+            }
 
-            increaseRate +=.20;
+
+            increaseRate +=.10;
             decreaseRate += .10;
             toursCount = 0;
+
         }
 
 

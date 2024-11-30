@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Card_Enum;
+using CharacterType_Enum;
 using EnemyFeatures;
 using LevelTypeEnums;
 using UnityEngine;
@@ -47,7 +48,7 @@ public class GameManager : MonoBehaviour
     private bool finishLevel = false;
     public bool FinishLevel {get {return finishLevel;} set {finishLevel = value;}}
 
-    private bool isLevelOver = false;
+    [SerializeField]private bool isLevelOver = false;
     public bool IsLevelOver {get {return isLevelOver;} set {isLevelOver = value;}}
 
     private int characterCurrentLevelIndex =1;
@@ -213,7 +214,22 @@ public class GameManager : MonoBehaviour
             }
         }
         
-       
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            RunCharacterTrait(30);
+        }
+
+        if(Input.GetKeyDown(KeyCode.W))
+        {
+            character.CharacterTraits_Function("healtbar","+",20);
+        }
+
+        if(Input.GetKeyDown(KeyCode.S))
+        {
+            character.CharacterTraits_Function("healtbar","-",20);
+
+        }
+
     }
 
     #region 
@@ -365,8 +381,13 @@ public class GameManager : MonoBehaviour
             {
                 characterCurrentLevelIndex = levelObjects[0].LevelIndex;
                 SaveSystem.DataSave("levelIndex",characterCurrentLevelIndex);
+
                 characterCurrentLevelType = levelObjects[0].LevelType_Enum.ToString();
                 SaveSystem.DataSave("levelType",characterCurrentLevelType);
+
+                character.CharacterType.FeatureUsed = false;
+                SaveSystem.DataSave("characterFeatureUsed","false");
+
             }
             else
             {
@@ -401,8 +422,30 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < charactersCount; i++)
         {
+
             CharacterControl characterClone = Instantiate(levelCharacterPrefab,_characterPosition[i],Quaternion.identity);
             character = characterClone;
+
+            if(SaveSystem.DataQuery("characterFeatureUsed"))
+            {
+                string characterFeatureUsed = SaveSystem.DataExtraction("characterFeatureUsed","");
+                print("characterFeatureUsed : " + characterFeatureUsed );
+                switch(characterFeatureUsed)
+                {
+                    case "True":
+                        character.CharacterType.FeatureUsed = true;
+                    break;
+                    
+                    case "False":
+                        character.CharacterType.FeatureUsed = false;
+                    break;
+
+                    default:
+                    break;
+                
+                } 
+                print (character.CharacterType.FeatureUsed);
+            }
 
             CharacterUI characterUI =character.GetComponent<CharacterUI>();
             
@@ -411,6 +454,27 @@ public class GameManager : MonoBehaviour
             
             characters.Add(characterClone);
         }
+    }
+
+    //karakter'in özel özelliği çalıştıran method
+    public void RunCharacterTrait(int enemyDamage)
+    {
+        character.UseCharacterFeature(enemyDamage);
+    }
+    /// <summary>
+    /// bu methodun düzgün çalişmasi için parametreleri healt,shield,energy,power,damage bu şekilde girilmesi gerekiyor
+    /// </summary> <summary>
+    /// 
+    /// </summary>
+    public void CharcterValueSave(int[] characterFeaturesValue)
+    {
+        string values = "";
+        foreach (int characterFeatureValue in characterFeaturesValue)
+        {
+            values += characterFeatureValue.ToString();
+        } 
+        SaveSystem.DataSave("characterFeatures",values);
+        //character.CharacterRegisteredFeature(characterFeaturesValue[0],characterFeaturesValue[1],characterFeaturesValue[2],characterFeaturesValue[3],characterFeaturesValue[4]);
     }
 
     #endregion
