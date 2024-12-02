@@ -41,7 +41,7 @@ public class CharacterUI : MonoBehaviour
         }
         else
         {
-            characterHealtBar_Image.fillAmount = value;
+            characterHealtBar_Image.fillAmount = value/100;
             healtbarNumber_Text.text = characterHealt.ToString();
         }
 

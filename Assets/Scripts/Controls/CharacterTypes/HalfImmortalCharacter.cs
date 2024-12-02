@@ -9,22 +9,24 @@ public class HalfImmortalCharacter : CharacterType
     public override void CharacterSpecialFeature()
     {
 
-        if(GameManager.Instance.CharacterCurrentLevelIndex == 1 && !featureUsed)
+        if( !featureUsed)
         {
-            Deneme(false);
+            CharacterVisibilty(false);
             StartCoroutine(Dirilt());
             hasHealed = false;
         }
         else if(featureUsed)
         {
+            GameManager.Instance.ResetCharacterFeature();
             Destroy(gameObject);
             GameManager.Instance.LevelReset();
+            SaveSystem.DataRemove("characterFeatures");
         }
 
     }
 
     
-    private void Deneme(bool value)
+    private void CharacterVisibilty(bool value)
     {
         CharacterControl character = GameManager.Instance.character;
         character.GetComponent<MeshRenderer>().enabled  = value;
@@ -41,7 +43,7 @@ public class HalfImmortalCharacter : CharacterType
             GameManager.Instance.character.CharacterTraits_Function("healtbar","+",50);
             hasHealed=  true;
         }
-        Deneme(true);
+        CharacterVisibilty(true);
 
         SaveSystem.DataSave("characterFeatureUsed",featureUsed.ToString());
         featureUsed = true;

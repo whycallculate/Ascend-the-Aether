@@ -23,8 +23,7 @@ public class GameManager : MonoBehaviour
         }
     }
     #endregion
-    private int numberCardeUsed = 0;
-    public int NumberCardeUsed {get {return numberCardeUsed;} set {numberCardeUsed = value;} }
+
 
     public List<GameObject> deck = new List<GameObject>();
     public List<GameObject> hand = new List<GameObject>();
@@ -34,6 +33,7 @@ public class GameManager : MonoBehaviour
     public EnemyController enemy;
     public bool isPlayerTurn = true;
 
+    private bool isGameStart = false;
 
     #region  Level fields
     
@@ -169,10 +169,14 @@ public class GameManager : MonoBehaviour
             LevelOpening();
         }
 
+        print("levelIndex : "+characterCurrentLevelIndex);
         CreateEarnedCard();
+
+        isGameStart = true;
         
     }
 
+    #region Start And Update Function
     private void Start()
     {
         DrawCards();
@@ -214,23 +218,21 @@ public class GameManager : MonoBehaviour
             }
         }
         
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            RunCharacterTrait(30);
-        }
 
         if(Input.GetKeyDown(KeyCode.W))
         {
-            character.CharacterTraits_Function("healtbar","+",20);
+            CharacterValueLoad();
+            
         }
-
         if(Input.GetKeyDown(KeyCode.S))
         {
             character.CharacterTraits_Function("healtbar","-",20);
-
         }
 
     }
+
+    #endregion  
+
 
     #region 
 
@@ -289,10 +291,6 @@ public class GameManager : MonoBehaviour
     }
     public void CardCharacterInteraction(string characterTraits,string transaction,int value)
     {
-        if(numberCardeUsed !=4)
-        {
-            numberCardeUsed++;
-        }
         character.CharacterTraits_Function(characterTraits,transaction,value);
     }
 
@@ -379,14 +377,7 @@ public class GameManager : MonoBehaviour
         {
             if(finishLevel)
             {
-                characterCurrentLevelIndex = levelObjects[0].LevelIndex;
-                SaveSystem.DataSave("levelIndex",characterCurrentLevelIndex);
-
-                characterCurrentLevelType = levelObjects[0].LevelType_Enum.ToString();
-                SaveSystem.DataSave("levelType",characterCurrentLevelType);
-
-                character.CharacterType.FeatureUsed = false;
-                SaveSystem.DataSave("characterFeatureUsed","false");
+                ResetCharacterFeature();
 
             }
             else
@@ -408,11 +399,12 @@ public class GameManager : MonoBehaviour
         CardButtonInteractableControl();
     }
 
+    
 
-    
-    #endregion 
-    
-    
+
+    #endregion
+
+
 
 
     #region  Character
@@ -454,6 +446,10 @@ public class GameManager : MonoBehaviour
             
             characters.Add(characterClone);
         }
+        if (isGameStart)
+        {
+            CharacterValueLoad();
+        }
     }
 
     //karakter'in özel özelliği çalıştıran method
@@ -461,6 +457,7 @@ public class GameManager : MonoBehaviour
     {
         character.UseCharacterFeature(enemyDamage);
     }
+
     /// <summary>
     /// bu methodun düzgün çalişmasi için parametreleri healt,shield,energy,power,damage bu şekilde girilmesi gerekiyor
     /// </summary> <summary>
@@ -468,14 +465,55 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void CharcterValueSave(int[] characterFeaturesValue)
     {
+        //karakterin değerlerini,değişkenlerini kaydetmemizi sağliyan method
         string values = "";
-        foreach (int characterFeatureValue in characterFeaturesValue)
+        for (int i = 0; i < characterFeaturesValue.Length; i++)
         {
-            values += characterFeatureValue.ToString();
-        } 
+            if(i != characterFeaturesValue.Length-1)
+            {
+                values += characterFeaturesValue[i].ToString()+",";
+            }
+            else
+            {
+                values += characterFeaturesValue[i];
+            }
+        }
         SaveSystem.DataSave("characterFeatures",values);
-        //character.CharacterRegisteredFeature(characterFeaturesValue[0],characterFeaturesValue[1],characterFeaturesValue[2],characterFeaturesValue[3],characterFeaturesValue[4]);
     }
+
+    //karakterin kaydedilmiş olan değerlerini karaktere tanımlamamizi sağliyan method
+    public void CharacterValueLoad()
+    {
+        if(SaveSystem.DataQuery("characterFeatures"))
+        {
+            string characterFeaturesValue = SaveSystem.DataExtraction("characterFeatures", "");
+            string[] _characterFeatures = characterFeaturesValue.Split(",");
+
+            int[] characterFeatures = new int[_characterFeatures.Length];
+
+            for (int i = 0; i < _characterFeatures.Length; i++)
+            {
+                characterFeatures[i] = int.Parse(_characterFeatures[i]);
+            }
+
+
+            character.CharacterRegisteredFeature(characterFeatures);
+        }
+    }
+
+    public void ResetCharacterFeature()
+    {
+        characterCurrentLevelIndex = levelObjects[0].LevelIndex;
+        SaveSystem.DataSave("levelIndex", characterCurrentLevelIndex);
+        print(characterCurrentLevelIndex);
+
+        characterCurrentLevelType = levelObjects[0].LevelType_Enum.ToString();
+        SaveSystem.DataSave("levelType", characterCurrentLevelType);
+
+        character.CharacterType.FeatureUsed = false;
+        SaveSystem.DataSave("characterFeatureUsed", "false");
+    }
+
 
     #endregion
 

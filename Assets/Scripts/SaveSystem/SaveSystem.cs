@@ -51,4 +51,13 @@ public class SaveSystem : MonoBehaviour
 
     #endregion
 
+
+    #region  Veri Silme
+
+    public static void DataRemove(string dataType)
+    {
+        PlayerPrefs.DeleteKey(dataType);
+    }
+
+    #endregion
 }

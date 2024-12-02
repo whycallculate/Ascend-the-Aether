@@ -56,18 +56,6 @@ public class CharacterControl : CalculateCharacterValues
 
     }
 
-    private void Start() 
-    {
-        print("Is it used character feature : " + characterType.FeatureUsed);    
-    }
-
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.P))
-        {
-            characterType.FeatureUsed = false;
-        }
-    }
 
     //karakter'in değerlerini veya özelliklerini artımamizi ve azaltmamizi sağlayan methodlar
     public void CharacterTraits_Function(string traits,string transaction,int value)
@@ -106,6 +94,9 @@ public class CharacterControl : CalculateCharacterValues
             default:
             break;
         }
+
+        GameManager.Instance.CharcterValueSave(new int[]{currentHealt,shieldCurrent,energyCurrent,powerCurrent,characterDamage});
+
     }
 
     //karakter'in yaşayip yaşamadiğini kontrol eden method
@@ -128,6 +119,8 @@ public class CharacterControl : CalculateCharacterValues
                 Destroy(gameObject);
                 GameManager.Instance.LevelReset();
                 isCharacterAlive = true;
+                SaveSystem.DataRemove("characterFeatures");
+                GameManager.Instance.ResetCharacterFeature();
             }
             if(characterTypeEnum == CharacterTypeEnum.HalfImmortalCharacter) 
             {
@@ -200,12 +193,23 @@ public class CharacterControl : CalculateCharacterValues
         }
     }
 
-    public void CharacterRegisteredFeature(int healt,int shield,int energy,int power,int damage)
+    //karakter'in kayıtlı olan özelliklerini karakterin özelliklerine tanımlatan method
+    public void CharacterRegisteredFeature(int[] features)
     {
-        currentHealt = healt;
-        shieldCurrent = shield;
-        energyCurrent = energy;
-        powerCurrent = power;
-        characterDamage = damage;
+        currentHealt = features[0];
+        uiManager.CharacterUI.CharacterHealtBar_Function(currentHealt,"",currentHealt);
+
+        shieldCurrent = features[1];
+        uiManager.CharacterUI.CharacterShild_Function(shieldCurrent);
+
+        energyCurrent = features[2];
+        uiManager.CharacterUI.CharacterEnergy_Function(energyCurrent);
+
+        powerCurrent = features[3];
+        uiManager.CharacterUI.CharacterEnergy_Function(energyCurrent);
+        
+        characterDamage = features[4];
+        uiManager.CharacterUI.CharacterDamageUI_Function(characterDamage);
+
     }
 }

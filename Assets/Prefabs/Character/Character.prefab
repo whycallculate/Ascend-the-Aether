@@ -939,7 +939,7 @@ MonoBehaviour:
   energyCurrent: 0
   powerCurrent: 0
   characterDamage: 20
-  characterTypeEnum: 4
+  characterTypeEnum: 1
   characterType: {fileID: 0}
   isCharacterAlive: 0
 --- !u!114 &755682997884664763
