@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using LevelTypeEnums;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,6 +19,8 @@ public class UIManager : MonoBehaviour
             return instance;
         }
     }
+    [SerializeField] private GameObject canvas;
+    public GameObject Canvas { get { return canvas; } }
     [SerializeField] private GameObject dectGameObject;
     public GameObject DectGameObject { get { return dectGameObject; } }
 
@@ -28,6 +29,8 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private Transform earnedGameObject;
     public Transform EarnedGameObject { get { return earnedGameObject;}}
+    [SerializeField] private Transform[] earnedCardsPositions;
+    public Transform[] EarnedCardsPositions { get { return earnedCardsPositions; }}
 
     public RectTransform[] cardPos;
     [SerializeField] private Button nextTourButton;
@@ -364,6 +367,10 @@ public class UIManager : MonoBehaviour
     //kart geliştirme buttonu için method
     public void CardDevelopment_Function()
     {
+        for (int i = 0; i < GameManager.Instance.Cards.Count; i++)
+        {
+            GameManager.Instance.Cards[i].transform.localScale = Vector3.one;
+        }
         CardAndHealtButtonUIOpenOrClose(false);
         SetActiveUI(cardsScroll.name);
         GameManager.Instance.CharacterCurrentLevelIndex += GameManager.Instance.CurrentLevelIndex;

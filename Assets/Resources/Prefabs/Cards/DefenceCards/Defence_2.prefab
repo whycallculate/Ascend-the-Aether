@@ -311,6 +311,7 @@ MonoBehaviour:
   cardType: 2
   cardLegendary: 1
   cardCombineLegendary: 
+  cardPosition: {x: 0, y: 0}
   energyCost: 4
   duration: 4
   defence: 30

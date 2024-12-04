@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Card_Enum;
 using CharacterType_Enum;
 using EnemyFeatures;
-using LevelTypeEnums;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -169,8 +168,8 @@ public class GameManager : MonoBehaviour
             LevelOpening();
         }
 
-        print("levelIndex : "+characterCurrentLevelIndex);
         CreateEarnedCard();
+    
 
         isGameStart = true;
         
@@ -221,8 +220,11 @@ public class GameManager : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.W))
         {
-            CharacterValueLoad();
-            
+            //CharacterValueLoad();
+            //WhatOfKindCharacter();
+            print("level index : " + characterCurrentLevelIndex);
+            print("level type : " + characterCurrentLevelType);
+
         }
         if(Input.GetKeyDown(KeyCode.S))
         {
@@ -375,22 +377,11 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.NextTourButton.interactable = false;
         if(deadEnemyCount == enemys.Count)
         {
-            if(finishLevel)
-            {
-                ResetCharacterFeature();
-
-            }
-            else
-            {
-                characterCurrentLevelIndex += currentLevelIndex;
-                SaveSystem.DataSave("levelIndex",characterCurrentLevelIndex);
-            }
-            
+        
             isLevelOver = true;
             
-            LevelOpening();
-            CreateCardWinFromEnemy();
-            UIManager.Instance.MapPrefab.SetActive(true);
+            WhatOfKindCharacter();
+            
             deadEnemyCount = 0;
             enemys.Clear();
         }
@@ -399,8 +390,13 @@ public class GameManager : MonoBehaviour
         CardButtonInteractableControl();
     }
 
-    
-
+    private void LevelProgress()
+    {
+        characterCurrentLevelIndex += currentLevelIndex;
+        SaveSystem.DataSave("levelIndex", characterCurrentLevelIndex);
+        LevelOpening();
+        UIManager.Instance.MapPrefab.SetActive(true);
+    }
 
     #endregion
 
@@ -503,15 +499,27 @@ public class GameManager : MonoBehaviour
 
     public void ResetCharacterFeature()
     {
+        print("sifirladi");
         characterCurrentLevelIndex = levelObjects[0].LevelIndex;
         SaveSystem.DataSave("levelIndex", characterCurrentLevelIndex);
-        print(characterCurrentLevelIndex);
 
         characterCurrentLevelType = levelObjects[0].LevelType_Enum.ToString();
         SaveSystem.DataSave("levelType", characterCurrentLevelType);
 
         character.CharacterType.FeatureUsed = false;
         SaveSystem.DataSave("characterFeatureUsed", "false");
+
+        if(character.IsCharacterAlive)
+        {
+            SaveSystem.DataRemove("cardsName");
+            if (cards.Count > 0)
+            {
+                foreach (var item in cards)
+                {
+                    Destroy(item.gameObject);
+                }
+            }
+        }
     }
 
 
@@ -616,7 +624,12 @@ public class GameManager : MonoBehaviour
 
             }
         }
+
+
         SelectableCard(false);
+
+    
+
     }
 
     //kart objelerin buttonunu tıklanilmamasını sağliyor
@@ -639,94 +652,348 @@ public class GameManager : MonoBehaviour
     private int  lastRandomNumber = 0;
 
     //create the cards we win from the enemy
-    public void CreateCardWinFromEnemy()
-    {
-        // yeni kart eklme için kullanulıyor
-        //yeni kart oluşturunca oluşturulan kart dect  listesine ekle
-        
-        randomNumber = Random.Range(0,gameAllCards.Count-1);
-        lastRandomNumber = randomNumber;
-        StartCoroutine(RandomNumber());
-        
-    }
     
-
-    //random bir şekilde kart oluşturmaı sağliyor
-    private IEnumerator RandomNumber()
+    
+    //levelde ki bütün düşmanlari öldürünce kart seçmeni sağliyan method
+    [SerializeField] private List<GameObject> earnedCards = new List<GameObject>();
+    public void WhatOfKindCharacter()
     {
-        while(lastRandomNumber == randomNumber)
+        #region elimizde ki kartlari ve next buttonunu tiklanabilmesini engelleyen kod satirlari
+        
+        for (int i = 0; i < hand.Count; i++)
         {
-            randomNumber = Random.Range(0,gameAllCards.Count-1);
-            yield return null;
+            hand[i].GetComponent<Button>().interactable = false;
         }
-        lastRandomNumber = randomNumber;
+        UIManager.Instance.NextTourButton.interactable = false;
+        
+        #endregion
 
-        GameObject newCard = Instantiate(gameAllCards[randomNumber]);
-        newCard.name = gameAllCards[randomNumber].name;
-        newCard.transform.SetParent(UIManager.Instance.EarnedGameObject);
-        newCard.transform.localScale =Vector3.one;
-        newCard.GetComponent<CardMovement>().enabled = false;
-        newCard.GetComponent<Button>().onClick.AddListener(()=>CardDevelopment.Instance.SelectCardDevelopment(newCard));
-        newCard.SetActive(false);
-        cards.Add(newCard);
+        string type = "";
 
+        #region  Karakterin hangi türde olduğuu bulduğumuz kod satirlari
 
-        switch(newCard.tag)
+        if(character != null)
         {
-            case "AttackCard":
-                string attackCardsName = $"Prefabs/Cards/AttackCards/{newCard.name}";
-                
-                cardsName.Add(attackCardsName);
-            break;
-            case "DefenceCard":
-                string defenceCardsName = $"Prefabs/Cards/DefenceCards/{newCard.name}";
+            switch (character.CharacterTypeEnum)
+            {
 
+                case CharacterTypeEnum.AttackCharacter:
+                    type = "Attack";
+                    break;
 
-                cardsName.Add(defenceCardsName);
-            break;
-            case "AbilityCard":
-                string abilityCardsName = $"Prefabs/Cards/AbilityCards/{newCard.name}";
+                case CharacterTypeEnum.TankCharacter:
+                    type = "Defence";
+                    break;
 
-                cardsName.Add(abilityCardsName);
-            break;
-            case "StrenghCard":
-                string strenghCardsName =$"Prefabs/Cards/StrengthCards/{newCard.name}";
+                case CharacterTypeEnum.DampingCharacter:
+                    type = "Attack";
+                    break;
 
-                cardsName.Add(strenghCardsName);
-            break;
+                case CharacterTypeEnum.HalfImmortalCharacter:
+                    type = "Strengh";
+                    break;
+
+                case CharacterTypeEnum.SorcererCharacter:
+                    type = "Ability";
+                    break;
+
+                default:
+                    break;
+
+            }
+
+        }
+
+        #endregion
+
+        #region  Karakterin türünde kartlari şeçmemizi sağliyan kod satirlari 
+
+        switch (type)
+        {
+
+            case "Attack":
+                for (int i = 0; i < gameAllCards.Count; i++)
+                {
+                    randomNumber = Random.Range(0,gameAllCards.Count-1);
+                    lastRandomNumber = randomNumber;
+
+                    GameObject obje = gameAllCards[randomNumber];
+                    obje.name = gameAllCards[randomNumber].name;
+
+                    if (obje.GetComponent<AttackCardController>() != null)
+                    {
+                        if (earnedCards.Count < 2)
+                        {
+                            if(earnedCards.Count == 1)
+                            {
+                                if(earnedCards[0].name == obje.name)
+                                {
+                                    continue;
+                                }
+                                else if(earnedCards[0].name != obje.name)
+                                {
+                                    earnedCards.Add(obje);
+                                }
+                            }
+                            else if(earnedCards.Count == 0)
+                            {
+                                earnedCards.Add(obje);
+                            }
+                        }
+                    }
+                    
+                }
+                break;
+
+            case "Defence":
+                for (int i = 0; i < gameAllCards.Count; i++)
+                {
+                    
+                    randomNumber = Random.Range(0,gameAllCards.Count-1);
+                    lastRandomNumber = randomNumber;
+
+                    GameObject obje = gameAllCards[randomNumber];
+                    obje.name = gameAllCards[randomNumber].name;
+
+                    if (obje.GetComponent<DefenceCardController>() != null)
+                    {
+                        if (earnedCards.Count < 2)
+                        {
+                            if(earnedCards.Count == 1)
+                            {
+                                if(earnedCards[0].name == obje.name)
+                                {
+                                    continue;
+                                }
+                                else if(earnedCards[0].name != obje.name)
+                                {
+                                    earnedCards.Add(obje);
+                                }
+                            }
+                            else if(earnedCards.Count == 0)
+                            {
+                                earnedCards.Add(obje);
+                            }
+                        }
+                    }
+
+                }
+                break;
+
+            case "Ability":
+                for (int i = 0; i < gameAllCards.Count; i++)
+                {
+                    randomNumber = Random.Range(0,gameAllCards.Count-1);
+                    lastRandomNumber = randomNumber;
+
+                    GameObject obje = gameAllCards[randomNumber];
+                    obje.name = gameAllCards[randomNumber].name;
+
+                    if (obje.GetComponent<AbilityCardController>() != null)
+                    {
+                        if (earnedCards.Count < 2)
+                        {
+                            if(earnedCards.Count == 1)
+                            {
+                                if(earnedCards[0].name == obje.name)
+                                {
+                                    continue;
+                                }
+                                else if(earnedCards[0].name != obje.name)
+                                {
+                                    earnedCards.Add(obje);
+                                }
+                            }
+                            else if(earnedCards.Count == 0)
+                            {
+                                earnedCards.Add(obje);
+                            }
+                        }
+                    }
+                }
+                break;
+
+            case "Strengh":
+                for (int i = 0; i < gameAllCards.Count; i++)
+                {
+                    randomNumber = Random.Range(0,gameAllCards.Count-1);
+                    lastRandomNumber = randomNumber;
+
+                    GameObject obje = gameAllCards[randomNumber];
+                    obje.name = gameAllCards[randomNumber].name;
+
+                    if (obje.GetComponent<StrengthCardController>() != null)
+                    {
+                        if (earnedCards.Count < 2)
+                        {
+                            if(earnedCards.Count == 1)
+                            {
+                                if(earnedCards[0].name == obje.name)
+                                {
+                                    continue;
+                                }
+                                else if(earnedCards[0].name != obje.name)
+                                {
+                                    earnedCards.Add(obje);
+                                }
+                            }
+                            else if(earnedCards.Count == 0)
+                            {
+                                earnedCards.Add(obje);
+                            }
+                        }
+                    }
+                }
+                break;
+
             default:
-            break;
+                break;
+
+        }
+
+        #endregion
+        
+
+        
+        #region geri kalan kartlari random bir şekilde seçilmesini sağliyan kod satirlari
+        
+        int count = 4 - earnedCards.Count;
+
+        while(earnedCards.Count != 4)
+        {
+            randomNumber = 0;
+            randomNumber = Random.Range(0,gameAllCards.Count-1);
+            GameObject obje = gameAllCards[randomNumber];
+            if(!cards.Contains(obje) && !earnedCards.Contains(obje))
+            {
+                earnedCards.Add(obje);
+            }
         }
         
-        string _cardsName = string.Join(",", cardsName);
-        SaveSystem.DataSave("cardsName", _cardsName);
+        #endregion
+
+        #region  seçilmiş olan kartlari oluşturmamizi ve o kartlara tiklamamzi saliyan kod satirleri
+
+        for (int i = 0; i < earnedCards.Count; i++)
+        {
+            GameObject newCard = Instantiate(earnedCards[i].gameObject);
+            newCard.transform.localScale = Vector3.one;
+            newCard.name = earnedCards[i].name;
+            newCard.transform.position = UIManager.Instance.EarnedCardsPositions[i].position;
+            newCard.transform.SetParent(UIManager.Instance.EarnedGameObject);
+
+            newCard.GetComponent<Button>().onClick.AddListener(delegate()
+            {
+                cards.Add(newCard);
+                switch (newCard.tag)
+                {
+                    case "AttackCard":
+                        string attackCardsName = $"Prefabs/Cards/AttackCards/{newCard.name}";
+
+                        cardsName.Add(attackCardsName);
+                        break;
+                    case "DefenceCard":
+                        string defenceCardsName = $"Prefabs/Cards/DefenceCards/{newCard.name}";
+
+
+                        cardsName.Add(defenceCardsName);
+                        break;
+                    case "AbilityCard":
+                        string abilityCardsName = $"Prefabs/Cards/AbilityCards/{newCard.name}";
+
+                        cardsName.Add(abilityCardsName);
+                        break;
+                    case "StrenghCard":
+                        string strenghCardsName = $"Prefabs/Cards/StrengthCards/{newCard.name}";
+
+                        cardsName.Add(strenghCardsName);
+                        break;
+                    default:
+                        break;
+                }
+
+                string _cardsName = string.Join(",", cardsName);
+                SaveSystem.DataSave("cardsName", _cardsName);
+
+                int siblingIndex = newCard.transform.GetSiblingIndex();
+                for (int i = 0; i < UIManager.Instance.EarnedGameObject.transform.childCount; i++)
+                {
+                    if (i != siblingIndex)
+                    {
+                        if(UIManager.Instance.EarnedGameObject.transform.GetChild(i).gameObject.activeSelf)
+                        {
+                            Destroy(UIManager.Instance.EarnedGameObject.transform.GetChild(i).gameObject);
+                        }
+                    }
+                    else
+                    {
+                        UIManager.Instance.EarnedGameObject.transform.GetChild(i).gameObject.SetActive(false);
+                    }
+                }
+
+                earnedCards.Clear();
+                foreach (var card in cards)
+                {
+                    if(card != null)
+                    {
+                        Button cardButton = card.GetComponent<Button>();
+                        if (cardButton != null)
+                        {
+                            if (cardButton.onClick == null)
+                            {
+                                cardButton.onClick = new Button.ButtonClickedEvent();
+                            }
+                            cardButton.onClick.RemoveAllListeners();
+                            cardButton.onClick.AddListener(() => CardDevelopment.Instance.SelectCardDevelopment(card));
+                        }
+                    }
+                }
+
+                LevelProgress();
+
+                if(finishLevel)
+                {
+                    ResetCharacterFeature();
+                    LevelOpening();
+                    finishLevel = false;
+                }
+            });
+        }
+        #endregion
+        
+        
     }
+
+
+    
 
 
     //düşman yok edildiğinde kazanilan kartlari oluşturan method    
     public void CreateEarnedCard()
     {
-        string _a = SaveSystem.DataExtraction("cardsName","");
+        string _a = SaveSystem.DataExtraction("cardsName", "");
         string[] _b = _a.Split(",");
         for (int i = 0; i < _b.Length; i++)
         {
             print(_b[i]);
             resourcesCard = Resources.Load<GameObject>(_b[i]);
-            if(resourcesCard != null)
+            if (resourcesCard != null)
             {
-                GameObject _object = Instantiate(resourcesCard,UIManager.Instance.EarnedGameObject.transform);
-                
+                GameObject _object = Instantiate(resourcesCard, UIManager.Instance.EarnedGameObject.transform);
+
                 _object.name = _b[i].Split("/")[3];
                 _object.transform.localScale = Vector3.one;
                 _object.gameObject.SetActive(false);
                 //yeni eklenen kod
-                _object.GetComponent<Button>().onClick.AddListener(()=>CardDevelopment.Instance.SelectCardDevelopment(_object));
+                _object.GetComponent<Button>().onClick.AddListener(() => CardDevelopment.Instance.SelectCardDevelopment(_object));
                 //deck.Add(_object);
-                cards.Add(_object); 
-            
+                cards.Add(_object);
+
             }
-        }   
+        }
     }
+
+   
 
 
 
@@ -857,7 +1124,76 @@ public class GameManager : MonoBehaviour
         
     }
 
+
+    #region Kart Olayinda Kullanilana  Eski Methodlar
+    public void CreateCardWinFromEnemy()
+    {
+        // yeni kart eklme için kullanulıyor
+        //yeni kart oluşturunca oluşturulan kart dect  listesine ekle
+        
+        randomNumber = Random.Range(0,gameAllCards.Count-1);
+        lastRandomNumber = randomNumber;
+        StartCoroutine(RandomNumber());
+    }
+    
+    //random bir şekilde kart oluşturmaı sağliyor
+    private IEnumerator RandomNumber()
+    {
+        while(lastRandomNumber == randomNumber)
+        {
+            randomNumber = Random.Range(0,gameAllCards.Count-1);
+            yield return null;
+        }
+        lastRandomNumber = randomNumber;
+
+        GameObject newCard = Instantiate(gameAllCards[randomNumber]);
+        newCard.name = gameAllCards[randomNumber].name;
+        newCard.transform.SetParent(UIManager.Instance.EarnedGameObject);
+        newCard.transform.localScale =Vector3.one;
+        newCard.GetComponent<CardMovement>().enabled = false;
+        newCard.GetComponent<Button>().onClick.AddListener(()=>CardDevelopment.Instance.SelectCardDevelopment(newCard));
+        newCard.SetActive(false);
+        cards.Add(newCard);
+
+
+        switch(newCard.tag)
+        {
+            case "AttackCard":
+                string attackCardsName = $"Prefabs/Cards/AttackCards/{newCard.name}";
+                
+                cardsName.Add(attackCardsName);
+            break;
+            case "DefenceCard":
+                string defenceCardsName = $"Prefabs/Cards/DefenceCards/{newCard.name}";
+
+
+                cardsName.Add(defenceCardsName);
+            break;
+            case "AbilityCard":
+                string abilityCardsName = $"Prefabs/Cards/AbilityCards/{newCard.name}";
+
+                cardsName.Add(abilityCardsName);
+            break;
+            case "StrenghCard":
+                string strenghCardsName =$"Prefabs/Cards/StrengthCards/{newCard.name}";
+
+                cardsName.Add(strenghCardsName);
+            break;
+            default:
+            break;
+        }
+        
+        string _cardsName = string.Join(",", cardsName);
+        SaveSystem.DataSave("cardsName", _cardsName);
+        
+
+
+
+    }
     #endregion
+
+    #endregion
+
 
     #region  Map
     
@@ -907,6 +1243,7 @@ public class GameManager : MonoBehaviour
     }
 
     #endregion
+
 
     #region  Ekonominest
 

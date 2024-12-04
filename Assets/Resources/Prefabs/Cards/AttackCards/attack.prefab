@@ -140,7 +140,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 1
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -226,7 +226,7 @@ GameObject:
   - component: {fileID: 1690503972065664783}
   - component: {fileID: 4680981818951742055}
   m_Layer: 5
-  m_Name: Attack
+  m_Name: attack
   m_TagString: AttackCard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -382,9 +382,10 @@ MonoBehaviour:
   cardType: 1
   cardLegendary: 2
   cardCombineLegendary: 
-  energyCost: 1
+  cardPosition: {x: 0, y: 0}
+  energyCost: 0
   duration: 1
-  damage: 30
+  damage: 35
   attackCards: []
   cardButton: {fileID: 0}
 --- !u!114 &4680981818951742055

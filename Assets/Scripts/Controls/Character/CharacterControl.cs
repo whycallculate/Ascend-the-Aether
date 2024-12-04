@@ -34,6 +34,7 @@ public class CharacterControl : CalculateCharacterValues
     private int toursCount = 0;
 
     [SerializeField] private bool isCharacterAlive = false;
+    public bool IsCharacterAlive {get {return isCharacterAlive;}}
 
 
     private void Awake() 

@@ -30,6 +30,11 @@ public class LevelPrefabControl : MonoBehaviour
 
     #endregion
 
+    #region  Crystal
+    [SerializeField] private int levelCrystalCount;
+    public int CrystalCount { get { return levelCrystalCount;}  set { levelCrystalCount = value;}}
+    #endregion
+
     private void OnValidate() 
     {
         levelButton = GetComponent<Button>();    
