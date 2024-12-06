@@ -45,8 +45,8 @@ public class HalfImmortalCharacter : CharacterType
         }
         CharacterVisibilty(true);
 
-        SaveSystem.DataSave("characterFeatureUsed",featureUsed.ToString());
         featureUsed = true;
+        SaveSystem.DataSave("characterFeatureUsed",featureUsed.ToString());
     }
     
 }

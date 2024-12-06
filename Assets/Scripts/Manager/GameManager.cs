@@ -175,6 +175,7 @@ public class GameManager : MonoBehaviour
         
     }
 
+
     #region Start And Update Function
     private void Start()
     {
@@ -217,15 +218,12 @@ public class GameManager : MonoBehaviour
             }
         }
         
-
         if(Input.GetKeyDown(KeyCode.W))
         {
-            //CharacterValueLoad();
-            //WhatOfKindCharacter();
-            print("level index : " + characterCurrentLevelIndex);
-            print("level type : " + characterCurrentLevelType);
-
+            RunCharacterTrait(20);
         }
+
+
         if(Input.GetKeyDown(KeyCode.S))
         {
             character.CharacterTraits_Function("healtbar","-",20);
@@ -323,18 +321,39 @@ public class GameManager : MonoBehaviour
         characterCurrentLevelIndex = 1;
         LevelOpening();
 
+        SaveSystem.DataSave("cardsName", "");
+
+        CardsClear();
+
         CardPositionReset();
 
         CardButtonInteractableControl();
+
+        EnemysClear();
+
+    }
+
+    private void EnemysClear()
+    {
         for (int i = 0; i < enemys.Count; i++)
         {
-            if(enemys[i] != null)
+            if (enemys[i] != null)
             {
                 Destroy(enemys[i].gameObject);
             }
         }
-        enemys.Clear();
 
+        enemys.Clear();
+    }
+
+    private void CardsClear()
+    {
+        foreach (GameObject card in cards)
+        {
+            Destroy(card);
+        }
+
+        cards.Clear();
     }
 
     //kart'ın posizyonunu sıfılıyor
@@ -379,8 +398,22 @@ public class GameManager : MonoBehaviour
         {
         
             isLevelOver = true;
+
+            if(finishLevel)
+            {
             
-            WhatOfKindCharacter();
+                WhatOfKindCharacter(2,4);
+
+                character.CharacterType.FeatureUsed = false;
+                SaveSystem.DataSave("characterFeatureUsed", character.CharacterType.FeatureUsed.ToString());
+                
+            }
+            else if(!finishLevel)
+            {
+            
+                WhatOfKindCharacter(2,3);
+            
+            }
             
             deadEnemyCount = 0;
             enemys.Clear();
@@ -412,7 +445,6 @@ public class GameManager : MonoBehaviour
         {
 
             CharacterControl characterClone = Instantiate(levelCharacterPrefab,_characterPosition[i],Quaternion.identity);
-            character = characterClone;
 
             if(SaveSystem.DataQuery("characterFeatureUsed"))
             {
@@ -421,20 +453,21 @@ public class GameManager : MonoBehaviour
                 switch(characterFeatureUsed)
                 {
                     case "True":
-                        character.CharacterType.FeatureUsed = true;
+                        characterClone.CharacterType.FeatureUsed = true;
                     break;
                     
                     case "False":
-                        character.CharacterType.FeatureUsed = false;
+                        characterClone.CharacterType.FeatureUsed = false;
                     break;
 
                     default:
                     break;
                 
                 } 
-                print (character.CharacterType.FeatureUsed);
+                print (characterClone.CharacterType.FeatureUsed);
             }
 
+            character = characterClone;
             CharacterUI characterUI =character.GetComponent<CharacterUI>();
             
             UIManager.Instance.CharacterUI = characterUI;
@@ -506,8 +539,7 @@ public class GameManager : MonoBehaviour
         characterCurrentLevelType = levelObjects[0].LevelType_Enum.ToString();
         SaveSystem.DataSave("levelType", characterCurrentLevelType);
 
-        character.CharacterType.FeatureUsed = false;
-        SaveSystem.DataSave("characterFeatureUsed", "false");
+       
 
         if(character.IsCharacterAlive)
         {
@@ -520,6 +552,8 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+
+    
     }
 
 
@@ -656,7 +690,7 @@ public class GameManager : MonoBehaviour
     
     //levelde ki bütün düşmanlari öldürünce kart seçmeni sağliyan method
     [SerializeField] private List<GameObject> earnedCards = new List<GameObject>();
-    public void WhatOfKindCharacter()
+    public void WhatOfKindCharacter(int sameFeatureEarnedCardCount,int earnedCardsMaxCount)
     {
         #region elimizde ki kartlari ve next buttonunu tiklanabilmesini engelleyen kod satirlari
         
@@ -712,135 +746,71 @@ public class GameManager : MonoBehaviour
         {
 
             case "Attack":
-                for (int i = 0; i < gameAllCards.Count; i++)
+                while(earnedCards.Count != sameFeatureEarnedCardCount)
                 {
+                    randomNumber = 0;
                     randomNumber = Random.Range(0,gameAllCards.Count-1);
-                    lastRandomNumber = randomNumber;
-
                     GameObject obje = gameAllCards[randomNumber];
-                    obje.name = gameAllCards[randomNumber].name;
-
                     if (obje.GetComponent<AttackCardController>() != null)
                     {
-                        if (earnedCards.Count < 2)
+                        if(!cards.Contains(obje) && !earnedCards.Contains(obje))
                         {
-                            if(earnedCards.Count == 1)
-                            {
-                                if(earnedCards[0].name == obje.name)
-                                {
-                                    continue;
-                                }
-                                else if(earnedCards[0].name != obje.name)
-                                {
-                                    earnedCards.Add(obje);
-                                }
-                            }
-                            else if(earnedCards.Count == 0)
-                            {
-                                earnedCards.Add(obje);
-                            }
+                            earnedCards.Add(obje);
+                            
                         }
                     }
-                    
                 }
                 break;
 
             case "Defence":
-                for (int i = 0; i < gameAllCards.Count; i++)
+
+                while(earnedCards.Count != sameFeatureEarnedCardCount)
                 {
-                    
+                    randomNumber = 0;
                     randomNumber = Random.Range(0,gameAllCards.Count-1);
-                    lastRandomNumber = randomNumber;
-
                     GameObject obje = gameAllCards[randomNumber];
-                    obje.name = gameAllCards[randomNumber].name;
-
                     if (obje.GetComponent<DefenceCardController>() != null)
                     {
-                        if (earnedCards.Count < 2)
+                        if(!cards.Contains(obje) && !earnedCards.Contains(obje))
                         {
-                            if(earnedCards.Count == 1)
-                            {
-                                if(earnedCards[0].name == obje.name)
-                                {
-                                    continue;
-                                }
-                                else if(earnedCards[0].name != obje.name)
-                                {
-                                    earnedCards.Add(obje);
-                                }
-                            }
-                            else if(earnedCards.Count == 0)
-                            {
-                                earnedCards.Add(obje);
-                            }
+                            earnedCards.Add(obje);
+                            
                         }
                     }
-
                 }
+
                 break;
 
             case "Ability":
-                for (int i = 0; i < gameAllCards.Count; i++)
+            
+                while(earnedCards.Count != sameFeatureEarnedCardCount)
                 {
+                    randomNumber = 0;
                     randomNumber = Random.Range(0,gameAllCards.Count-1);
-                    lastRandomNumber = randomNumber;
-
                     GameObject obje = gameAllCards[randomNumber];
-                    obje.name = gameAllCards[randomNumber].name;
-
                     if (obje.GetComponent<AbilityCardController>() != null)
                     {
-                        if (earnedCards.Count < 2)
+                        if(!cards.Contains(obje) && !earnedCards.Contains(obje))
                         {
-                            if(earnedCards.Count == 1)
-                            {
-                                if(earnedCards[0].name == obje.name)
-                                {
-                                    continue;
-                                }
-                                else if(earnedCards[0].name != obje.name)
-                                {
-                                    earnedCards.Add(obje);
-                                }
-                            }
-                            else if(earnedCards.Count == 0)
-                            {
-                                earnedCards.Add(obje);
-                            }
+                            earnedCards.Add(obje);
+                            
                         }
                     }
                 }
                 break;
 
             case "Strengh":
-                for (int i = 0; i < gameAllCards.Count; i++)
+                while(earnedCards.Count != sameFeatureEarnedCardCount)
                 {
+                    randomNumber = 0;
                     randomNumber = Random.Range(0,gameAllCards.Count-1);
-                    lastRandomNumber = randomNumber;
-
                     GameObject obje = gameAllCards[randomNumber];
-                    obje.name = gameAllCards[randomNumber].name;
-
                     if (obje.GetComponent<StrengthCardController>() != null)
                     {
-                        if (earnedCards.Count < 2)
+                        if(!cards.Contains(obje) && !earnedCards.Contains(obje))
                         {
-                            if(earnedCards.Count == 1)
-                            {
-                                if(earnedCards[0].name == obje.name)
-                                {
-                                    continue;
-                                }
-                                else if(earnedCards[0].name != obje.name)
-                                {
-                                    earnedCards.Add(obje);
-                                }
-                            }
-                            else if(earnedCards.Count == 0)
-                            {
-                                earnedCards.Add(obje);
-                            }
+                            earnedCards.Add(obje);
+                            
                         }
                     }
                 }
@@ -857,9 +827,8 @@ public class GameManager : MonoBehaviour
         
         #region geri kalan kartlari random bir şekilde seçilmesini sağliyan kod satirlari
         
-        int count = 4 - earnedCards.Count;
 
-        while(earnedCards.Count != 4)
+        while(earnedCards.Count != earnedCardsMaxCount)
         {
             randomNumber = 0;
             randomNumber = Random.Range(0,gameAllCards.Count-1);
@@ -873,7 +842,7 @@ public class GameManager : MonoBehaviour
         #endregion
 
         #region  seçilmiş olan kartlari oluşturmamizi ve o kartlara tiklamamzi saliyan kod satirleri
-
+        
         for (int i = 0; i < earnedCards.Count; i++)
         {
             GameObject newCard = Instantiate(earnedCards[i].gameObject);
@@ -881,6 +850,8 @@ public class GameManager : MonoBehaviour
             newCard.name = earnedCards[i].name;
             newCard.transform.position = UIManager.Instance.EarnedCardsPositions[i].position;
             newCard.transform.SetParent(UIManager.Instance.EarnedGameObject);
+            
+            
 
             newCard.GetComponent<Button>().onClick.AddListener(delegate()
             {
