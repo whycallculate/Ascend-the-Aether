@@ -18,6 +18,12 @@ public class TankCharacter : CharacterType
                 increaseRate += .10;
                 toursCount = 0;
             }
+            else
+            {
+                GameManager.Instance.character.CharacterTraits_Function("shield", "-", shield);
+                increaseRate += .10;
+                toursCount = 0;
+            }
         }
     }
 }
