@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class LevelPrefabControl : MonoBehaviour
 {
     [SerializeField] private LevelType_Enum levelTypeEnum;
-    public LevelType_Enum LevelType_Enum { get { return levelTypeEnum; } }
+    public LevelType_Enum LevelType_Enum { get { return levelTypeEnum; }  set { levelTypeEnum = value; } }
     [SerializeField] private Button levelButton;
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private int levelIndex;
@@ -17,16 +17,28 @@ public class LevelPrefabControl : MonoBehaviour
 
     #region  Enemy
     [SerializeField] private EnemyController levelEnemyPrefab;
+    public EnemyController LevelEnemyPrefab { get {return levelEnemyPrefab;} set { levelEnemyPrefab = value;}}
+
     [SerializeField] private Vector3[]  levelEnemyPosition;
+    public Vector3[] LevelEnemyPositions {get {return levelEnemyPosition;} set{levelEnemyPosition = value;}}
+
     [SerializeField] private EnemyFeature[] enemy;
+    public EnemyFeature[] EnemyFeatures { get {return enemy;} set { enemy = value;}}
     [SerializeField] private int levelEnemyCount;
+
 
     #endregion
 
     #region  Character
     [SerializeField] private CharacterControl levelCharacterPrefab;
+    public CharacterControl LevelCharacterPrefab { get {return levelCharacterPrefab;} set { levelCharacterPrefab = value;}}
+
     [SerializeField] private int levelCharacterCount;
+    public int LevelCharacterCount { get {return levelCharacterCount;} set {levelCharacterCount = value;}}
+    
     [SerializeField] private Vector3[]  levelCharacterPosition;
+    public Vector3[] LevelCharacterPositions {get {return levelCharacterPosition;} set {levelCharacterPosition = value;}}
+
 
     #endregion
 
@@ -37,13 +49,13 @@ public class LevelPrefabControl : MonoBehaviour
 
     private void OnValidate() 
     {
-        levelButton = GetComponent<Button>();    
-        levelText = GetComponentInChildren<TextMeshProUGUI>();
     }
 
     private void Awake() 
     {
-        levelText.text = levelTypeEnum.ToString();
+        levelButton = GetComponent<Button>();    
+        levelText = GetComponentInChildren<TextMeshProUGUI>();
+        
         if(gameObject.tag != "ChangeLevel" && gameObject.tag != "BossLevel")
         {
             if(levelTypeEnum != LevelType_Enum.None)
@@ -64,9 +76,36 @@ public class LevelPrefabControl : MonoBehaviour
         
     }
 
+    private void Start() 
+    {
+        levelText.text = levelTypeEnum.ToString();
+    }
+
+    public void LevelInformationIdentification(LevelType_Enum levelType,CharacterControl levelCharacterPrefab,int levelCharacterCount,Vector3[] levelCharacterPositions,EnemyController levelEnemyPrefab,int levelEnemyCount,Vector3[] levelEnemyPositions,EnemyFeature[] enemyFeatures)
+    {
+        levelTypeEnum = levelType;
+        this.levelCharacterPrefab = levelCharacterPrefab;
+        this.levelCharacterCount = levelCharacterCount;
+        levelCharacterPosition = levelCharacterPositions;
+        this.levelEnemyPrefab = levelEnemyPrefab;
+        this.levelEnemyCount = levelEnemyCount;
+        levelEnemyPosition = levelEnemyPositions; 
+        enemy = enemyFeatures;
+    }
+
     //level butonuna basınca düşman ve karakteri üreten method
     private void LevelButtonFunction(bool value)
     {
+        if(levelCharacterPrefab == null)
+        {
+            print("karakter boş");
+        }
+        if(levelEnemyPrefab == null)
+        {
+            print("düşman boş");
+        }
+
+        print("çalişiyor");
         if(levelIndex == 1 && GameManager.Instance.character == null)
         {
             GameManager.Instance.CreatingCharacter(levelCharacterCount,levelCharacterPrefab,levelCharacterPosition);
@@ -139,6 +178,10 @@ public class LevelPrefabControl : MonoBehaviour
     //this function for change level button 
     public void ChangeLevelType()
     {
+        if(GameManager.Instance.character == null)
+        {
+            GameManager.Instance.CreatingCharacter(levelCharacterCount,levelCharacterPrefab,levelCharacterPosition);
+        }
         GameManager.Instance.CharacterCurrentLevelType = LevelType_Enum.None.ToString();
 
         SaveSystem.DataSave("levelType",GameManager.Instance.CharacterCurrentLevelType);
@@ -149,6 +192,8 @@ public class LevelPrefabControl : MonoBehaviour
         GameManager.Instance.CurrentLevelIndex = levelIndex;
 
         GameManager.Instance.levelProgress += LevelButtonFunction;
+
+
     }
 
     //this function for boss level button 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Card_Enum;
 using CharacterType_Enum;
 using EnemyFeatures;
+using LevelTypeEnums;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,6 +31,10 @@ public class GameManager : MonoBehaviour
 
     public CharacterControl character;
     public EnemyController enemy;
+
+    private int mapIndex = 0;
+    public int MapIndex { get { return mapIndex; } }
+
     public bool isPlayerTurn = true;
 
     private bool isGameStart = false;
@@ -38,6 +43,7 @@ public class GameManager : MonoBehaviour
     
     [SerializeField] private GameObject levelsObject;
     [SerializeField] private List<LevelPrefabControl> levelObjects = new List<LevelPrefabControl>();
+    public List<LevelPrefabControl> LevelObjects { get { return levelObjects; } }
 
     public delegate void LevelProgressDelegate(bool value);
 
@@ -54,10 +60,10 @@ public class GameManager : MonoBehaviour
     public int CharacterCurrentLevelIndex {get {return characterCurrentLevelIndex;} set {characterCurrentLevelIndex = value;}}
     private string characterCurrentLevelType ;
     public string CharacterCurrentLevelType {get {return characterCurrentLevelType;} set {characterCurrentLevelType = value;}}
-    private int currentLevelIndex;
+    private int currentLevelIndex = 0;
     public int CurrentLevelIndex {get {return currentLevelIndex;} set {currentLevelIndex = value;}}
 
-
+    
 
 
     #endregion
@@ -119,15 +125,29 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        
         levelsObject = GameObject.FindGameObjectWithTag("Levels");
-        if (levelsObject != null)
+
+        if(SaveSystem.DataQuery("mapIndex"))
         {
-            for (int i = 0; i < levelsObject.transform.childCount; i++)
+            mapIndex = SaveSystem.DataExtraction("mapIndex",0);
+        }
+        
+        mapIndex = 3;
+
+        if(levelsObject.transform.GetChild(mapIndex) != null)
+        {
+            Transform child = levelsObject.transform.GetChild(mapIndex);
+            child.gameObject.SetActive(true);
+            
+            if (levelsObject != null)
             {
-                levelObjects.Add(levelsObject.transform.GetChild(i).GetComponent<LevelPrefabControl>());
+                for (int i = 0; i < child.childCount; i++)
+                {
+                    levelObjects.Add(child.GetChild(i).GetComponent<LevelPrefabControl>());
+                }
             }
         }
+        
 
         if (enemy == null)
         {
@@ -138,10 +158,12 @@ public class GameManager : MonoBehaviour
                 deck[i].GetComponent<CardMovement>().enabled = false;
             }
         }
-        
+
+
         LevelIndexAdjust();
 
         AllCardLoad();
+
         if(SaveSystem.DataQuery("crystalCount"))
         {
             crystalCount = SaveSystem.DataExtraction("crystalCount",0);
@@ -218,14 +240,19 @@ public class GameManager : MonoBehaviour
             }
         }
         
+        
         if(Input.GetKeyDown(KeyCode.W))
         {
-            RunCharacterTrait(20);
+            //RunCharacterTrait(20);
+            print("map index : " + mapIndex);    
+            print("kaydedilen index : " + SaveSystem.DataExtraction("mapIndex",0));
+            print("level index : " + characterCurrentLevelIndex);
         }
 
 
         if(Input.GetKeyDown(KeyCode.S))
         {
+            //NextMapLevel();
             character.CharacterTraits_Function("healtbar","-",20);
         }
 
@@ -320,6 +347,7 @@ public class GameManager : MonoBehaviour
         characterCurrentLevelType = levelObjects[0].LevelType_Enum.ToString();
         characterCurrentLevelIndex = 1;
         LevelOpening();
+        
 
         SaveSystem.DataSave("cardsName", "");
 
@@ -366,7 +394,91 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private bool isFinishLevels = false;
+    public void NextMapLevel()
+    {
+        if( mapIndex != UIManager.Instance.MapLevel.Length-1)
+        {
+            mapIndex++;
+        }
+        else
+        {
+            //mapIndex = 0;
+            print("bütün levellar bitti");
+            characterCurrentLevelIndex = 0;
+            isFinishLevels = true;
+        }
 
+        SaveSystem.DataSave("mapIndex",mapIndex);
+
+        Transform mapLevel = null;
+
+        if(UIManager.Instance.MapLevel[mapIndex] != null)
+        {
+            mapLevel = UIManager.Instance.MapLevel[mapIndex];
+        }
+
+        characterCurrentLevelType = levelObjects[0].LevelType_Enum.ToString();
+        SaveSystem.DataSave("levelType", characterCurrentLevelType);
+        
+        levelObjects.Clear();
+
+        
+
+        if(mapLevel != null)
+        {
+            for (int i = 0; i < UIManager.Instance.MapLevel.Length; i++)
+            {
+                if (i == mapIndex)
+                {
+                    UIManager.Instance.MapLevel[i].gameObject.SetActive(true);
+                }
+                else
+                {
+                    UIManager.Instance.MapLevel[i].gameObject.SetActive(false);
+
+                }
+            }
+
+            for (int i = 0; i < mapLevel.childCount; i++)
+            {
+                levelObjects.Add(mapLevel.GetChild(i).GetComponent<LevelPrefabControl>());
+            }
+            LevelIndexAdjust();
+        }
+    }
+
+
+    public void ResetMapLevel()
+    {
+        levelObjects.Clear();
+        mapIndex = 0;
+        SaveSystem.DataSave("mapIndex",mapIndex);
+        
+        Transform mapLevel = UIManager.Instance.MapLevel[mapIndex];
+
+        for (int i = 0; i < UIManager.Instance.MapLevel.Length; i++)
+        {
+            if(i == mapIndex)
+            {
+                UIManager.Instance.MapLevel[i].gameObject.SetActive(true);
+            }
+            else
+            {
+                UIManager.Instance.MapLevel[i].gameObject.SetActive(false);
+
+            }
+        }
+        
+
+        for (int i = 0; i < mapLevel.childCount; i++)
+        {
+            levelObjects.Add(mapLevel.transform.GetChild(i).GetComponent<LevelPrefabControl>());
+        }
+
+        LevelIndexAdjust();
+    }
+   
     #endregion
 
 
@@ -406,7 +518,7 @@ public class GameManager : MonoBehaviour
 
                 character.CharacterType.FeatureUsed = false;
                 SaveSystem.DataSave("characterFeatureUsed", character.CharacterType.FeatureUsed.ToString());
-                
+                NextMapLevel();
             }
             else if(!finishLevel)
             {
@@ -532,17 +644,30 @@ public class GameManager : MonoBehaviour
 
     public void ResetCharacterFeature()
     {
-        print("sifirladi");
-        characterCurrentLevelIndex = levelObjects[0].LevelIndex;
-        SaveSystem.DataSave("levelIndex", characterCurrentLevelIndex);
+        if(finishLevel)
+        {
+            characterCurrentLevelIndex = levelObjects[0].LevelIndex;
+            SaveSystem.DataSave("levelIndex", characterCurrentLevelIndex);
 
-        characterCurrentLevelType = levelObjects[0].LevelType_Enum.ToString();
-        SaveSystem.DataSave("levelType", characterCurrentLevelType);
+            characterCurrentLevelType = levelObjects[0].LevelType_Enum.ToString();
+            SaveSystem.DataSave("levelType", characterCurrentLevelType);
+        }
 
-       
+
+        if(isFinishLevels)
+        {
+            characterCurrentLevelIndex = 0;
+            SaveSystem.DataSave("levelIndex", characterCurrentLevelIndex);
+
+            characterCurrentLevelType = levelObjects[0].LevelType_Enum.ToString();
+            SaveSystem.DataSave("levelType", characterCurrentLevelType);
+        }
+        
+        
 
         if(character.IsCharacterAlive)
         {
+            ResetMapLevel();
             SaveSystem.DataRemove("cardsName");
             if (cards.Count > 0)
             {
@@ -1169,8 +1294,10 @@ public class GameManager : MonoBehaviour
     #region  Map
     
     //levelerin indexi otamatik tanımlayan bir method
-    private void LevelIndexAdjust()
+    public void LevelIndexAdjust()
     {
+        
+        
         int levelIndexResult = 0;
         for (int i = 0; i < levelObjects.Count; i++)
         {
@@ -1179,7 +1306,7 @@ public class GameManager : MonoBehaviour
                 levelObjects[i].LevelIndex = 1;
             }
 
-            if (levelObjects[i].LevelType_Enum != LevelTypeEnums.LevelType_Enum.Change)
+            if (levelObjects[i].LevelType_Enum != LevelType_Enum.Change)
             {
 
                 if(i % 2 == 1)
@@ -1209,10 +1336,27 @@ public class GameManager : MonoBehaviour
             else
             {
                 levelObjects[i].LevelIndex = levelObjects[i-1].LevelIndex *2;
+                levelObjects[i+1].LevelIndex = levelObjects[i].LevelIndex *2;
+            }
+        }
+        
+
+        
+
+        foreach (LevelPrefabControl item in levelObjects)
+        {
+            if(item.LevelIndex == characterCurrentLevelIndex)
+            {
+                item.GetComponent<Button>().interactable = true;
+            }
+            else if(item.LevelIndex != characterCurrentLevelIndex)
+            {
+                item.GetComponent<Button>().interactable = false;
             }
         }
     }
 
+    
     #endregion
 
 

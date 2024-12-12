@@ -108,7 +108,7 @@ public class CardBoard : MonoBehaviour,IDropHandler
             {
                 if(attackCardController.CardCombineLegendary[i] == SeasonTicketTypeFind(seasonTicket))
                 {
-                    CardComboManager.Instance.CardComboFunction(GameManager.Instance.character.GetComponent<CharacterController>(), new string[]{"healtbar","energy"}, new string[]{"-","-"},new int[]{20,(attackCardController.energyCost + seasonTicketEnergy)}, GameManager.Instance.enemy, "", 20, "");
+                    CardComboManager.Instance.CardComboFunction(GameManager.Instance.character.GetComponent<CharacterController>(), new string[]{"healtbar","energy"}, new string[]{"-","-"},new int[]{20,(attackCardController.energyCost + seasonTicketEnergy)}, GameManager.Instance.enemy, "", 20, "",seasonTicket,combineCard);
                     seasonTicket.SetActive(false);
                     attackCardController.gameObject.SetActive(false);
                     isCardCombine = true;
@@ -121,7 +121,7 @@ public class CardBoard : MonoBehaviour,IDropHandler
             {
                 if(defenceCardController.CardCombineLegendary[i] == SeasonTicketTypeFind(seasonTicket))
                 {
-                    CardComboManager.Instance.CardComboFunction(GameManager.Instance.character.GetComponent<CharacterController>(), new string[]{"healtbar","energy"}, new string[]{"-","-"},new int[]{20,(defenceCardController.energyCost + seasonTicketEnergy)}, GameManager.Instance.enemy, "", 20, "");    
+                    CardComboManager.Instance.CardComboFunction(GameManager.Instance.character.GetComponent<CharacterController>(), new string[]{"healtbar","energy"}, new string[]{"-","-"},new int[]{20,(defenceCardController.energyCost + seasonTicketEnergy)}, GameManager.Instance.enemy, "", 20, "",seasonTicket,combineCard);    
                     defenceCardController.gameObject.SetActive(false);
                     seasonTicket.SetActive(false);
 
@@ -135,7 +135,7 @@ public class CardBoard : MonoBehaviour,IDropHandler
             {
                 if(abilityCardController.CardCombineLegendary[i] == SeasonTicketTypeFind(seasonTicket))
                 {
-                    CardComboManager.Instance.CardComboFunction(GameManager.Instance.character.GetComponent<CharacterController>(), new string[]{"healtbar","energy"}, new string[]{"-","-"},new int[]{20,(abilityCardController.energyCost + seasonTicketEnergy)}, GameManager.Instance.enemy, "", 20, "");
+                    CardComboManager.Instance.CardComboFunction(GameManager.Instance.character.GetComponent<CharacterController>(), new string[]{"healtbar","energy"}, new string[]{"-","-"},new int[]{20,(abilityCardController.energyCost + seasonTicketEnergy)}, GameManager.Instance.enemy, "", 20, "",seasonTicket,combineCard);
                     isCombineCard = true;
                     abilityCardController.gameObject.SetActive(false);
                     seasonTicket.SetActive(false);
@@ -148,7 +148,7 @@ public class CardBoard : MonoBehaviour,IDropHandler
             {
                 if(strenghCardController.CardCombineLegendary[i] == SeasonTicketTypeFind(seasonTicket))
                 {
-                    CardComboManager.Instance.CardComboFunction(GameManager.Instance.character.GetComponent<CharacterController>(), new string[]{"healtbar","energy"}, new string[]{"-","-"},new int[]{20,(strenghCardController.energyCost + seasonTicketEnergy)}, GameManager.Instance.enemy, "", 20, "");
+                    CardComboManager.Instance.CardComboFunction(GameManager.Instance.character.GetComponent<CharacterController>(), new string[]{"healtbar","energy"}, new string[]{"-","-"},new int[]{20,(strenghCardController.energyCost + seasonTicketEnergy)}, GameManager.Instance.enemy, "", 20, "",seasonTicket,combineCard);
                     strenghCardController.gameObject.SetActive(false);
                     seasonTicket.SetActive(false);
                     isCardCombine = true;

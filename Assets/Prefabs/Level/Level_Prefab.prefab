@@ -228,6 +228,14 @@ MonoBehaviour:
   levelButton: {fileID: 4922527654300570919}
   levelText: {fileID: 1540834152443333996}
   levelIndex: 0
+  levelEnemyPrefab: {fileID: 0}
+  levelEnemyPosition: []
+  enemy: []
+  levelEnemyCount: 0
+  levelCharacterPrefab: {fileID: 0}
+  levelCharacterCount: 0
+  levelCharacterPosition: []
+  levelCrystalCount: 0
 --- !u!114 &4922527654300570919
 MonoBehaviour:
   m_ObjectHideFlags: 0

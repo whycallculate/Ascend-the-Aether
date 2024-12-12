@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -103,8 +104,19 @@ public class UIManager : MonoBehaviour
 
     #region  Map
 
+    [Space]
+    [Space]
+    [Space]
+
+    [SerializeField] private GameObject levelPrefab;
+    public GameObject LevelPrefab { get { return levelPrefab;}}
+    [SerializeField] private Transform levelPrefabContent;
+    public Transform LevelPrefabContent { get { return levelPrefabContent;}}
     [SerializeField] private Button cardDevelopmenButton;
     [SerializeField] private Button characterHealtRenewalButton;
+
+    [SerializeField] private Transform[] mapLevel;
+    public Transform[] MapLevel { get { return mapLevel;}}
 
 
     #endregion
