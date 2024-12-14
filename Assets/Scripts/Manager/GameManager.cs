@@ -760,48 +760,79 @@ public class GameManager : MonoBehaviour
     #region  Map
     
     //levelerin indexi otamatik tanımlayan bir method
-    private void LevelIndexAdjust()
+    public void LevelIndexAdjust()
     {
-        int levelIndexResult = 0;
+        
         for (int i = 0; i < levelObjects.Count; i++)
         {
+           
             if (i == 0)
             {
-                levelObjects[i].LevelIndex = 1;
+                levelObjects[0].LevelIndex = 1;
             }
-
-            if (levelObjects[i].LevelType_Enum != LevelTypeEnums.LevelType_Enum.Change)
+            if(levelObjects[i].LevelType_Enum != LevelType_Enum.Change)
             {
-
-                if(i % 2 == 1)
+                if(i != 0)
                 {
-                    if(i == 1)
+                    if(i % 2  == 0)
                     {
-                        levelIndexResult = levelObjects[i-1].LevelIndex * 2;
-                        levelObjects[i].LevelIndex = levelIndexResult;
-                        levelObjects[i+1].LevelIndex = levelIndexResult;
+                        if(levelObjects[i-2].LevelType_Enum == LevelType_Enum.Change)
+                        {
+                            levelObjects[i].LevelIndex = levelObjects[i-1].LevelIndex;
+                        }
+                        else if(levelObjects[i-2].LevelType_Enum != LevelType_Enum.Change && (i-2) !=0)
+                        {
+                            levelObjects[i].LevelIndex = levelObjects[i-1].LevelIndex * 2;
+                        }
+                        else
+                        {
+                            levelObjects[i].LevelIndex = levelObjects[i-1].LevelIndex;
+                        }
                     }
-                    else
+                    else if( i% 2 == 1)
                     {
-                        levelIndexResult = levelObjects[i-2].LevelIndex *2;
-                        levelObjects[i-1].LevelIndex = levelIndexResult;
-                        levelObjects[i].LevelIndex = levelIndexResult;
-                    }
-                }
-                else
-                {
-                    if(i == levelObjects.Count-1)
-                    {
-                        levelObjects[i].LevelIndex = levelObjects[i-1].LevelIndex * 2;
+                        if(levelObjects[i-1].LevelType_Enum == LevelType_Enum.Change)
+                        {
+                            levelObjects[i].LevelIndex = levelObjects[i-1].LevelIndex*2;
+                        }
+                        else if(levelObjects[i-1].LevelType_Enum != LevelType_Enum.Change)
+                        {
+                            if((i-1)==0)
+                            {
+                                levelObjects[i].LevelIndex = levelObjects[i-1].LevelIndex*2;
+                            }
+                            else
+                            {
+                                levelObjects[i].LevelIndex = levelObjects[i-1].LevelIndex;
+                            }
+                        }
+                        
                     }
                 }
                 
             }
-            else
+            else if(levelObjects[i].LevelType_Enum == LevelType_Enum.Change)
             {
-                levelObjects[i].LevelIndex = levelObjects[i-1].LevelIndex *2;
+                levelObjects[i].LevelIndex = levelObjects[i-1].LevelIndex * 2;
+            }
+
+        }
+        
+
+        
+
+        foreach (LevelPrefabControl item in levelObjects)
+        {
+            if(item.LevelIndex == characterCurrentLevelIndex)
+            {
+                item.GetComponent<Button>().interactable = true;
+            }
+            else if(item.LevelIndex != characterCurrentLevelIndex)
+            {
+                item.GetComponent<Button>().interactable = false;
             }
         }
+
     }
 
     #endregion
