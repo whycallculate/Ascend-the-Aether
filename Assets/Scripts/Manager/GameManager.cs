@@ -5,7 +5,7 @@ using CharacterType_Enum;
 using EnemyFeatures;
 using UnityEngine;
 using UnityEngine.UI;
-
+using LevelTypeEnums;
 public class GameManager : MonoBehaviour
 {
     #region skeleton
