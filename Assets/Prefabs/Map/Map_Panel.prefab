@@ -956,6 +956,50 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &4323569843798811424
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8282678858432421765}
+  m_Layer: 5
+  m_Name: Path_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &8282678858432421765
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4323569843798811424}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5118722254501776392}
+  - {fileID: 6813910887076472386}
+  - {fileID: 2048288529940832277}
+  - {fileID: 4885919759659418448}
+  - {fileID: 1064622696067622906}
+  - {fileID: 8145521993132927357}
+  - {fileID: 48672969124400474}
+  - {fileID: 3221878459139372229}
+  - {fileID: 4088565849818500241}
+  m_Father: {fileID: 226047000906765812}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &4378809659660219658
 GameObject:
   m_ObjectHideFlags: 0
@@ -1731,15 +1775,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5118722254501776392}
-  - {fileID: 6813910887076472386}
-  - {fileID: 2048288529940832277}
-  - {fileID: 4885919759659418448}
-  - {fileID: 1064622696067622906}
-  - {fileID: 8145521993132927357}
-  - {fileID: 48672969124400474}
-  - {fileID: 3221878459139372229}
-  - {fileID: 4088565849818500241}
+  - {fileID: 8282678858432421765}
   m_Father: {fileID: 8012758175073842373}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2622,7 +2658,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 226047000906765812}
+    m_TransformParent: {fileID: 8282678858432421765}
     m_Modifications:
     - target: {fileID: 517692542107000485, guid: 79d0e591b0956534294d7e83f7b1c867,
         type: 3}
@@ -2732,7 +2768,7 @@ PrefabInstance:
     - target: {fileID: 3136062388487517667, guid: 79d0e591b0956534294d7e83f7b1c867,
         type: 3}
       propertyPath: levelTypeEnum
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3136062388487517667, guid: 79d0e591b0956534294d7e83f7b1c867,
         type: 3}
@@ -2807,7 +2843,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 226047000906765812}
+    m_TransformParent: {fileID: 8282678858432421765}
     m_Modifications:
     - target: {fileID: 517692542107000485, guid: 79d0e591b0956534294d7e83f7b1c867,
         type: 3}
@@ -2917,7 +2953,7 @@ PrefabInstance:
     - target: {fileID: 3136062388487517667, guid: 79d0e591b0956534294d7e83f7b1c867,
         type: 3}
       propertyPath: levelTypeEnum
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3136062388487517667, guid: 79d0e591b0956534294d7e83f7b1c867,
         type: 3}
@@ -2992,7 +3028,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 226047000906765812}
+    m_TransformParent: {fileID: 8282678858432421765}
     m_Modifications:
     - target: {fileID: 517692542107000485, guid: 79d0e591b0956534294d7e83f7b1c867,
         type: 3}
@@ -3321,7 +3357,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 226047000906765812}
+    m_TransformParent: {fileID: 8282678858432421765}
     m_Modifications:
     - target: {fileID: 517692542107000485, guid: 79d0e591b0956534294d7e83f7b1c867,
         type: 3}
@@ -3431,7 +3467,7 @@ PrefabInstance:
     - target: {fileID: 3136062388487517667, guid: 79d0e591b0956534294d7e83f7b1c867,
         type: 3}
       propertyPath: levelTypeEnum
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3136062388487517667, guid: 79d0e591b0956534294d7e83f7b1c867,
         type: 3}
@@ -3506,7 +3542,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 226047000906765812}
+    m_TransformParent: {fileID: 8282678858432421765}
     m_Modifications:
     - target: {fileID: 43209382936172303, guid: 3d9aa6a8e1f268c49a5ab1d3363f528b,
         type: 3}
@@ -3686,7 +3722,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 226047000906765812}
+    m_TransformParent: {fileID: 8282678858432421765}
     m_Modifications:
     - target: {fileID: 517692542107000485, guid: 79d0e591b0956534294d7e83f7b1c867,
         type: 3}
@@ -3932,7 +3968,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 226047000906765812}
+    m_TransformParent: {fileID: 8282678858432421765}
     m_Modifications:
     - target: {fileID: 464724517219477086, guid: da0b7126a4de6dd4a99f5e22936ddeaa,
         type: 3}
@@ -4076,7 +4112,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 226047000906765812}
+    m_TransformParent: {fileID: 8282678858432421765}
     m_Modifications:
     - target: {fileID: 517692542107000485, guid: 79d0e591b0956534294d7e83f7b1c867,
         type: 3}
@@ -4276,7 +4312,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 226047000906765812}
+    m_TransformParent: {fileID: 8282678858432421765}
     m_Modifications:
     - target: {fileID: 517692542107000485, guid: 79d0e591b0956534294d7e83f7b1c867,
         type: 3}
@@ -4386,7 +4422,7 @@ PrefabInstance:
     - target: {fileID: 3136062388487517667, guid: 79d0e591b0956534294d7e83f7b1c867,
         type: 3}
       propertyPath: levelTypeEnum
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3136062388487517667, guid: 79d0e591b0956534294d7e83f7b1c867,
         type: 3}

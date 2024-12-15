@@ -139,6 +139,11 @@ public class LevelPrefabControl : MonoBehaviour
     //this function for change level button 
     public void ChangeLevelType()
     {
+        if(GameManager.Instance.character == null)
+        {
+            GameManager.Instance.CreatingCharacter(levelCharacterCount,levelCharacterPrefab,levelCharacterPosition);
+        }
+
         GameManager.Instance.CharacterCurrentLevelType = LevelType_Enum.None.ToString();
 
         SaveSystem.DataSave("levelType",GameManager.Instance.CharacterCurrentLevelType);

@@ -57,7 +57,7 @@ public class GameManager : MonoBehaviour
     private int currentLevelIndex;
     public int CurrentLevelIndex {get {return currentLevelIndex;} set {currentLevelIndex = value;}}
 
-
+    private int mapLevelIndex = 0;
 
 
     #endregion
@@ -119,7 +119,8 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        
+        FindMapLevels();
+        /*
         levelsObject = GameObject.FindGameObjectWithTag("Levels");
         if (levelsObject != null)
         {
@@ -128,6 +129,7 @@ public class GameManager : MonoBehaviour
                 levelObjects.Add(levelsObject.transform.GetChild(i).GetComponent<LevelPrefabControl>());
             }
         }
+        */
 
         if (enemy == null)
         {
@@ -139,7 +141,7 @@ public class GameManager : MonoBehaviour
             }
         }
         
-        LevelIndexAdjust();
+        //LevelIndexAdjust();
 
         AllCardLoad();
         if(SaveSystem.DataQuery("crystalCount"))
@@ -220,7 +222,8 @@ public class GameManager : MonoBehaviour
         
         if(Input.GetKeyDown(KeyCode.W))
         {
-            RunCharacterTrait(20);
+            //RunCharacterTrait(20);
+            NextMapLevel();
         }
 
 
@@ -1168,81 +1171,158 @@ public class GameManager : MonoBehaviour
 
     #region  Map
     
+    private void FindMapLevels()
+    {
+        if(SaveSystem.DataQuery("mapLevelIndex"))
+        {
+            mapLevelIndex = SaveSystem.DataExtraction("mapLevelIndex",0);
+
+        }
+        else if(!SaveSystem.DataQuery("mapLevelIndex"))
+        {
+            mapLevelIndex = 0;
+        }
+
+        if (mapLevelIndex != UIManager.Instance.LevelsContent.transform.childCount)
+        {
+            Transform levels = UIManager.Instance.LevelsContent.transform.GetChild(mapLevelIndex);
+            MapLevelActive();
+            for (int i = 0; i < levels.childCount; i++)
+            {
+                levelObjects.Add(levels.GetChild(i).GetComponent<LevelPrefabControl>());
+            }
+
+            LevelIndexAdjust();
+        }
+        else
+        {
+            for (int i = 0; i < UIManager.Instance.LevelsContent.transform.childCount; i++)
+            {
+                UIManager.Instance.LevelsContent.transform.GetChild(i).gameObject.SetActive(false);
+            }
+        }
+    }
+
     //levelerin indexi otamatik tanımlayan bir method
+   //levelerin indexi otamatik tanımlayan bir method
+    private bool isLevelChange = false;
     public void LevelIndexAdjust()
     {
-        
         for (int i = 0; i < levelObjects.Count; i++)
         {
-           
             if (i == 0)
             {
+                // İlk obje daima 1 olarak ayarlanır
                 levelObjects[0].LevelIndex = 1;
+                continue;
             }
-            if(levelObjects[i].LevelType_Enum != LevelType_Enum.Change)
+            
+            if(i == 1)
             {
-                if(i != 0)
+                levelObjects[i].LevelIndex = levelObjects[i-1].LevelIndex *2;
+                continue;
+            }
+            
+
+            if (levelObjects[i].LevelType_Enum == LevelType_Enum.Change)
+            {
+                levelObjects[i].LevelIndex = levelObjects[i - 1].LevelIndex * 2;
+                isLevelChange = !isLevelChange;
+            }
+            else
+            {
+                if (i % 2 == 0)
                 {
-                    if(i % 2  == 0)
+                    if(levelObjects[i-1].LevelType_Enum == LevelType_Enum.Change)
                     {
-                        if(levelObjects[i-2].LevelType_Enum == LevelType_Enum.Change)
-                        {
-                            levelObjects[i].LevelIndex = levelObjects[i-1].LevelIndex;
-                        }
-                        else if(levelObjects[i-2].LevelType_Enum != LevelType_Enum.Change && (i-2) !=0)
+                        print(levelObjects[i-1].name + levelObjects[i].name);
+                        levelObjects[i].LevelIndex = levelObjects[i-1].LevelIndex * 2;
+                    }
+                    else if(levelObjects[i-1].LevelType_Enum != LevelType_Enum.Change)
+                    {
+                        if(isLevelChange)
                         {
                             levelObjects[i].LevelIndex = levelObjects[i-1].LevelIndex * 2;
                         }
-                        else
+                        else if(!isLevelChange)
                         {
                             levelObjects[i].LevelIndex = levelObjects[i-1].LevelIndex;
-                        }
-                    }
-                    else if( i% 2 == 1)
-                    {
-                        if(levelObjects[i-1].LevelType_Enum == LevelType_Enum.Change)
-                        {
-                            levelObjects[i].LevelIndex = levelObjects[i-1].LevelIndex*2;
-                        }
-                        else if(levelObjects[i-1].LevelType_Enum != LevelType_Enum.Change)
-                        {
-                            if((i-1)==0)
-                            {
-                                levelObjects[i].LevelIndex = levelObjects[i-1].LevelIndex*2;
-                            }
-                            else
-                            {
-                                levelObjects[i].LevelIndex = levelObjects[i-1].LevelIndex;
-                            }
                         }
                         
                     }
                 }
-                
+                else
+                {
+                    if(isLevelChange)
+                    {
+                        levelObjects[i].LevelIndex = levelObjects[i-1].LevelIndex;
+                    }
+                    else if(!isLevelChange)
+                    {
+                        levelObjects[i].LevelIndex = levelObjects[i-1].LevelIndex *2;
+                    }
+                }
             }
-            else if(levelObjects[i].LevelType_Enum == LevelType_Enum.Change)
-            {
-                levelObjects[i].LevelIndex = levelObjects[i-1].LevelIndex * 2;
-            }
-
         }
-        
 
-        
-
+        // Butonların interaktifliği ayarlanıyor
         foreach (LevelPrefabControl item in levelObjects)
         {
-            if(item.LevelIndex == characterCurrentLevelIndex)
-            {
-                item.GetComponent<Button>().interactable = true;
-            }
-            else if(item.LevelIndex != characterCurrentLevelIndex)
-            {
-                item.GetComponent<Button>().interactable = false;
-            }
+            item.GetComponent<Button>().interactable = (item.LevelIndex == characterCurrentLevelIndex);
         }
-
     }
+
+
+    public void NextMapLevel()
+    {
+        isLevelChange = false;
+        int maxLevelIndexCount = UIManager.Instance.LevelsContent.childCount;
+        if(mapLevelIndex != maxLevelIndexCount)
+        {
+            mapLevelIndex++;
+            SaveSystem.DataSave("mapLevelIndex",mapLevelIndex);
+        }
+        else if(mapLevelIndex == maxLevelIndexCount) 
+        {
+            mapLevelIndex  = 0;
+            SaveSystem.DataSave("mapLevelIndex",mapLevelIndex);
+            return;
+        }
+        levelObjects.Clear();
+        FindMapLevels();
+        MapLevelActive();
+    
+    }
+
+    private void MapLevelActive()
+    {
+        if(mapLevelIndex != UIManager.Instance.LevelsContent.transform.childCount)
+        {
+            RectTransform rectTransform = UIManager.Instance.LevelsContent.transform.GetChild(mapLevelIndex).GetComponent<RectTransform>();
+
+
+            for (int i = 0; i < UIManager.Instance.LevelsContent.transform.childCount; i++)
+            {
+                if (i == mapLevelIndex)
+                {
+                    UIManager.Instance.LevelsContent.transform.GetChild(i).gameObject.SetActive(true);
+                }
+                else if (i != mapLevelIndex)
+                {
+                    UIManager.Instance.LevelsContent.transform.GetChild(i).gameObject.SetActive(false);
+                }
+            }
+
+            int height = rectTransform.childCount * 280;
+
+            rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, height / 2);
+            rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, height);
+            RectTransform parent = UIManager.Instance.LevelsContent.GetComponent<RectTransform>();
+            parent.anchoredPosition = new Vector2(parent.anchoredPosition.x,height / 2);
+            parent.sizeDelta = new Vector2(parent.sizeDelta.x,height);
+        }
+    }
+
 
     #endregion
 

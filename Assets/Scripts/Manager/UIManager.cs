@@ -106,6 +106,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button cardDevelopmenButton;
     [SerializeField] private Button characterHealtRenewalButton;
 
+    [SerializeField] private Transform levelsContent;
+    public Transform LevelsContent { get { return levelsContent; } }
+
+    [SerializeField] private Transform[] mapLevels;
+    public Transform[] MapLevels { get { return mapLevels;}}
+
 
     #endregion
 
