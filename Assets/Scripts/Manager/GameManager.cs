@@ -120,16 +120,6 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         FindMapLevels();
-        /*
-        levelsObject = GameObject.FindGameObjectWithTag("Levels");
-        if (levelsObject != null)
-        {
-            for (int i = 0; i < levelsObject.transform.childCount; i++)
-            {
-                levelObjects.Add(levelsObject.transform.GetChild(i).GetComponent<LevelPrefabControl>());
-            }
-        }
-        */
 
         if (enemy == null)
         {
@@ -141,8 +131,6 @@ public class GameManager : MonoBehaviour
             }
         }
         
-        //LevelIndexAdjust();
-
         AllCardLoad();
         if(SaveSystem.DataQuery("crystalCount"))
         {
@@ -222,7 +210,6 @@ public class GameManager : MonoBehaviour
         
         if(Input.GetKeyDown(KeyCode.W))
         {
-            //RunCharacterTrait(20);
             NextMapLevel();
         }
 
@@ -535,14 +522,15 @@ public class GameManager : MonoBehaviour
 
     public void ResetCharacterFeature()
     {
-        print("sifirladi");
         characterCurrentLevelIndex = levelObjects[0].LevelIndex;
         SaveSystem.DataSave("levelIndex", characterCurrentLevelIndex);
 
         characterCurrentLevelType = levelObjects[0].LevelType_Enum.ToString();
         SaveSystem.DataSave("levelType", characterCurrentLevelType);
 
-       
+        mapLevelIndex = 0;
+        SaveSystem.DataSave("mapLevelIndex",mapLevelIndex);
+        MapLevelActive();
 
         if(character.IsCharacterAlive)
         {
@@ -949,7 +937,6 @@ public class GameManager : MonoBehaviour
         string[] _b = _a.Split(",");
         for (int i = 0; i < _b.Length; i++)
         {
-            print(_b[i]);
             resourcesCard = Resources.Load<GameObject>(_b[i]);
             if (resourcesCard != null)
             {
@@ -1212,7 +1199,6 @@ public class GameManager : MonoBehaviour
         {
             if (i == 0)
             {
-                // İlk obje daima 1 olarak ayarlanır
                 levelObjects[0].LevelIndex = 1;
                 continue;
             }
@@ -1235,7 +1221,6 @@ public class GameManager : MonoBehaviour
                 {
                     if(levelObjects[i-1].LevelType_Enum == LevelType_Enum.Change)
                     {
-                        print(levelObjects[i-1].name + levelObjects[i].name);
                         levelObjects[i].LevelIndex = levelObjects[i-1].LevelIndex * 2;
                     }
                     else if(levelObjects[i-1].LevelType_Enum != LevelType_Enum.Change)
@@ -1272,7 +1257,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
+    //harita da ki ilerideki leveleri aktif etmemizi sağliyor
     public void NextMapLevel()
     {
         isLevelChange = false;
@@ -1294,6 +1279,7 @@ public class GameManager : MonoBehaviour
     
     }
 
+    //map de ki level haritalarini indexe eşit ise aktif etmemizi sağliyor
     private void MapLevelActive()
     {
         if(mapLevelIndex != UIManager.Instance.LevelsContent.transform.childCount)
