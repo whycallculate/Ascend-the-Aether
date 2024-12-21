@@ -98,6 +98,10 @@ public class LevelPrefabControl : MonoBehaviour
         levelButton.interactable  =false;
         GameManager.Instance.LevelOpening();
         GameManager.Instance.SetActiveCardMovement();
+
+        GameManager.Instance.HandToDeck();
+        GameManager.Instance.DrawCards();
+        GameManager.Instance.CardTypeFindPositionSet();
     }
     
     // ileri veya geri level geçişi yapabilip yapamiyacağimizi kontrol ediyor
@@ -167,9 +171,14 @@ public class LevelPrefabControl : MonoBehaviour
             GameManager.Instance.CreatingCharacter(levelCharacterCount, levelCharacterPrefab, levelCharacterPosition);
         }
 
+
         GameManager.Instance.CreatingEnemies(levelEnemyCount,levelEnemyPrefab,levelEnemyPosition,enemy);
         GameManager.Instance.SetActiveCardMovement();
         UIManager.Instance.MapPrefab.SetActive(false);
+        
+        GameManager.Instance.HandToDeck();
+        GameManager.Instance.DrawCards();
+        GameManager.Instance.CardTypeFindPositionSet();
     
     }
 

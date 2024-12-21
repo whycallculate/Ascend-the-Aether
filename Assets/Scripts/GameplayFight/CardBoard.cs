@@ -24,39 +24,56 @@ public class CardBoard : MonoBehaviour,IDropHandler
 
     private int seasonTicketEnergy = 0;
 
+    private void Start() 
+    {
+    }
+
     public void OnDrop(PointerEventData eventData)
     {
 
         GameManager.Instance.SelectableCard(false);
-        if(eventData.pointerDrag.GetComponent<CanvasGroup>() != null)
+        if (eventData.pointerDrag.GetComponent<CanvasGroup>() != null)
         {
             eventData.pointerDrag.GetComponent<CanvasGroup>().blocksRaycasts = true;
         }
 
-        
-
-        if(IsPointDragCombine(eventData.pointerDrag))
-        {
-            combineCard = eventData.pointerDrag;
-            StartCoroutine(CombinationWait(eventData.pointerDrag));
-        }
-        if(!IsPointDragCombine(eventData.pointerDrag))
-        {
-            if(GameManager.Instance.CardCombineStart)
-            {
-                seasonTicket = eventData.pointerDrag;
-                CardCombine(ref seasonTicket);
-                
-            }
-            if(!GameManager.Instance.CardCombineStart)
-            {
-                CardImpact(eventData.pointerDrag);
-            }
-
-            
-        }
+        //CardInteraction(eventData.pointerDrag);
+        StartCoroutine(AnimationAfter(eventData.pointerDrag));
     }
 
+    private void CardInteraction(GameObject eventData)
+    {
+        if (IsPointDragCombine(eventData))
+        {
+            combineCard = eventData;
+            StartCoroutine(CombinationWait(eventData));
+        }
+        if (!IsPointDragCombine(eventData))
+        {
+            if (GameManager.Instance.CardCombineStart)
+            {
+                seasonTicket = eventData;
+                CardCombine(ref seasonTicket,eventData);
+
+            }
+            if (!GameManager.Instance.CardCombineStart)
+            {
+                CardImpact(eventData);
+        
+            }
+
+        }
+    }
+    //Card_0_DeckReturnAnimation
+    private IEnumerator AnimationAfter(GameObject eventData)
+    {
+        if(!IsPointDragCombine(eventData))
+        {
+            GameManager.Instance.CardDeckReturnAnimation(eventData);
+        }
+        yield return new WaitForSeconds(1f);
+        CardInteraction(eventData);
+    }
     private void CardImpact(GameObject card)
     {
         if (GameManager.Instance.enemy != null)
@@ -88,19 +105,30 @@ public class CardBoard : MonoBehaviour,IDropHandler
     //combine kartı combine edip etmiyeceği kontrol ettiğimiz fonksiyon
     private IEnumerator CombinationWait(GameObject card)
     {
+        
+
         GameManager.Instance.CardCombineStart = true;
         yield return new WaitForSeconds(5);
 
+        if(seasonTicket == null)
+        {
+            GameManager.Instance.CardDeckReturnAnimation(card);
+        }
         
         if(seasonTicket == null && GameManager.Instance.CardCombineStart)
         {
+            GameManager.Instance.CardDeckReturnAnimation(card);
+            yield return new WaitForSeconds(1f);
             CardImpact(card);
         }
+
+        card.GetComponent<Animator>().enabled = false;
+
         GameManager.Instance.CardCombineStart = false;
     }
     
     //kartin kombine etme olayini kontrol ettiğimiz fonksiyon
-    public void CardCombine(ref GameObject seasonTicket)
+    public void CardCombine(ref GameObject seasonTicket,GameObject card)
     {
         if(attackCardController != null)
         {
@@ -109,8 +137,8 @@ public class CardBoard : MonoBehaviour,IDropHandler
                 if(attackCardController.CardCombineLegendary[i] == SeasonTicketTypeFind(seasonTicket))
                 {
                     CardComboManager.Instance.CardComboFunction(GameManager.Instance.character.GetComponent<CharacterController>(), new string[]{"healtbar","energy"}, new string[]{"-","-"},new int[]{20,(attackCardController.energyCost + seasonTicketEnergy)}, GameManager.Instance.enemy, "", 20, "");
-                    seasonTicket.SetActive(false);
-                    attackCardController.gameObject.SetActive(false);
+                    //seasonTicket.SetActive(false);
+                    //attackCardController.gameObject.SetActive(false);
                     isCardCombine = true;
                 }
             }
@@ -122,8 +150,8 @@ public class CardBoard : MonoBehaviour,IDropHandler
                 if(defenceCardController.CardCombineLegendary[i] == SeasonTicketTypeFind(seasonTicket))
                 {
                     CardComboManager.Instance.CardComboFunction(GameManager.Instance.character.GetComponent<CharacterController>(), new string[]{"healtbar","energy"}, new string[]{"-","-"},new int[]{20,(defenceCardController.energyCost + seasonTicketEnergy)}, GameManager.Instance.enemy, "", 20, "");    
-                    defenceCardController.gameObject.SetActive(false);
-                    seasonTicket.SetActive(false);
+                    //defenceCardController.gameObject.SetActive(false);
+                    //seasonTicket.SetActive(false);
 
                     isCardCombine = true;
                 }
@@ -137,8 +165,8 @@ public class CardBoard : MonoBehaviour,IDropHandler
                 {
                     CardComboManager.Instance.CardComboFunction(GameManager.Instance.character.GetComponent<CharacterController>(), new string[]{"healtbar","energy"}, new string[]{"-","-"},new int[]{20,(abilityCardController.energyCost + seasonTicketEnergy)}, GameManager.Instance.enemy, "", 20, "");
                     isCombineCard = true;
-                    abilityCardController.gameObject.SetActive(false);
-                    seasonTicket.SetActive(false);
+                    //abilityCardController.gameObject.SetActive(false);
+                    //seasonTicket.SetActive(false);
                 }
             }
         }
@@ -149,8 +177,8 @@ public class CardBoard : MonoBehaviour,IDropHandler
                 if(strenghCardController.CardCombineLegendary[i] == SeasonTicketTypeFind(seasonTicket))
                 {
                     CardComboManager.Instance.CardComboFunction(GameManager.Instance.character.GetComponent<CharacterController>(), new string[]{"healtbar","energy"}, new string[]{"-","-"},new int[]{20,(strenghCardController.energyCost + seasonTicketEnergy)}, GameManager.Instance.enemy, "", 20, "");
-                    strenghCardController.gameObject.SetActive(false);
-                    seasonTicket.SetActive(false);
+                    //strenghCardController.gameObject.SetActive(false);
+                    //seasonTicket.SetActive(false);
                     isCardCombine = true;
                 }
             }
@@ -168,6 +196,9 @@ public class CardBoard : MonoBehaviour,IDropHandler
         
         
         GameManager.Instance.CardCombineStart = false;
+
+
+
     }
 
     //kombine edilicek kartın lengendarysini kontrol eden fonksiyon

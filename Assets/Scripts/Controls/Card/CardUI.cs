@@ -34,4 +34,9 @@ public class CardUI : MonoBehaviour
             energyNumber_Text.text = cardEnery.ToString();
         }
     }
+
+    public void CardAnimationFinish()
+    {
+        GetComponent<Animator>().enabled = false;
+    }
 }

@@ -117,6 +117,9 @@ public class GameManager : MonoBehaviour
     
     [SerializeField] private GameObject resourcesCard;
 
+    public  delegate void CardAnimation();
+    public CardAnimation cardAnimation;
+
     private void Awake()
     {
         FindMapLevels();
@@ -169,8 +172,8 @@ public class GameManager : MonoBehaviour
     #region Start And Update Function
     private void Start()
     {
-        DrawCards();
-        CardTypeFindPositionSet();
+        //DrawCards();
+        //CardTypeFindPositionSet();
     }
 
 
@@ -228,6 +231,10 @@ public class GameManager : MonoBehaviour
 
     public void DrawCards()
     {
+        if(deck.Count <= 0)
+        {
+            print("0");
+        }
         hand.Clear();
 
         for (int i = 0; i < handSize; i++)
@@ -243,11 +250,13 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        /*
         for(int i = 0;i < hand.Count;i++)
         {
             hand[i].GetComponent<RectTransform>().anchoredPosition = UIManager.Instance.cardPos[i].anchoredPosition;
         }
-
+        */
+        CardsPositionMoveAnimation();
     }
 
     public void HandToDeck()
@@ -386,14 +395,14 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.NextTourButton.interactable = false;
         if(deadEnemyCount == enemys.Count)
         {
-        
+
             isLevelOver = true;
 
             if(finishLevel)
             {
             
+                NextMapLevel();
                 WhatOfKindCharacter(2,4);
-
                 character.CharacterType.FeatureUsed = false;
                 SaveSystem.DataSave("characterFeatureUsed", character.CharacterType.FeatureUsed.ToString());
                 
@@ -967,23 +976,27 @@ public class GameManager : MonoBehaviour
     }
 
     //kartlarin posizyonlarini sifirlayan method
-    private void CardTypeFindPositionSet()
+    public void CardTypeFindPositionSet()
     {
         for (int i = 0; i < hand.Count; i++)
         {
             switch(hand[i].tag)
             {
                 case "AttackCard":
-                    hand[i].GetComponent<AttackCardController>().cardPosition = hand[i].GetComponent<RectTransform>().anchoredPosition;
+                    hand[i].GetComponent<AttackCardController>().cardPosition = UIManager.Instance.cardPos[i].anchoredPosition;
+                    hand[i].transform.localRotation = Quaternion.identity;
                 break;
                 case "DefenceCard":
-                    hand[i].GetComponent<DefenceCardController>().cardPosition = hand[i].GetComponent<RectTransform>().anchoredPosition;
+                    hand[i].GetComponent<DefenceCardController>().cardPosition = UIManager.Instance.cardPos[i].anchoredPosition;
+                    hand[i].transform.localRotation = Quaternion.identity;
                 break;
                 case "AbilityCard":
-                    hand[i].GetComponent<AbilityCardController>().cardPosition = hand[i].GetComponent<RectTransform>().anchoredPosition;
+                    hand[i].GetComponent<AbilityCardController>().cardPosition = UIManager.Instance.cardPos[i].anchoredPosition;
+                    hand[i].transform.localRotation = Quaternion.identity;
                 break;
                 case "StrenghCard":
-                    hand[i].GetComponent<StrengthCardController>().cardPosition = hand[i].GetComponent<RectTransform>().anchoredPosition;
+                    hand[i].GetComponent<StrengthCardController>().cardPosition = UIManager.Instance.cardPos[i].anchoredPosition;
+                    hand[i].transform.localRotation = Quaternion.identity;
                 break;
             }
         }
@@ -1260,6 +1273,7 @@ public class GameManager : MonoBehaviour
     //harita da ki ilerideki leveleri aktif etmemizi sağliyor
     public void NextMapLevel()
     {
+        print("çalişiyor");
         isLevelChange = false;
         int maxLevelIndexCount = UIManager.Instance.LevelsContent.childCount;
         if(mapLevelIndex != maxLevelIndexCount)
@@ -1346,5 +1360,35 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
+    #region  Animation
+
+    public void CardsPositionMoveAnimation()
+    {
+        for (int i = 0; i < hand.Count; i++)
+        {
+            Animator cardAnim = hand[i].GetComponent<Animator>();
+            cardAnim.enabled = true;
+            cardAnim.Play($"Card_{i}_PositionMove");
+        }
+    }
+
+    public void CardDeckReturnAnimation(GameObject card)
+    {
+        int animationIndex = 0;
+        Animator cardAnim =  card.GetComponent<Animator>();
+        cardAnim.enabled = true;
+
+        for (int i = 0; i < hand.Count; i++)
+        {
+            if(hand[i].gameObject.name == card.name)
+            {
+                animationIndex = i;
+                break;
+            }
+        }
+        cardAnim.Play($"Card_{animationIndex}_DeckReturnAnimation");
+    }
+
+    #endregion
 
 }
