@@ -58,7 +58,25 @@ public  class EnemyAI : MonoBehaviour
     }
     public void SetHealth(int value) => health = value;
     public void AddHealth(int value) => health += value;
-    public void TakeDamage(int value) => health -= value;
+    public void TakeDamage(int value)
+    {
+        if (shield > 0)
+        {
+
+            int newValue = shield - value;
+            shield -= value;
+            if (newValue != 0 && shield <= 0)
+            {
+                health -= newValue;
+            }
+
+        }
+        else if (shield <= 0)
+        {
+            health -= value;
+        }
+
+    }
     public void OnShield(int value) => shield += value;
     public void TakeShield(int value)
     {

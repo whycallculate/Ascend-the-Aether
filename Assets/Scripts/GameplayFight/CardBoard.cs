@@ -225,20 +225,20 @@ public class CardBoard : MonoBehaviour,IDropHandler
         attackCardController = card.GetComponent<AttackCardController>();
         if(GameManager.Instance.character.energyCurrent >= attackCardController.energyCost)
         {
-            if(GameManager.Instance.enemy.SHIELD <= 0)
+            if(GameManager.Instance.enemy.EnemyAI.shield<= 0)
             {
                 GameManager.Instance.CardCharacterInteraction("energy", "-", attackCardController.energyCost);
                 GameManager.Instance.enemy.EnemyAI.TakeDamage(attackCardController.damage);
                 attackCardController.gameObject.SetActive(false);
                 attackCardController = null;
             }
-            else if(GameManager.Instance.enemy.SHIELD >= 0)
+            else if(GameManager.Instance.enemy.EnemyAI.shield >= 0)
             {
                 int newDamage = GameManager.Instance.enemy.SHIELD - attackCardController.damage;
 
                 GameManager.Instance.CardCharacterInteraction("energy", "-", attackCardController.energyCost);
                 GameManager.Instance.enemy.EnemyAI.TakeShield(attackCardController.damage);
-                if (GameManager.Instance.enemy.SHIELD <= 0)
+                if (GameManager.Instance.enemy.EnemyAI.shield <= 0)
                 {
                     GameManager.Instance.enemy.EnemyAI.TakeDamage(-newDamage);
                 }
