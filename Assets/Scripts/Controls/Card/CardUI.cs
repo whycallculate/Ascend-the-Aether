@@ -35,8 +35,38 @@ public class CardUI : MonoBehaviour
         }
     }
 
-    public void CardAnimationFinish()
+    public void CardMoveAnimationFinish()
     {
         GetComponent<Animator>().enabled = false;
+    }
+
+    public void CardDeckReturnAnimationFinish()
+    {
+        GetComponent<Animator>().enabled = false;
+        gameObject.SetActive(false);
+
+        if(GameManager.Instance.DeadEnemyCount == GameManager.Instance.enemys.Count)
+        {
+            if(GameManager.Instance.FinishLevel)
+            {
+                GameManager.Instance.WhatOfKindCharacter(2,4);
+            }
+            else if(!GameManager.Instance.FinishLevel)
+            {
+                GameManager.Instance.WhatOfKindCharacter(2,3);
+
+            }
+        }
+    }
+
+    public void CardSelectBeginAnimationStart()
+    {
+        for (int i = 0; i < GameManager.Instance.hand.Count; i++)
+        {
+            if(GameManager.Instance.hand[i].gameObject.name != gameObject.name)
+            {
+                GameManager.Instance.hand[i].GetComponent<Animator>().enabled = false;  
+            }
+        }
     }
 }

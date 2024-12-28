@@ -41,6 +41,13 @@ public class CardBoard : MonoBehaviour,IDropHandler
         StartCoroutine(AnimationAfter(eventData.pointerDrag));
     }
 
+    private IEnumerator AnimationAfter(GameObject eventData)
+    {
+        yield return new WaitForSeconds(1f);
+        CardInteraction(eventData);
+    }
+
+    
     private void CardInteraction(GameObject eventData)
     {
         if (IsPointDragCombine(eventData))
@@ -48,32 +55,126 @@ public class CardBoard : MonoBehaviour,IDropHandler
             combineCard = eventData;
             StartCoroutine(CombinationWait(eventData));
         }
-        if (!IsPointDragCombine(eventData))
+        else if (!IsPointDragCombine(eventData))
         {
-            if (GameManager.Instance.CardCombineStart)
+            seasonTicket = eventData;
+        
+            if(GameManager.Instance.CardCombineStart)
             {
-                seasonTicket = eventData;
-                CardCombine(ref seasonTicket,eventData);
-
+                CardCombine(ref seasonTicket,combineCard);
             }
-            if (!GameManager.Instance.CardCombineStart)
+            else if(!GameManager.Instance.CardCombineStart)
             {
                 CardImpact(eventData);
-        
+                GameManager.Instance.CardDeckReturnAnimation(eventData);
+                seasonTicket = null;
             }
-
         }
     }
     //Card_0_DeckReturnAnimation
-    private IEnumerator AnimationAfter(GameObject eventData)
+    
+    
+
+    //combine kartı combine edip etmiyeceği kontrol ettiğimiz fonksiyon
+    private IEnumerator CombinationWait(GameObject card)
     {
-        if(!IsPointDragCombine(eventData))
+        
+
+        GameManager.Instance.CardCombineStart = true;
+        yield return new WaitForSeconds(2);
+
+        
+        
+        if(seasonTicket == null && GameManager.Instance.CardCombineStart)
         {
-            GameManager.Instance.CardDeckReturnAnimation(eventData);
+            print("combine olmuyor");
+            GameManager.Instance.CardCombineStart = false;
+            CardImpact(card);
+            
+            GameManager.Instance.CardDeckReturnAnimation(card);
+
+            seasonTicket = null;
+            combineCard = null;
         }
-        yield return new WaitForSeconds(1f);
-        CardInteraction(eventData);
+    
+    
+
     }
+    
+    //CardComboManager.Instance.CardComboFunction(GameManager.Instance.character.GetComponent<CharacterController>(), new string[]{"healtbar","energy"}, new string[]{"-","-"},new int[]{20,(attackCardController.energyCost + seasonTicketEnergy)}, GameManager.Instance.enemy, "", 20, "");
+    //kartin kombine etme olayini kontrol ettiğimiz fonksiyon
+    public void CardCombine(ref GameObject _seasonTicket,GameObject card)
+    {
+        print(_seasonTicket.name + "-" + combineCard.name);
+        
+        GameManager.Instance.CardCombineStart = false;
+
+        switch(card.tag)
+        {
+            case "AttackCard":
+                AttackCardController attackCard = card.GetComponent<AttackCardController>();
+                for (int i = 0; i < attackCard.CardCombineLegendary.Length; i++)
+                {
+                    if(attackCard.CardCombineLegendary[i] == SeasonTicketTypeFind(_seasonTicket))
+                    {
+                        print("attack combosu");
+                        GameManager.Instance.CardDeckReturnAnimation(_seasonTicket);
+                        combineCard.GetComponent<Animator>().enabled = false;
+                    }
+                }
+            break;
+            
+            case "DefenceCard":
+                DefenceCardController defenceCard = card.GetComponent<DefenceCardController>();
+                for (int i = 0; i < defenceCard.CardCombineLegendary.Length; i++)
+                {
+                    if(defenceCard.CardCombineLegendary[i] == SeasonTicketTypeFind(_seasonTicket))
+                    {
+                        GameManager.Instance.CardDeckReturnAnimation(_seasonTicket);
+                        combineCard.GetComponent<Animator>().enabled = false;
+
+                    }
+                }
+            break;
+            
+            case "AbilityCard":
+                AbilityCardController abilityCard = card.GetComponent<AbilityCardController>();
+                for (int i = 0; i < abilityCard.CardCombineLegendary.Length; i++)
+                {
+                    if(abilityCard.CardCombineLegendary[i] == SeasonTicketTypeFind(_seasonTicket))
+                    {
+                        GameManager.Instance.CardDeckReturnAnimation(_seasonTicket);
+                        combineCard.GetComponent<Animator>().enabled = false;
+
+                    }
+                }
+            break;
+
+            case "StrenghCard":
+                StrengthCardController strenghCard = card.GetComponent<StrengthCardController>();
+                for (int i = 0; i < strenghCard.CardCombineLegendary.Length; i++)
+                {
+                    if(strenghCard.CardCombineLegendary[i] == SeasonTicketTypeFind(_seasonTicket))
+                    {
+                        GameManager.Instance.CardDeckReturnAnimation(_seasonTicket);
+                        combineCard.GetComponent<Animator>().enabled = false;
+
+                    }
+                }
+            break;
+            
+            default:
+            break;
+        }
+
+        GameManager.Instance.CardDeckReturnAnimation(combineCard);
+
+
+
+        combineCard = null;
+        _seasonTicket = null;
+    }
+
     private void CardImpact(GameObject card)
     {
         if (GameManager.Instance.enemy != null)
@@ -98,107 +199,8 @@ public class CardBoard : MonoBehaviour,IDropHandler
 
         }
         GameManager.Instance.HandCardPositionAdjust();
-        seasonTicket = null;
-        combineCard = null;
-    }
 
-    //combine kartı combine edip etmiyeceği kontrol ettiğimiz fonksiyon
-    private IEnumerator CombinationWait(GameObject card)
-    {
         
-
-        GameManager.Instance.CardCombineStart = true;
-        yield return new WaitForSeconds(5);
-
-        if(seasonTicket == null)
-        {
-            GameManager.Instance.CardDeckReturnAnimation(card);
-        }
-        
-        if(seasonTicket == null && GameManager.Instance.CardCombineStart)
-        {
-            GameManager.Instance.CardDeckReturnAnimation(card);
-            yield return new WaitForSeconds(1f);
-            CardImpact(card);
-        }
-
-        card.GetComponent<Animator>().enabled = false;
-
-        GameManager.Instance.CardCombineStart = false;
-    }
-    
-    //kartin kombine etme olayini kontrol ettiğimiz fonksiyon
-    public void CardCombine(ref GameObject seasonTicket,GameObject card)
-    {
-        if(attackCardController != null)
-        {
-            for (int i = 0; i < attackCardController.CardCombineLegendary.Length; i++)
-            {
-                if(attackCardController.CardCombineLegendary[i] == SeasonTicketTypeFind(seasonTicket))
-                {
-                    CardComboManager.Instance.CardComboFunction(GameManager.Instance.character.GetComponent<CharacterController>(), new string[]{"healtbar","energy"}, new string[]{"-","-"},new int[]{20,(attackCardController.energyCost + seasonTicketEnergy)}, GameManager.Instance.enemy, "", 20, "");
-                    //seasonTicket.SetActive(false);
-                    //attackCardController.gameObject.SetActive(false);
-                    isCardCombine = true;
-                }
-            }
-        }
-        else if(defenceCardController != null)
-        {
-            for (int i = 0; i < defenceCardController.CardCombineLegendary.Length; i++)
-            {
-                if(defenceCardController.CardCombineLegendary[i] == SeasonTicketTypeFind(seasonTicket))
-                {
-                    CardComboManager.Instance.CardComboFunction(GameManager.Instance.character.GetComponent<CharacterController>(), new string[]{"healtbar","energy"}, new string[]{"-","-"},new int[]{20,(defenceCardController.energyCost + seasonTicketEnergy)}, GameManager.Instance.enemy, "", 20, "");    
-                    //defenceCardController.gameObject.SetActive(false);
-                    //seasonTicket.SetActive(false);
-
-                    isCardCombine = true;
-                }
-            }
-        }
-        else if(abilityCardController != null)
-        {
-            for (int i = 0; i < abilityCardController.CardCombineLegendary.Length; i++)
-            {
-                if(abilityCardController.CardCombineLegendary[i] == SeasonTicketTypeFind(seasonTicket))
-                {
-                    CardComboManager.Instance.CardComboFunction(GameManager.Instance.character.GetComponent<CharacterController>(), new string[]{"healtbar","energy"}, new string[]{"-","-"},new int[]{20,(abilityCardController.energyCost + seasonTicketEnergy)}, GameManager.Instance.enemy, "", 20, "");
-                    isCombineCard = true;
-                    //abilityCardController.gameObject.SetActive(false);
-                    //seasonTicket.SetActive(false);
-                }
-            }
-        }
-        else if(strenghCardController != null)
-        {   
-            for (int i = 0; i < strenghCardController.CardCombineLegendary.Length; i++)
-            {
-                if(strenghCardController.CardCombineLegendary[i] == SeasonTicketTypeFind(seasonTicket))
-                {
-                    CardComboManager.Instance.CardComboFunction(GameManager.Instance.character.GetComponent<CharacterController>(), new string[]{"healtbar","energy"}, new string[]{"-","-"},new int[]{20,(strenghCardController.energyCost + seasonTicketEnergy)}, GameManager.Instance.enemy, "", 20, "");
-                    //strenghCardController.gameObject.SetActive(false);
-                    //seasonTicket.SetActive(false);
-                    isCardCombine = true;
-                }
-            }
-        }
-        else
-        {
-            isCardCombine = false;
-        }
-
-        if(isCardCombine)
-        {
-            seasonTicket = null;
-            combineCard = null;
-        }
-        
-        
-        GameManager.Instance.CardCombineStart = false;
-
-
-
     }
 
     //kombine edilicek kartın lengendarysini kontrol eden fonksiyon
@@ -207,21 +209,25 @@ public class CardBoard : MonoBehaviour,IDropHandler
         switch(seasonTicket.tag)
         {
             case "AttackCard":
+            print("attack : "+seasonTicket.name);
                 AttackCardController seasonAttack = seasonTicket.GetComponent<AttackCardController>();
                 seasonTicketEnergy = seasonAttack.energyCost;
             return seasonAttack.CardLegendary;
             
             case "DefenceCard":
+            print("defence : "+seasonTicket.name);
                 DefenceCardController seasonDefence = seasonTicket.GetComponent<DefenceCardController>();
                 seasonTicketEnergy = seasonDefence.energyCost;
             return seasonDefence.CardLegendary;
 
             case "AbilityCard":
+            print("ability : "+seasonTicket.name);
                 AbilityCardController seasonAbility = seasonTicket.GetComponent<AbilityCardController>();
                 seasonTicketEnergy = seasonAbility.energyCost;
             return seasonAbility.CardLegendary;
 
             case "StrenghCard":
+            print("strengh : "+seasonTicket.name);
                 StrengthCardController seasonStrengh = seasonTicket.GetComponent<StrengthCardController>();
                 seasonTicketEnergy = seasonStrengh.energyCost;
             return seasonStrengh.CardLegendary;
@@ -233,6 +239,9 @@ public class CardBoard : MonoBehaviour,IDropHandler
         }
     }
 
+
+    #region 
+
     public void UseAbilityCard(GameObject card)
     {
         abilityCardController = card.GetComponent<AbilityCardController>();
@@ -240,7 +249,7 @@ public class CardBoard : MonoBehaviour,IDropHandler
         {
             GameManager.Instance.CardCharacterInteraction("energy", "-", abilityCardController.energyCost);
             GameManager.Instance.enemy.EnemyAI.TakePower(abilityCardController.ability);
-            abilityCardController.gameObject.SetActive(false);
+            //abilityCardController.gameObject.SetActive(false);
             abilityCardController = null;
         }
         else
@@ -260,7 +269,7 @@ public class CardBoard : MonoBehaviour,IDropHandler
             {
                 GameManager.Instance.CardCharacterInteraction("energy", "-", attackCardController.energyCost);
                 GameManager.Instance.enemy.EnemyAI.TakeDamage(attackCardController.damage);
-                attackCardController.gameObject.SetActive(false);
+                //attackCardController.gameObject.SetActive(false);
                 attackCardController = null;
             }
             else if(GameManager.Instance.enemy.SHIELD >= 0)
@@ -274,7 +283,7 @@ public class CardBoard : MonoBehaviour,IDropHandler
                     GameManager.Instance.enemy.EnemyAI.TakeDamage(-newDamage);
                 }
 
-                attackCardController.gameObject.SetActive(false);
+                //attackCardController.gameObject.SetActive(false);
                 attackCardController = null;
 
             }
@@ -294,7 +303,7 @@ public class CardBoard : MonoBehaviour,IDropHandler
         {
             GameManager.Instance.CardCharacterInteraction("energy", "-", defenceCardController.energyCost);
             GameManager.Instance.CardCharacterInteraction("shield", "+", defenceCardController.defence);
-            defenceCardController.gameObject.SetActive(false);
+            //defenceCardController.gameObject.SetActive(false);
             defenceCardController = null;
             GameManager.Instance.enemy.GetEnemyAiStat();
         }
@@ -311,7 +320,7 @@ public class CardBoard : MonoBehaviour,IDropHandler
         {
             GameManager.Instance.CardCharacterInteraction("energy", "-", strenghCardController.energyCost);
             GameManager.Instance.CardCharacterInteraction("power", "+", strenghCardController.strength);
-            strenghCardController.gameObject.SetActive(false);
+            //strenghCardController.gameObject.SetActive(false);
             strenghCardController = null;
             GameManager.Instance.enemy.GetEnemyAiStat();
         }
@@ -321,9 +330,11 @@ public class CardBoard : MonoBehaviour,IDropHandler
         }
 
     }
+    #endregion
 
     private bool isCombineCard = false;
     
+    //kart'ın combo yapabiliceğini ve sayısını kontrol eden method
     private bool IsPointDragCombine(GameObject pointDragGameObject)
     {
         switch(pointDragGameObject.tag)
@@ -354,5 +365,8 @@ public class CardBoard : MonoBehaviour,IDropHandler
 
         }
     }
+    
+    
 
+    
 }

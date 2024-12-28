@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] public List<EnemyController> enemys = new List<EnemyController>();
     private int deadEnemyCount = 0;
-    
+    public int DeadEnemyCount{get {return deadEnemyCount;}}    
     [SerializeField] private bool isEnemysStan = false;
     public bool IsEnemysStan {get {return isEnemysStan;} set {isEnemysStan = value;}}
 
@@ -402,7 +402,7 @@ public class GameManager : MonoBehaviour
             {
             
                 NextMapLevel();
-                WhatOfKindCharacter(2,4);
+                //WhatOfKindCharacter(2,4);
                 character.CharacterType.FeatureUsed = false;
                 SaveSystem.DataSave("characterFeatureUsed", character.CharacterType.FeatureUsed.ToString());
                 
@@ -410,7 +410,7 @@ public class GameManager : MonoBehaviour
             else if(!finishLevel)
             {
             
-                WhatOfKindCharacter(2,3);
+                //WhatOfKindCharacter(2,3);
             
             }
             
@@ -537,8 +537,9 @@ public class GameManager : MonoBehaviour
         characterCurrentLevelType = levelObjects[0].LevelType_Enum.ToString();
         SaveSystem.DataSave("levelType", characterCurrentLevelType);
 
-        mapLevelIndex = 0;
-        SaveSystem.DataSave("mapLevelIndex",mapLevelIndex);
+        //mapLevelIndex = 0;
+        //SaveSystem.DataSave("mapLevelIndex",mapLevelIndex);
+        
         MapLevelActive();
 
         if(character.IsCharacterAlive)
@@ -1387,6 +1388,42 @@ public class GameManager : MonoBehaviour
             }
         }
         cardAnim.Play($"Card_{animationIndex}_DeckReturnAnimation");
+    }
+
+    public void CardSelectedBeginAnimation(GameObject card)
+    {
+        int animationIndex = 0;
+        Animator cardAnim =  card.GetComponent<Animator>();
+        cardAnim.enabled = true;
+
+        for (int i = 0; i < hand.Count; i++)
+        {
+            if(hand[i].gameObject.name == card.name)
+            {
+                animationIndex = i;
+                break;
+            }
+        }
+        cardAnim.Play($"Card_{animationIndex}_SelectedBeginAnimation");
+
+        
+    }   
+
+    public void CardSelectedLeftAnimation(GameObject card)
+    {
+        int animationIndex = 0;
+        Animator cardAnim =  card.GetComponent<Animator>();
+        cardAnim.enabled = true;
+
+        for (int i = 0; i < hand.Count; i++)
+        {
+            if(hand[i].gameObject.name == card.name)
+            {
+                animationIndex = i;
+                break;
+            }
+        }
+        cardAnim.Play($"Card_{animationIndex}_SelectedLeftAnimation");
     }
 
     #endregion
