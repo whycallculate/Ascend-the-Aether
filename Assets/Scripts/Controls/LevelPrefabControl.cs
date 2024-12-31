@@ -67,6 +67,8 @@ public class LevelPrefabControl : MonoBehaviour
     //level butonuna basınca düşman ve karakteri üreten method
     private void LevelButtonFunction(bool value)
     {
+        UIManager.Instance.MarketIcon_Button.SetActive(false);
+
         if(levelIndex == 1 && GameManager.Instance.character == null)
         {
             GameManager.Instance.CreatingCharacter(levelCharacterCount,levelCharacterPrefab,levelCharacterPosition);
@@ -100,7 +102,10 @@ public class LevelPrefabControl : MonoBehaviour
         GameManager.Instance.SetActiveCardMovement();
 
         GameManager.Instance.HandToDeck();
-        GameManager.Instance.DrawCards();
+        if(levelTypeEnum  != LevelType_Enum.Change)
+        {
+            GameManager.Instance.DrawCards();
+        }
         GameManager.Instance.CardTypeFindPositionSet();
     }
     
@@ -158,6 +163,7 @@ public class LevelPrefabControl : MonoBehaviour
         GameManager.Instance.CurrentLevelIndex = levelIndex;
 
         GameManager.Instance.levelProgress += LevelButtonFunction;
+       
     }
 
     //this function for boss level button 

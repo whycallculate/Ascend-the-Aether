@@ -17,6 +17,7 @@ TagManager:
   - C
   - Canvas
   - CardBoard
+  - CardPos
   layers:
   - Default
   - TransparentFX

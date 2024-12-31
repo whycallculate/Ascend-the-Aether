@@ -122,6 +122,21 @@ public class UIManager : MonoBehaviour
     #endregion
 
 
+    #region Market ui
+    [Space]
+    [Space]
+    [Space]
+    [SerializeField] private Market marketPanel;
+    public Market MarketPanel {get { return marketPanel;} }
+    [SerializeField] private GameObject marketIconButton;
+    public GameObject MarketIcon_Button { get { return marketIconButton;}}
+
+
+    #endregion
+
+
+    #region Awake Start Update SetActiveUi
+   
     private void Awake() 
     {
         levelsPanel = mapPrefab.transform.GetChild(0).gameObject;
@@ -167,8 +182,13 @@ public class UIManager : MonoBehaviour
             {
                 GameManager.Instance.Cards[i].transform.SetParent(cardUpgradeContent.transform);
                 GameManager.Instance.Cards[i].SetActive(true);
+                
             }
+            
+            
+
             backReturnButton.gameObject.SetActive(true);
+            
         }
         
 
@@ -187,6 +207,7 @@ public class UIManager : MonoBehaviour
 
     }
 
+    #endregion
 
     #region  Card
     private int result;
@@ -382,6 +403,7 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.CharacterCurrentLevelIndex += GameManager.Instance.CurrentLevelIndex;
         SaveSystem.DataSave("levelIndex",GameManager.Instance.CharacterCurrentLevelIndex);
         GameManager.Instance.levelProgress(false);
+         GameManager.Instance.NewMethod();
     }
 
     //kart geliştirme ve can yenileme buttonlarini aktifleştirmek veya aktif dişi bırakmamizi sağliyan method
@@ -406,4 +428,18 @@ public class UIManager : MonoBehaviour
 
     #endregion
 
+
+    #region Market
+    
+    public void MarketIconButton()
+    {
+        marketPanel.MarketActivation();
+        marketIconButton.SetActive(false);
+        //marketPanel.SetShopItemDegree();
+    }
+
+    
+    
+
+    #endregion
 }
