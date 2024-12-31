@@ -1,4 +1,4 @@
-using System.Collections;
+ using System.Collections;
 using System.Collections.Generic;
 using Card_Enum;
 using CharacterType_Enum;
@@ -117,8 +117,8 @@ public class GameManager : MonoBehaviour
     
     [SerializeField] private GameObject resourcesCard;
 
-    public  delegate void CardAnimation();
-    public CardAnimation cardAnimation;
+    [SerializeField] private List<GameObject> equipments = new List<GameObject>();
+    public List<GameObject> Equipments {get {return equipments;}}
 
     private void Awake()
     {
@@ -176,7 +176,7 @@ public class GameManager : MonoBehaviour
         //CardTypeFindPositionSet();
     }
 
-
+    
     private void Update() 
     {
         if (Input.GetMouseButtonDown(0))
@@ -199,7 +199,7 @@ public class GameManager : MonoBehaviour
         
         
         
-
+        //düzeltilecek hatta farklı bir script de olucak.
         if(Input.GetKeyDown(KeyCode.Escape))
         {
             UIManager.Instance.SetActiveUI(UIManager.Instance.LevelsPanel.name);
@@ -213,18 +213,59 @@ public class GameManager : MonoBehaviour
         
         if(Input.GetKeyDown(KeyCode.W))
         {
-            NextMapLevel();
+            //NextMapLevel();
+            //UIManager.Instance.MarketActivation();
+            string cardlar = SaveSystem.DataExtraction("cardsName","");
+            string[] cardslar = cardlar.Split(',');
+            for (int i = 0; i < cardslar.Length; i++)
+            {
+                print(cardslar[i]);
+            }
         }
 
 
-        if(Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.S))
         {
-            character.CharacterTraits_Function("healtbar","-",20);
+            //character.CharacterTraits_Function("healtbar","-",20);
         }
 
     }
 
-    #endregion  
+    public void NewMethod()
+    {
+        List<GameObject> a = new List<GameObject>();
+
+        // İlk döngü: "CardPos" olmayan nesneleri listeye ekle
+        for (int i = 0; i < UIManager.Instance.DectGameObject.transform.childCount; i++)
+        {
+            if (UIManager.Instance.DectGameObject.transform.GetChild(i).gameObject.tag != "CardPos")
+                a.Add(UIManager.Instance.DectGameObject.transform.GetChild(i).gameObject);
+        }
+
+        // İkinci döngü: Listedeki nesneler üzerinde işlem yap
+        for (int i = 0; i < a.Count; i++)
+        {
+            GameObject currentCard = a[i]; // Bağımsız bir değişken oluştur
+
+            currentCard.transform.SetParent(UIManager.Instance.CardUpgradeContent.transform);
+            currentCard.SetActive(true);
+            currentCard.GetComponent<Animator>().enabled = false;
+
+            Button button = currentCard.GetComponent<Button>();
+            button.interactable = true;
+
+            if (button.onClick == null)
+            {
+                button.onClick = new Button.ButtonClickedEvent();
+            }
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() => CardDevelopment.Instance.SelectCardDevelopment(currentCard));
+
+            currentCard.transform.localRotation = Quaternion.identity;
+        }
+    }
+
+    #endregion
 
 
     #region 
@@ -395,12 +436,12 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.NextTourButton.interactable = false;
         if(deadEnemyCount == enemys.Count)
         {
-
+            
             isLevelOver = true;
 
             if(finishLevel)
             {
-            
+                
                 NextMapLevel();
                 //WhatOfKindCharacter(2,4);
                 character.CharacterType.FeatureUsed = false;
@@ -857,42 +898,14 @@ public class GameManager : MonoBehaviour
             newCard.GetComponent<Button>().onClick.AddListener(delegate()
             {
                 cards.Add(newCard);
-                switch (newCard.tag)
-                {
-                    case "AttackCard":
-                        string attackCardsName = $"Prefabs/Cards/AttackCards/{newCard.name}";
-
-                        cardsName.Add(attackCardsName);
-                        break;
-                    case "DefenceCard":
-                        string defenceCardsName = $"Prefabs/Cards/DefenceCards/{newCard.name}";
-
-
-                        cardsName.Add(defenceCardsName);
-                        break;
-                    case "AbilityCard":
-                        string abilityCardsName = $"Prefabs/Cards/AbilityCards/{newCard.name}";
-
-                        cardsName.Add(abilityCardsName);
-                        break;
-                    case "StrenghCard":
-                        string strenghCardsName = $"Prefabs/Cards/StrengthCards/{newCard.name}";
-
-                        cardsName.Add(strenghCardsName);
-                        break;
-                    default:
-                        break;
-                }
-
-                string _cardsName = string.Join(",", cardsName);
-                SaveSystem.DataSave("cardsName", _cardsName);
+                CardSave(newCard);
 
                 int siblingIndex = newCard.transform.GetSiblingIndex();
                 for (int i = 0; i < UIManager.Instance.EarnedGameObject.transform.childCount; i++)
                 {
                     if (i != siblingIndex)
                     {
-                        if(UIManager.Instance.EarnedGameObject.transform.GetChild(i).gameObject.activeSelf)
+                        if (UIManager.Instance.EarnedGameObject.transform.GetChild(i).gameObject.activeSelf)
                         {
                             Destroy(UIManager.Instance.EarnedGameObject.transform.GetChild(i).gameObject);
                         }
@@ -901,12 +914,13 @@ public class GameManager : MonoBehaviour
                     {
                         UIManager.Instance.EarnedGameObject.transform.GetChild(i).gameObject.SetActive(false);
                     }
+                    UIManager.Instance.MarketIcon_Button.SetActive(true);
                 }
 
                 earnedCards.Clear();
                 foreach (var card in cards)
                 {
-                    if(card != null)
+                    if (card != null)
                     {
                         Button cardButton = card.GetComponent<Button>();
                         if (cardButton != null)
@@ -923,7 +937,7 @@ public class GameManager : MonoBehaviour
 
                 LevelProgress();
 
-                if(finishLevel)
+                if (finishLevel)
                 {
                     ResetCharacterFeature();
                     LevelOpening();
@@ -936,8 +950,66 @@ public class GameManager : MonoBehaviour
         
     }
 
+    public void CardSave(GameObject newCard)
+    {
+        switch (newCard.tag)
+        {
+            case "AttackCard":
+                string attackCardsName = $"Prefabs/Cards/AttackCards/{newCard.name}";
 
-    
+                cardsName.Add(attackCardsName);
+                break;
+            case "DefenceCard":
+                string defenceCardsName = $"Prefabs/Cards/DefenceCards/{newCard.name}";
+
+
+                cardsName.Add(defenceCardsName);
+                break;
+            case "AbilityCard":
+                string abilityCardsName = $"Prefabs/Cards/AbilityCards/{newCard.name}";
+
+                cardsName.Add(abilityCardsName);
+                break;
+            case "StrenghCard":
+                string strenghCardsName = $"Prefabs/Cards/StrengthCards/{newCard.name}";
+
+                cardsName.Add(strenghCardsName);
+                break;
+            default:
+                break;
+        }
+
+        string _cardsName = string.Join(",", cardsName);
+        SaveSystem.DataSave("cardsName", _cardsName);
+    }
+
+
+    public void CardDelete(GameObject deleteCard)
+    {
+        switch(deleteCard.tag)
+        {
+            case "AttackCard":
+                string deleteAttackCardName = $"Prefabs/Cards/AttackCards/{deleteCard.name}";
+                cardsName.Remove(deleteAttackCardName);
+            break;
+            case "DefenceCard":
+                string deleteDefenceCardName = $"Prefabs/Cards/DefenceCards/{deleteCard.name}";
+                cardsName.Remove(deleteDefenceCardName);
+            break;
+            case "AbilityCard":
+                string deleteAbilityCardName = $"Prefabs/Cards/AbilityCards/{deleteCard.name}";
+                cardsName.Remove(deleteAbilityCardName);
+            break;
+            case "StrenghCard":
+                string deleteStrenghCardName = $"Prefabs/Cards/StrengthCards/{deleteCard.name}";
+                cardsName.Remove(deleteStrenghCardName);
+            break;
+            default:
+            break;
+        }
+        string _cardsName = string.Join(",", cardsName);
+        SaveSystem.DataSave("cardsName", _cardsName);
+    }
 
 
     //düşman yok edildiğinde kazanilan kartlari oluşturan method    
@@ -962,10 +1034,18 @@ public class GameManager : MonoBehaviour
 
             }
         }
+
+        for (int i = 0; i < cards.Count; i++)
+        {
+            equipments.Add(cards[i]);
+        }
+
+        for (int i = 0; i < UIManager.Instance.DectGameObject.transform.childCount; i++)
+        {
+            if (UIManager.Instance.DectGameObject.transform.GetChild(i).gameObject.tag != "CardPos")
+                equipments.Add(UIManager.Instance.DectGameObject.transform.GetChild(i).gameObject);
+        }
     }
-
-   
-
 
 
     public void SetActiveCardMovement()
@@ -975,6 +1055,8 @@ public class GameManager : MonoBehaviour
             gameAllCards[i].GetComponent<CardMovement>().enabled = true;
         }
     }
+
+
 
     //kartlarin posizyonlarini sifirlayan method
     public void CardTypeFindPositionSet()
@@ -1098,75 +1180,9 @@ public class GameManager : MonoBehaviour
         }
         
     }
-
-
-    #region Kart Olayinda Kullanilana  Eski Methodlar
-    public void CreateCardWinFromEnemy()
-    {
-        // yeni kart eklme için kullanulıyor
-        //yeni kart oluşturunca oluşturulan kart dect  listesine ekle
-        
-        randomNumber = Random.Range(0,gameAllCards.Count-1);
-        lastRandomNumber = randomNumber;
-        StartCoroutine(RandomNumber());
-    }
     
-    //random bir şekilde kart oluşturmaı sağliyor
-    private IEnumerator RandomNumber()
-    {
-        while(lastRandomNumber == randomNumber)
-        {
-            randomNumber = Random.Range(0,gameAllCards.Count-1);
-            yield return null;
-        }
-        lastRandomNumber = randomNumber;
 
-        GameObject newCard = Instantiate(gameAllCards[randomNumber]);
-        newCard.name = gameAllCards[randomNumber].name;
-        newCard.transform.SetParent(UIManager.Instance.EarnedGameObject);
-        newCard.transform.localScale =Vector3.one;
-        newCard.GetComponent<CardMovement>().enabled = false;
-        newCard.GetComponent<Button>().onClick.AddListener(()=>CardDevelopment.Instance.SelectCardDevelopment(newCard));
-        newCard.SetActive(false);
-        cards.Add(newCard);
-
-
-        switch(newCard.tag)
-        {
-            case "AttackCard":
-                string attackCardsName = $"Prefabs/Cards/AttackCards/{newCard.name}";
-                
-                cardsName.Add(attackCardsName);
-            break;
-            case "DefenceCard":
-                string defenceCardsName = $"Prefabs/Cards/DefenceCards/{newCard.name}";
-
-
-                cardsName.Add(defenceCardsName);
-            break;
-            case "AbilityCard":
-                string abilityCardsName = $"Prefabs/Cards/AbilityCards/{newCard.name}";
-
-                cardsName.Add(abilityCardsName);
-            break;
-            case "StrenghCard":
-                string strenghCardsName =$"Prefabs/Cards/StrengthCards/{newCard.name}";
-
-                cardsName.Add(strenghCardsName);
-            break;
-            default:
-            break;
-        }
-        
-        string _cardsName = string.Join(",", cardsName);
-        SaveSystem.DataSave("cardsName", _cardsName);
-        
-
-
-
-    }
-    #endregion
-
+   
     #endregion
 
 
@@ -1362,7 +1378,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region  Animation
-
+    //animation region altında ki methodlar burada kalmicak CardAnimation.cs geçirilicek
     public void CardsPositionMoveAnimation()
     {
         for (int i = 0; i < hand.Count; i++)
