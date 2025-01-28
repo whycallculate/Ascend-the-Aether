@@ -6,6 +6,8 @@ using EnemyFeatures;
 using UnityEngine;
 using UnityEngine.UI;
 using LevelTypeEnums;
+using Products;
+using GameDates;
 public class GameManager : MonoBehaviour
 {
     #region skeleton
@@ -110,6 +112,9 @@ public class GameManager : MonoBehaviour
 
     #endregion
     
+    [SerializeField] private GameDate gameDates;
+    public GameDate GameDates {get {return gameDates;}}
+
     [SerializeField] private int crystalCount = 0;
     public int CrystalCount {get {return crystalCount;} set { crystalCount = value;}}
     private int refCrystalCount;
@@ -119,6 +124,14 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private List<GameObject> equipments = new List<GameObject>();
     public List<GameObject> Equipments {get {return equipments;}}
+
+    [SerializeField] private List<string> cardDeckNames = new List<string>();
+    public List<string> CardDeckNames {get {return cardDeckNames;}}
+
+    private int allCardCount = 0;
+    private int randomNumber = 0;
+
+
 
     private void Awake()
     {
@@ -143,9 +156,9 @@ public class GameManager : MonoBehaviour
         SaveSystem.DataSave("crystalCount",crystalCount);
         refCrystalCount = crystalCount;
 
-        if(SaveSystem.DataExtraction("cardsName","") != "")
+        if(SaveSystem.DataExtraction("earnedCardNames","") != "")
         {
-            string[] _cardsNames = SaveSystem.DataExtraction("cardsName", "").Split(",");
+            string[] _cardsNames = SaveSystem.DataExtraction("earnedCardNames", "").Split(",");
 
             for (int i = 0; i < _cardsNames.Length; i++)
             {
@@ -161,7 +174,7 @@ public class GameManager : MonoBehaviour
             LevelOpening();
         }
 
-        CreateEarnedCard();
+        //CreateEarnedCard();
     
 
         isGameStart = true;
@@ -169,11 +182,40 @@ public class GameManager : MonoBehaviour
     }
 
 
+    string cardNames="";
+    
     #region Start And Update Function
+
     private void Start()
     {
+        for (int i = 0; i < deck.Count; i++)
+        {
+            cardDeckNames.Add(deck[i].name);
+        }
+        cardNames = string.Join(",",cardDeckNames);
+
         //DrawCards();
         //CardTypeFindPositionSet();
+
+        for (int i = 0; i < gameDates.DecCards.Count; i++)
+        {
+            for (int j = 0; j < gameAllCards.Count; j++)
+            {
+                if (gameAllCards[j].name == gameDates.DecCards[i])
+                {
+                    GameObject decCard = Instantiate(gameAllCards[j]);
+                    decCard.name = gameAllCards[j].name;
+                    decCard.transform.SetParent(UIManager.Instance.DectGameObject.transform);
+                    decCard.transform.SetSiblingIndex(i);
+                    decCard.transform.localScale = Vector2.one;
+                    deck.Add(decCard);
+                    decCard.SetActive(false);
+                }
+            }
+        }
+
+        CreateEarnedCard();
+    
     }
 
     
@@ -210,28 +252,21 @@ public class GameManager : MonoBehaviour
                 cards[i].SetActive(false);
             }
         }
-        
+
         if(Input.GetKeyDown(KeyCode.W))
         {
-            //NextMapLevel();
-            //UIManager.Instance.MarketActivation();
-            string cardlar = SaveSystem.DataExtraction("cardsName","");
-            string[] cardslar = cardlar.Split(',');
-            for (int i = 0; i < cardslar.Length; i++)
-            {
-                print(cardslar[i]);
-            }
+           
         }
 
-
-        if (Input.GetKeyDown(KeyCode.S))
+        if(Input.GetKeyDown(KeyCode.S))
         {
-            //character.CharacterTraits_Function("healtbar","-",20);
+            
         }
+        
 
     }
 
-    public void NewMethod()
+    public void PrepareCardsForUpgrade()
     {
         List<GameObject> a = new List<GameObject>();
 
@@ -291,12 +326,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        /*
-        for(int i = 0;i < hand.Count;i++)
-        {
-            hand[i].GetComponent<RectTransform>().anchoredPosition = UIManager.Instance.cardPos[i].anchoredPosition;
-        }
-        */
+        
         CardsPositionMoveAnimation();
     }
 
@@ -361,7 +391,7 @@ public class GameManager : MonoBehaviour
         characterCurrentLevelIndex = 1;
         LevelOpening();
 
-        SaveSystem.DataSave("cardsName", "");
+        SaveSystem.DataSave("earnedCardNames", "");
 
         CardsClear();
 
@@ -585,7 +615,7 @@ public class GameManager : MonoBehaviour
 
         if(character.IsCharacterAlive)
         {
-            SaveSystem.DataRemove("cardsName");
+            SaveSystem.DataRemove("earnedCardNames");
             if (cards.Count > 0)
             {
                 foreach (var item in cards)
@@ -604,7 +634,7 @@ public class GameManager : MonoBehaviour
 
 
     #region  Card
-    private int allCardCount = 0;
+
     //dosyada ki bütün kartlari çekmemizi sağliyan fonksiyon
     private void AllCardLoad()
     {
@@ -690,6 +720,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
+    //kart posizyonlarina ayarlıyor.
     public void HandCardPositionAdjust()
     {
         for (int i = 0; i < hand.Count; i++)
@@ -724,8 +756,7 @@ public class GameManager : MonoBehaviour
         hand[i].GetComponent<CardMovement>().enabled = isCardMovement;
     }
 
-    private int randomNumber = 0;
-    private int  lastRandomNumber = 0;
+    
 
     //create the cards we win from the enemy
     
@@ -897,6 +928,12 @@ public class GameManager : MonoBehaviour
 
             newCard.GetComponent<Button>().onClick.AddListener(delegate()
             {
+                if(newCard.GetComponent<ProductControl>() == null)
+                {
+                    newCard.AddComponent<ProductControl>();
+                }
+
+                equipments.Add(newCard);
                 cards.Add(newCard);
                 CardSave(newCard);
 
@@ -950,6 +987,8 @@ public class GameManager : MonoBehaviour
         
     }
 
+
+    //kartlari kaydediyor.
     public void CardSave(GameObject newCard)
     {
         switch (newCard.tag)
@@ -980,10 +1019,10 @@ public class GameManager : MonoBehaviour
         }
 
         string _cardsName = string.Join(",", cardsName);
-        SaveSystem.DataSave("cardsName", _cardsName);
+        SaveSystem.DataSave("earnedCardNames", _cardsName);
     }
 
-
+    //kayitli kartlari silmeyi sağliyor
     public void CardDelete(GameObject deleteCard)
     {
         switch(deleteCard.tag)
@@ -1008,14 +1047,14 @@ public class GameManager : MonoBehaviour
             break;
         }
         string _cardsName = string.Join(",", cardsName);
-        SaveSystem.DataSave("cardsName", _cardsName);
+        SaveSystem.DataSave("earnedCardNames", _cardsName);
     }
 
 
     //düşman yok edildiğinde kazanilan kartlari oluşturan method    
     public void CreateEarnedCard()
     {
-        string _a = SaveSystem.DataExtraction("cardsName", "");
+        string _a = SaveSystem.DataExtraction("earnedCardNames", "");
         string[] _b = _a.Split(",");
         for (int i = 0; i < _b.Length; i++)
         {
@@ -1023,13 +1062,12 @@ public class GameManager : MonoBehaviour
             if (resourcesCard != null)
             {
                 GameObject _object = Instantiate(resourcesCard, UIManager.Instance.EarnedGameObject.transform);
-
+                _object.AddComponent<ProductControl>().gameObject.GetComponent<ProductControl>().ProductEnum = ProductEnum.Earned;
+                
                 _object.name = _b[i].Split("/")[3];
                 _object.transform.localScale = Vector3.one;
                 _object.gameObject.SetActive(false);
-                //yeni eklenen kod
                 _object.GetComponent<Button>().onClick.AddListener(() => CardDevelopment.Instance.SelectCardDevelopment(_object));
-                //deck.Add(_object);
                 cards.Add(_object);
 
             }
@@ -1043,7 +1081,10 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < UIManager.Instance.DectGameObject.transform.childCount; i++)
         {
             if (UIManager.Instance.DectGameObject.transform.GetChild(i).gameObject.tag != "CardPos")
+            {
+                UIManager.Instance.DectGameObject.transform.GetChild(i).gameObject.AddComponent<ProductControl>().gameObject.GetComponent<ProductControl>().ProductEnum = ProductEnum.Equipment;
                 equipments.Add(UIManager.Instance.DectGameObject.transform.GetChild(i).gameObject);
+            }
         }
     }
 
@@ -1406,42 +1447,7 @@ public class GameManager : MonoBehaviour
         cardAnim.Play($"Card_{animationIndex}_DeckReturnAnimation");
     }
 
-    public void CardSelectedBeginAnimation(GameObject card)
-    {
-        int animationIndex = 0;
-        Animator cardAnim =  card.GetComponent<Animator>();
-        cardAnim.enabled = true;
-
-        for (int i = 0; i < hand.Count; i++)
-        {
-            if(hand[i].gameObject.name == card.name)
-            {
-                animationIndex = i;
-                break;
-            }
-        }
-        cardAnim.Play($"Card_{animationIndex}_SelectedBeginAnimation");
-
-        
-    }   
-
-    public void CardSelectedLeftAnimation(GameObject card)
-    {
-        int animationIndex = 0;
-        Animator cardAnim =  card.GetComponent<Animator>();
-        cardAnim.enabled = true;
-
-        for (int i = 0; i < hand.Count; i++)
-        {
-            if(hand[i].gameObject.name == card.name)
-            {
-                animationIndex = i;
-                break;
-            }
-        }
-        cardAnim.Play($"Card_{animationIndex}_SelectedLeftAnimation");
-    }
-
+    
     #endregion
 
 }

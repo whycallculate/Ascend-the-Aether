@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Shop;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -403,7 +404,7 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.CharacterCurrentLevelIndex += GameManager.Instance.CurrentLevelIndex;
         SaveSystem.DataSave("levelIndex",GameManager.Instance.CharacterCurrentLevelIndex);
         GameManager.Instance.levelProgress(false);
-         GameManager.Instance.NewMethod();
+         GameManager.Instance.PrepareCardsForUpgrade();
     }
 
     //kart geliştirme ve can yenileme buttonlarini aktifleştirmek veya aktif dişi bırakmamizi sağliyan method
