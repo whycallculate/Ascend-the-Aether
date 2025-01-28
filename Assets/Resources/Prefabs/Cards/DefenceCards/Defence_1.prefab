@@ -225,6 +225,7 @@ GameObject:
   - component: {fileID: 5279802830650860861}
   - component: {fileID: 7599966713028110525}
   - component: {fileID: 1644009894964631285}
+  - component: {fileID: -2592995990399786203}
   m_Layer: 5
   m_Name: Defence_1
   m_TagString: DefenceCard
@@ -403,6 +404,27 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!95 &-2592995990399786203
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5173690010489165651}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6635610500461189083
 GameObject:
   m_ObjectHideFlags: 0

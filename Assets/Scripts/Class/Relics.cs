@@ -72,10 +72,10 @@ public class StatRelics : Relics
             Directory.CreateDirectory(folderPath);
         }
 
+#if UNITY_EDITOR
         PrefabUtility.SaveAsPrefabAsset(statRelics, prefabPath);
 
 
-#if UNITY_EDITOR
         Object.DestroyImmediate(statRelics);
 #endif
     }
@@ -90,7 +90,7 @@ public class StatusRelics : Relics
 
 
 
-    public StatusEffect effectType; // Etki türünü belirler
+    public StatusEffect effectType; // Etki tï¿½rï¿½nï¿½ belirler
     public int effectValue; 
 
     public override bool IsDataFilled()
@@ -121,13 +121,12 @@ public class StatusRelics : Relics
         {
             Directory.CreateDirectory(folderPath);
         }
-
+        #if UNITY_EDITOR
         PrefabUtility.SaveAsPrefabAsset(statusRelic, prefabPath);
 
 
-#if UNITY_EDITOR
         Object.DestroyImmediate(statusRelic);
-#endif
+        #endif
     }
 }
 #endregion

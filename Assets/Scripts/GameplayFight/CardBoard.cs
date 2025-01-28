@@ -87,7 +87,6 @@ public class CardBoard : MonoBehaviour,IDropHandler
         
         if(seasonTicket == null && GameManager.Instance.CardCombineStart)
         {
-            print("combine olmuyor");
             GameManager.Instance.CardCombineStart = false;
             CardImpact(card);
             

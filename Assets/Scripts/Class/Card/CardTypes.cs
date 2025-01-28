@@ -110,8 +110,10 @@ namespace CardTypes
                 {
                     Directory.CreateDirectory(folderPath);
                 }
+#if UNITY_EDITOR
 
                 PrefabUtility.SaveAsPrefabAsset(attackCard, prefabPath);
+#endif
             }
             catch (System.Exception)
             {
@@ -200,8 +202,9 @@ namespace CardTypes
                 {
                     Directory.CreateDirectory(folderPath);  
                 }
-
+                #if UNITY_EDITOR
                 PrefabUtility.SaveAsPrefabAsset(defenceCard, prefabPath);
+                #endif
             }
             catch (System.Exception)
             {
@@ -286,8 +289,10 @@ namespace CardTypes
                 {
                     Directory.CreateDirectory(folderPath);
                 }
+#if UNITY_EDITOR
 
                 PrefabUtility.SaveAsPrefabAsset(abilityCard, prefabPath);
+#endif
             }
             catch (System.Exception)
             {
@@ -389,8 +394,10 @@ namespace CardTypes
                 {
                     Directory.CreateDirectory(folderPath);
                 }
+#if UNITY_EDITOR
 
                 PrefabUtility.SaveAsPrefabAsset(strengthCard, prefabPath);
+#endif
             }
             catch (System.Exception)
             {

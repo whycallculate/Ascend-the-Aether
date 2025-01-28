@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf04cb3514c4d2b48bdc86d2df76c348, type: 3}
+  m_Name: Shop Product ScriptableObject
+  m_EditorClassIdentifier: 
+  products:
+  - productDegreeEnum: 1
+    minProductPrice: 100
+    maxProductPrice: 200
+  - productDegreeEnum: 2
+    minProductPrice: 100
+    maxProductPrice: 400
+  - productDegreeEnum: 3
+    minProductPrice: 300
+    maxProductPrice: 1000
+  legendaryProductCount: 0
+  legendaryProductCountMax: 2
+  rareProductCount: 0
+  rareProductCountMax: 0
+  ordinaryProductCount: 0
+  ordinaryProductCountMax: 0
+  productPriceNames:
+  - ability
+  - Ability_2
+  - Ability_3
+  - attack
+  - Attack_1
+  - Attack_4
+  - Attack_5
+  - Defence_1
+  - Defence_2
+  - Defence_3
+  - Strengh_1
+  - Strengh_2
+  - Strengh_3
+  - Strengh_4
+  - Strengh_5
+  productPrices: e5000000f00000007c00000014010000d3000000eb020000bd020000460300006b000000690100008a00000087000000b000000083010000f4000000

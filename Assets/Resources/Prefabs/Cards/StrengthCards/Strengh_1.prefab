@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 868788351370113191}
   - component: {fileID: 784210561838661301}
   - component: {fileID: 3156787088419143770}
+  - component: {fileID: 1350112597630209435}
   m_Layer: 5
   m_Name: Strengh_1
   m_TagString: StrenghCard
@@ -195,6 +196,27 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!95 &1350112597630209435
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1044623249289951667}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3036841534a9f434298e84d208247bc0, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2847803925177310795
 GameObject:
   m_ObjectHideFlags: 0
