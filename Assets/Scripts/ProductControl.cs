@@ -12,13 +12,17 @@ namespace Products
         [SerializeField] private int price;
         public int Price { get { return price;} set {price = value;}}
 
-
+        private bool selectable = false;
        
         public void SetProductPrice(int productPrice)
         {
             price = productPrice;;
         }
 
+        public void SetSelectable()
+        {
+            selectable = !selectable;
+        }
     }
 
 }

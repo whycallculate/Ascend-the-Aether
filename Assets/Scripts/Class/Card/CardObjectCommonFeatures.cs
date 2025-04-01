@@ -25,6 +25,9 @@ namespace CardObjectCommon_Features
         protected RectTransform rectTransform;
         public Vector2 cardPosition;
 
+        [SerializeField] private DeckItemPosition deckPosition;
+        public DeckItemPosition DeckPosition { get { return deckPosition;} set { deckPosition = value;}}
+
         public int energyCost;
         public float duration;
 

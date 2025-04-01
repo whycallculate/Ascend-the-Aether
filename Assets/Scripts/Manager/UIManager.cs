@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Shop;
+using Market;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,6 +30,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private Transform earnedGameObject;
     public Transform EarnedGameObject { get { return earnedGameObject;}}
+    
     [SerializeField] private Transform[] earnedCardsPositions;
     public Transform[] EarnedCardsPositions { get { return earnedCardsPositions; }}
 
@@ -119,6 +120,8 @@ public class UIManager : MonoBehaviour
     #region 
 
     [SerializeField] private Button backReturnButton;
+    [SerializeField] private Transform buyCardParent;
+    public Transform BuyCardParent { get { return buyCardParent;}}
 
     #endregion
 
@@ -127,12 +130,20 @@ public class UIManager : MonoBehaviour
     [Space]
     [Space]
     [Space]
-    [SerializeField] private Market marketPanel;
-    public Market MarketPanel {get { return marketPanel;} }
+    [SerializeField] private MarketManager marketPanel;
+    public MarketManager MarketPanel { get { return marketPanel; } }
+
     [SerializeField] private GameObject marketIconButton;
     public GameObject MarketIcon_Button { get { return marketIconButton;}}
+    [SerializeField] private MarketUI marketUIManager;
+    public MarketUI MarketUIManager => marketUIManager;
 
-
+    public void MarketIconButton()
+    {
+        marketPanel.gameObject.SetActive(true);
+        
+    }
+    
     #endregion
 
 
@@ -152,7 +163,7 @@ public class UIManager : MonoBehaviour
             crystalCount_Text.text = GameManager.Instance.CrystalCount.ToString();
         }
 
-
+        
     }
 
     private void Start() 
@@ -430,17 +441,17 @@ public class UIManager : MonoBehaviour
     #endregion
 
 
-    #region Market
+    #region  CardDeck UI and Functions
+    [Header("CardDeck UI")]
+    [SerializeField] private GameObject cardDeckPanel;
     
-    public void MarketIconButton()
+    public void CardDeckButtonFunction()
     {
-        marketPanel.MarketActivation();
-        marketIconButton.SetActive(false);
-        //marketPanel.SetShopItemDegree();
+        cardDeckPanel.SetActive(true);
     }
 
-    
-    
+
 
     #endregion
+   
 }
