@@ -71,7 +71,7 @@ namespace Deck
                             itemReckTransform.sizeDelta = deckItemPosition.GetDeckItemPositionSizeDelta();
                             item.transform.SetParent(deckItemPosition.transform);
                             item.transform.position = deckItemPosition.transform.position;
-                            OutItemButtonFromDeck(itemButton);
+                            OutItemButtonFromDeck(itemButton,deckItemPosition);
 
                         }
                     }
@@ -85,7 +85,7 @@ namespace Deck
         }
 
 
-        private void OutItemButtonFromDeck(Button itemButton)
+        private void OutItemButtonFromDeck(Button itemButton,DeckItemPosition deckItemPosition)
         {
             if (itemButton.onClick == null)
             {
@@ -95,7 +95,7 @@ namespace Deck
             itemButton.onClick.RemoveAllListeners();
             itemButton.onClick.AddListener(()=>
             {
-                print(index);
+                deckItemPosition.RemoveDeckItemPosition();
                 itemButton.transform.SetParent(deckItemScrollRectContent);
                 if(index > 0)
                 {
@@ -116,7 +116,6 @@ namespace Deck
 
                 if (tuple.Item1)
                 {
-
                     deckItemPosition.SetDeckItemPosition();
                     RectTransform itemReckTransform = itemButton.GetComponent<RectTransform>();
                     itemReckTransform.sizeDelta = deckItemPosition.GetDeckItemPositionSizeDelta();
@@ -124,20 +123,10 @@ namespace Deck
                     itemButton.transform.position = deckItemPosition.transform.position;
                     
                    
-                    OutItemButtonFromDeck(itemButton);
+                    OutItemButtonFromDeck(itemButton,deckItemPosition);
                 }
             });
-            
-            /*
-            ItemButtonReset(itemButton);
-            var tuple = DequeueDeckItemPosition();
-            DeckItemPosition itemPosition = tuple.Item2;
-            itemButton.transform.SetParent( itemPosition.transform);
-            itemButton.transform.position = itemPosition.transform.position;
-            print(itemPosition + "-" + index);
-            print(itemPositions[index].name);
-            index++;
-            */
+           
         }
 
         private void ItemButtonReset(Button itemButton)
@@ -154,10 +143,7 @@ namespace Deck
         {
             if(Input.GetKeyDown(KeyCode.Space))
             {
-                foreach (var item in itemPositions)
-                {
-                    print(item.name);
-                }
+                print(A());
             }
         }
 
@@ -166,25 +152,26 @@ namespace Deck
             gameObject.SetActive(false);
             foreach (DeckItemPosition item in itemPositions)
             {
-                Destroy(item.gameObject);
+                if( item != null)
+                {
+                    if(item.transform.childCount > 0)
+                    {
+                        item.transform.GetChild(0).transform.SetParent(UIManager.Instance.DectGameObject.transform);
+
+                    }
+                    Destroy(item.gameObject);
+                }
             }
+            itemPositions.Clear();
         }
 
 
         public Tuple<bool,DeckItemPosition> DequeueDeckItemPosition()
         {
-            /*
-            if(itemPositions.Count > 0)
-            {
-                DeckItemPosition deckItemPosition = itemPositions.Dequeue();
-                return deckItemPosition;
-            }
-            */
             if(index < itemPositions.Count)
             {
-                DeckItemPosition deckItemPosition = itemPositions[index];
-                index++;
-                print(index);
+                DeckItemPosition deckItemPosition = A();
+                
                 return Tuple.Create(true,deckItemPosition);
             }
             else
@@ -192,6 +179,21 @@ namespace Deck
                 DeckItemPosition deckItemPosition = null;
                 return Tuple.Create(false,deckItemPosition);
             }
+        }
+
+        private DeckItemPosition A()
+        {
+            DeckItemPosition deckItemPosition = null;
+            for (int i = 0; i < itemPositions.Count; i++)
+            {
+                if(itemPositions[i].IsPositionFull) continue;
+                else
+                {
+                    deckItemPosition = itemPositions[i];
+                    break;
+                }
+            }
+            return deckItemPosition;
         }
 
         public void SetDeckItenPositionFull()
