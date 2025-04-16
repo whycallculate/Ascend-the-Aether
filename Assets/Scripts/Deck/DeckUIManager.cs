@@ -66,12 +66,20 @@ namespace Deck
                         {
                             card.DeckPosition = deckItemPosition;
                             
-                            deckItemPosition.SetDeckItemPosition();
-                            RectTransform itemReckTransform = itemButton.GetComponent<RectTransform>();
-                            itemReckTransform.sizeDelta = deckItemPosition.GetDeckItemPositionSizeDelta();
-                            item.transform.SetParent(deckItemPosition.transform);
-                            item.transform.position = deckItemPosition.transform.position;
-                            OutItemButtonFromDeck(itemButton,deckItemPosition);
+                            if(deckItemPosition !=null)
+                            {
+                                if(!deckItemPosition.IsPositionFull)
+                                {
+                                    deckItemPosition.SetDeckItemPosition();
+                                    RectTransform itemReckTransform = itemButton.GetComponent<RectTransform>();
+                                    itemReckTransform.sizeDelta = deckItemPosition.GetDeckItemPositionSizeDelta();
+                                    item.transform.SetParent(deckItemPosition.transform);
+                                    item.transform.position = deckItemPosition.transform.position;
+                                    OutItemButtonFromDeck(itemButton,deckItemPosition);
+
+                                }
+
+                            }
 
                         }
                     }
@@ -95,13 +103,19 @@ namespace Deck
             itemButton.onClick.RemoveAllListeners();
             itemButton.onClick.AddListener(()=>
             {
-                deckItemPosition.RemoveDeckItemPosition();
-                itemButton.transform.SetParent(deckItemScrollRectContent);
-                if(index > 0)
+                if (deckItemPosition != null)
                 {
-                    index--;
+                    if (deckItemPosition.IsPositionFull)
+                    {
+                        deckItemPosition.RemoveDeckItemPosition();
+                        itemButton.transform.SetParent(deckItemScrollRectContent);
+                        if(index > 0)
+                        {
+                            index--;
+                        }
+                        AddItemToDeck(itemButton);
+                    }
                 }
-                AddItemToDeck(itemButton);
             });
 
         }
@@ -116,14 +130,20 @@ namespace Deck
 
                 if (tuple.Item1)
                 {
-                    deckItemPosition.SetDeckItemPosition();
-                    RectTransform itemReckTransform = itemButton.GetComponent<RectTransform>();
-                    itemReckTransform.sizeDelta = deckItemPosition.GetDeckItemPositionSizeDelta();
-                    itemButton.transform.SetParent(deckItemPosition.transform);
-                    itemButton.transform.position = deckItemPosition.transform.position;
-                    
-                   
-                    OutItemButtonFromDeck(itemButton,deckItemPosition);
+                    if (deckItemPosition != null)
+                    {
+                        if (!deckItemPosition.IsPositionFull)
+                        {
+                            deckItemPosition.SetDeckItemPosition();
+                            RectTransform itemReckTransform = itemButton.GetComponent<RectTransform>();
+                            itemReckTransform.sizeDelta = deckItemPosition.GetDeckItemPositionSizeDelta();
+                            itemButton.transform.SetParent(deckItemPosition.transform);
+                            itemButton.transform.position = deckItemPosition.transform.position;
+
+
+                            OutItemButtonFromDeck(itemButton, deckItemPosition);
+                        }
+                    }
                 }
             });
            
