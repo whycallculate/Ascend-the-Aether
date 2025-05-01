@@ -56,6 +56,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject cardsScroll;
     public GameObject CardsScroll { get { return cardsScroll;}}
 
+    [SerializeField] private Transform equipments;
+    public Transform Equipments => equipments; 
+
 
     #region  Card Development Table UI
 

@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: 7213659927804951776}
   - component: {fileID: 735722810218794280}
   - component: {fileID: 6270710953821644846}
+  - component: {fileID: 7151396135925686851}
   m_Layer: 5
   m_Name: Ability_2
   m_TagString: AbilityCard
@@ -244,6 +245,7 @@ MonoBehaviour:
   cardLegendary: 2
   cardCombineLegendary: 
   cardPosition: {x: 0, y: 0}
+  deckPosition: {fileID: 0}
   energyCost: 3
   duration: 1
   ability: 90
@@ -328,6 +330,20 @@ MonoBehaviour:
   itemNameText: {fileID: 7896128766864748543}
   itemPriceText: {fileID: 6451376508124789413}
   itemClickUI: {fileID: 8490873212569640604}
+--- !u!114 &7151396135925686851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1847758943206446360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2edfa9114a621ee4abdbfcb4a32d5787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveTargetPositions: []
+  cardAnimation_Controller: {fileID: 0}
 --- !u!1 &2382605166783416436
 GameObject:
   m_ObjectHideFlags: 0

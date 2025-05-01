@@ -649,6 +649,7 @@ GameObject:
   - component: {fileID: 5224300820747820459}
   - component: {fileID: -6726505115493326061}
   - component: {fileID: -5190307766004180732}
+  - component: {fileID: 6153425087871786073}
   m_Layer: 5
   m_Name: Strengh_2
   m_TagString: StrenghCard
@@ -797,6 +798,7 @@ MonoBehaviour:
   cardLegendary: 1
   cardCombineLegendary: 
   cardPosition: {x: 0, y: 0}
+  deckPosition: {fileID: 0}
   energyCost: 3
   duration: 3
   strength: 33
@@ -864,7 +866,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80b75f7fb768c3c41b300d394fd8e2ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemRarity: 1
+  itemRarity: 0
   itemPrice: 104
 --- !u!114 &-5190307766004180732
 MonoBehaviour:
@@ -881,6 +883,20 @@ MonoBehaviour:
   itemNameText: {fileID: 8503244305722432261}
   itemPriceText: {fileID: 540463095909895955}
   itemClickUI: {fileID: 7916416434458598072}
+--- !u!114 &6153425087871786073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3963717216292308052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2edfa9114a621ee4abdbfcb4a32d5787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveTargetPositions: []
+  cardAnimation_Controller: {fileID: 0}
 --- !u!1 &5006263385778238854
 GameObject:
   m_ObjectHideFlags: 0

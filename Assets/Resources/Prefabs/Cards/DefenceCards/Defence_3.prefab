@@ -228,6 +228,7 @@ GameObject:
   - component: {fileID: 6934137960009784815}
   - component: {fileID: 1087292639524261742}
   - component: {fileID: -7731249582257852421}
+  - component: {fileID: -1813925622537610455}
   m_Layer: 5
   m_Name: Defence_3
   m_TagString: DefenceCard
@@ -376,6 +377,7 @@ MonoBehaviour:
   cardLegendary: 2
   cardCombineLegendary: 
   cardPosition: {x: 0, y: 0}
+  deckPosition: {fileID: 0}
   energyCost: 2
   duration: 1
   defence: 30
@@ -443,7 +445,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80b75f7fb768c3c41b300d394fd8e2ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemRarity: 2
+  itemRarity: 0
   itemPrice: 0
 --- !u!114 &-7731249582257852421
 MonoBehaviour:
@@ -460,6 +462,20 @@ MonoBehaviour:
   itemNameText: {fileID: 1755751705298532067}
   itemPriceText: {fileID: 8261453029666956363}
   itemClickUI: {fileID: 1977490309833973070}
+--- !u!114 &-1813925622537610455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2473646034076853049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2edfa9114a621ee4abdbfcb4a32d5787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveTargetPositions: []
+  cardAnimation_Controller: {fileID: 0}
 --- !u!1 &3821995077566635194
 GameObject:
   m_ObjectHideFlags: 0

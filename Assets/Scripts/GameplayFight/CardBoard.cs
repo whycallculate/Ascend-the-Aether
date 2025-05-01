@@ -197,7 +197,7 @@ public class CardBoard : MonoBehaviour,IDropHandler
             }
 
         }
-        GameManager.Instance.HandCardPositionAdjust();
+        //GameManager.Instance.HandCardPositionAdjust();
 
         
     }

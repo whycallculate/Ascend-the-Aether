@@ -1131,6 +1131,7 @@ GameObject:
   - component: {fileID: 2121390472349402796}
   - component: {fileID: 7083793827580040756}
   - component: {fileID: 3147587319813047583}
+  - component: {fileID: 1659569521985253149}
   m_Layer: 5
   m_Name: Attack_1
   m_TagString: AttackCard
@@ -1291,6 +1292,7 @@ MonoBehaviour:
   cardLegendary: 2
   cardCombineLegendary: 
   cardPosition: {x: 0, y: 0}
+  deckPosition: {fileID: 0}
   energyCost: 1
   duration: 2
   damage: 70
@@ -1343,7 +1345,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80b75f7fb768c3c41b300d394fd8e2ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemRarity: 2
+  itemRarity: 0
   itemPrice: 0
 --- !u!114 &3147587319813047583
 MonoBehaviour:
@@ -1360,3 +1362,17 @@ MonoBehaviour:
   itemNameText: {fileID: 4692378415982644401}
   itemPriceText: {fileID: 4819893366836901893}
   itemClickUI: {fileID: 7682491151527753245}
+--- !u!114 &1659569521985253149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8758195172277305441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2edfa9114a621ee4abdbfcb4a32d5787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveTargetPositions: []
+  cardAnimation_Controller: {fileID: 0}

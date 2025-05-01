@@ -44,7 +44,7 @@ public class MarketManager : MonoBehaviour
 
     
     [SerializeField] private List<GameObject> bagEquipments = new List<GameObject>();
-    public List<GameObject> BagEquipments => bagEquipments;
+    public List<GameObject> BagEquipments {get => bagEquipments; set => bagEquipments = value;}
     
   
 
@@ -63,7 +63,7 @@ public class MarketManager : MonoBehaviour
     
     void Awake()
     {
-
+        
     }
 
     void Start()
@@ -97,6 +97,8 @@ public class MarketManager : MonoBehaviour
 
     void Update()
     {
+        
+        /*
         if(Input.GetKeyDown(KeyCode.V))
         {
             GameManager.Instance.CrystalCoinWin(12000);
@@ -124,6 +126,23 @@ public class MarketManager : MonoBehaviour
 
             string _path = string.Join(",",path);
             SaveSystem.DataSave("buyItems", _path);
+        }
+        */
+
+        if(Input.GetKeyDown(KeyCode.X))
+        {
+            
+            GameManager.Instance.CrystalCoinWin(20000);
+        }
+        if(Input.GetKeyDown(KeyCode.Z))
+        {
+            
+            string[] c = SaveSystem.DataExtraction("buyItems","").Split(",");
+            foreach (var item in c)
+            {
+                print(item);
+            }
+            
         }
     }
 
@@ -164,40 +183,83 @@ public class MarketManager : MonoBehaviour
         bagEquipments.Clear();
     }
 
-    [SerializeField] string[] newBuyItems;
+    private bool value =false;
     public void BuyItemSave()
     {
-        string buyItem = SaveSystem.DataExtraction("buyItems","");
-        string[] buyItems = buyItem.Split(',');
-
-        int buyItemsLength = buyItem.Split(",").Length;
-        
-        newBuyItems = new string[buyItemsLength + shopItems.Count];
-
-        int buyItemIndex = 0;
-
-        for (int i = 0; i < buyItems.Length; i++)
+        if(!value)
         {
-            newBuyItems[i] = buyItems[i];
+            string c = SaveSystem.DataExtraction("buyItems","");
+            if(c != null)
+            {
+                if(c != "")
+                {
+                    string[] d = c.Split(",");
+                    string[] e = new string[d.Length + shopItems.Count];
+                    
+                    int i= 0;
+                    int j = 0;
+                    bool sorgu = false;
+                    while(i < e.Length)
+                    {
+                        if(!sorgu)
+                        {
+                            if(j < d.Length)
+                            {
+                                e[i] = d[j];
+                                i++;
+                                j++;
+                            }
+                            else
+                            {
+                                j = 0;
+                                sorgu = true;
+                            }
+                        }   
+                        else if(sorgu)
+                        {
+                            if(j < shopItems.Count)
+                            {
+                                e[i] = FindItemPrefabPath(shopItems[j].gameObject);
+                                i++;
+                                j++;
+                            }
+                            else
+                            {
+                                j = e.Length;
+                            }
+                        }
+                    }
+
+                    string f = string.Join(",", e);
+                    SaveSystem.DataRemove("buyItems");
+                    SaveSystem.DataSave("buyItems",f);
+                }
+                else
+                {
+                    string[] a = new string[shopItems.Count];
+                    for (int i = 0; i < shopItems.Count; i++)
+                    {
+                        a[i] = FindItemPrefabPath(shopItems[i].gameObject);
+                    }
+
+                    string b = string.Join(",", a);
+
+                    SaveSystem.DataSave("buyItems", "");
+
+                    SaveSystem.DataSave("buyItems", b);
+                }
+            }
+            
+            
+            value = true;
         }
 
         
-        for (int i = buyItemsLength; i < newBuyItems.Length; i++)
-        {
-            newBuyItems[i] = FindItemPrefabPath(shopItems[buyItemIndex].gameObject);
-            if(buyItemIndex != 0)
-            {
-                if(GameManager.Instance.Equipments[buyItemIndex-1] != shopItems[buyItemIndex])
-                {
-                    GameManager.Instance.Equipments.Add(shopItems[buyItemIndex].gameObject);
-                    buyItemIndex++;
-                }
+    }
 
-            }
-
-        }       
-
-       
+    public void ResetButton()
+    {
+        value = false;
     }
 
 
@@ -221,6 +283,8 @@ public class MarketManager : MonoBehaviour
             }
 
         }
+
+        bagEquipments.Clear();
 
         sellItemName = "";
         sellItemName = string.Join(",",sellItemNames);
@@ -287,10 +351,26 @@ public class MarketManager : MonoBehaviour
     {
         GameManager.Instance.AddItemEquiptmens(item);
     }
-
-    public void AddItemShopList(GameObject item)
+    
+    //Market de ki shop listesine eleman eklememizi sağliyor
+    public void AddItemShopList(GameObject item,int maxCount)
     {
-        shop.Add(item);
+        if(shop.Count < maxCount)
+        {
+            shop.Add(item);
+        }
+        
     }
+
+
+    public void ClearBagEquipmentsList()
+    {
+        if(bagEquipments.Count > 0)
+        {
+            bagEquipments.Clear();
+        }
+    }
+
+
 
 }

@@ -78,4 +78,9 @@ public class AttackCardController : CardObjectCommonFeatures
         energyCost = cardEnergy;
         damage = cardDamage;
     }
+
+    public void Attack()
+    {
+        print(gameObject.name+ "Attack");
+    }
 }

@@ -14,7 +14,8 @@ namespace Market
 
         public void ShopItemAdjustment(Transform parentObject)
         {
-            if(parentObject.childCount < 10)
+            Debug.Log(10 - MarketManager.Instance.Shop.Count);
+            if(MarketManager.Instance.Shop.Count < 10)
             {
                 CreateWithItemRatio(parentObject,10);
             }
@@ -30,14 +31,17 @@ namespace Market
                 GameObject.Destroy(parent.transform.GetChild(i).gameObject);
             }
 
+            if(shopItemCount != 0) shopItemCount =0;
+
             CreateWithItemRatio(parent, 10);
 
         }
 
-
+        //Shop sayfasına random bir şekilde oluşturmayı sağliyor.    
         public void CreateWithItemRatio(Transform parentObject,int _itemsCount)
         {
             shopItemCount = _itemsCount;
+            Debug.Log(shopItemCount);
             int i = 0;
             int ordinaryCount = 0;
             int rareCount = 0;
@@ -55,38 +59,38 @@ namespace Market
                 ItemController item = GameManager.Instance.GameAllCards[randomIndex].GetComponent<ItemController>();
                 if(item.ItemRarityEnum == ItemRarityEnum.OrdinaryCard && ordinaryCount < ordinaryMaxCount)
                 {
-                    shopItem = CreateItem(parentObject,randomIndex);
+                    shopItem = CreateItem(parentObject,item,randomIndex);
                     ShopItemButtonFunction(shopItem.GetComponent<Button>());
                     i++;
                     ordinaryCount ++;
                 }
                 else if(item.ItemRarityEnum == ItemRarityEnum.RareCard && rareCount < rareMaxCount)
                 {
-                    shopItem = CreateItem(parentObject,randomIndex);
+                    shopItem = CreateItem(parentObject,item,randomIndex);
                     ShopItemButtonFunction(shopItem.GetComponent<Button>());
                     i++;
                     rareCount++;
                 }
                 else if(item.ItemRarityEnum == ItemRarityEnum.LegendaryCard && legendaryCount < legendaryMaxCount)
                 {
-                    shopItem = CreateItem(parentObject,randomIndex);
+                    shopItem = CreateItem(parentObject,item,randomIndex);
                     ShopItemButtonFunction(shopItem.GetComponent<Button>());
                     i++;
                     legendaryCount++;
                 }
-               
-                MarketManager.Instance.AddItemShopList(shopItem);
+                
             }             
 
-            Debug.Log(shopItemCount);
         }
-
-        private GameObject CreateItem(Transform parentObject,int randomIndex)
+        
+        //Verilen random verilen bir kart objesini oluşturması.
+        private GameObject CreateItem(Transform parentObject,ItemController itemController,int randomIndex)
         {
-            GameObject itemPrefab= GameManager.Instance.GameAllCards[randomIndex];
+            GameObject itemPrefab= itemController.gameObject;
             GameObject createdItemObject = GameObject.Instantiate(itemPrefab,parentObject);
             createdItemObject.name = itemPrefab.name;
             createdItemObject.GetComponent<CardMovement>().enabled = false;
+            MarketManager.Instance.AddItemShopList(createdItemObject,10);
             return createdItemObject;
         }
 
@@ -255,6 +259,7 @@ namespace Market
         public void ShopItemsReset()
         {
             shopItemCount = 0;
+            MarketManager.Instance.ShopItems.Clear();
         }
 
     }

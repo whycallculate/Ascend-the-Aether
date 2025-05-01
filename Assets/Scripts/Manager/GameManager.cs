@@ -181,10 +181,11 @@ public class GameManager : MonoBehaviour
         CreateEarnedCard();
 
         CreateBuyItem();
+
+        
     }
 
-
-
+    [SerializeField] private CardAnimationControl card;
 
 
     private void Update() 
@@ -220,6 +221,12 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+
+            cardAnimation_Controller.cardReturnMovementAnimation(card,0,45);
+           
+        }
 
     }
 
@@ -278,7 +285,7 @@ public class GameManager : MonoBehaviour
     public void CreateBuyItem()
     {
         string _itemsName = SaveSystem.DataExtraction("buyItems","");
-        if(_itemsName != "")
+        if(_itemsName != "" & _itemsName != null)
         {
             string[] itemsName = _itemsName.Split(',');
 
@@ -290,15 +297,22 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < itemsName.Length; i++)
         {
-            if(itemsName[i] != "" & itemsName[i] != ",")
+            if(itemsName[i] != null)
             {
-                GameObject obj = Instantiate(Resources.Load<GameObject>(itemsName[i]));
-                obj.gameObject.SetActive(false);
-                obj.transform.SetParent(UIManager.Instance.BuyCardParent.transform);
-                obj.transform.localScale = Vector3.one;
-                obj.name =  obj.name.Replace("(Clone)","");  
-                equipments.Add(obj);        
+                if(itemsName[i] != "" & itemsName[i] != ",")
+                {
+                    GameObject obj = Instantiate(Resources.Load<GameObject>(itemsName[i]));
+                    if(obj != null)
+                    {
+                        obj.gameObject.SetActive(false);
+                        obj.transform.SetParent(UIManager.Instance.BuyCardParent.transform);
+                        obj.transform.localScale = Vector3.one;
+                        obj.name =  obj.name.Replace("(Clone)","");  
+                        equipments.Add(obj);        
 
+                    }
+
+                }
             }
         }
     }
@@ -365,8 +379,11 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        
-        CardsPositionMoveAnimation();
+        for (int i = 0; i < hand.Count; i++)
+        {
+            cardAnimation_Controller.cardMovementAnimation(hand[i].GetComponent<CardAnimationControl>(),i,45);
+        }
+        //CardsPositionMoveAnimation();
     }
 
     public void HandToDeck()
@@ -1249,6 +1266,7 @@ public class GameManager : MonoBehaviour
             if(equipments[i] == item)
             {
                 equipments.Remove(item);
+                Destroy(item);
                 return;
             }
         }
@@ -1261,7 +1279,7 @@ public class GameManager : MonoBehaviour
 
 
 
-
+    [SerializeField] CardAnimationController cardAnimation_Controller;
 
     #region  Map
     
@@ -1454,38 +1472,7 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
-    #region  Animation
-    //animation region altında ki methodlar burada kalmicak CardAnimation.cs geçirilicek
-    public void CardsPositionMoveAnimation()
-    {
-        for (int i = 0; i < hand.Count; i++)
-        {
-            Animator cardAnim = hand[i].GetComponent<Animator>();
-            cardAnim.enabled = true;
-            cardAnim.Play($"Card_{i}_PositionMove");
-        }
-    }
-
-    public void CardDeckReturnAnimation(GameObject card)
-    {
-        int animationIndex = 0;
-        Animator cardAnim =  card.GetComponent<Animator>();
-        cardAnim.enabled = true;
-
-        for (int i = 0; i < hand.Count; i++)
-        {
-            if(hand[i].gameObject.name == card.name)
-            {
-                animationIndex = i;
-                break;
-            }
-        }
-        cardAnim.Play($"Card_{animationIndex}_DeckReturnAnimation");
-    }
-
-    
-    #endregion
-
+    //kart'ın türünü bulmamizi ve geri döndürmemizi sağliyor.
     public CardObjectCommonFeatures FindCardType(GameObject card)
     {
         CardObjectCommonFeatures _cardObjectCommonFeatures = null;
