@@ -66,7 +66,6 @@ public class CardBoard : MonoBehaviour,IDropHandler
             else if(!GameManager.Instance.CardCombineStart)
             {
                 CardImpact(eventData);
-                GameManager.Instance.CardDeckReturnAnimation(eventData);
                 seasonTicket = null;
             }
         }
@@ -90,8 +89,7 @@ public class CardBoard : MonoBehaviour,IDropHandler
             GameManager.Instance.CardCombineStart = false;
             CardImpact(card);
             
-            GameManager.Instance.CardDeckReturnAnimation(card);
-
+           
             seasonTicket = null;
             combineCard = null;
         }
@@ -117,7 +115,6 @@ public class CardBoard : MonoBehaviour,IDropHandler
                     if(attackCard.CardCombineLegendary[i] == SeasonTicketTypeFind(_seasonTicket))
                     {
                         print("attack combosu");
-                        GameManager.Instance.CardDeckReturnAnimation(_seasonTicket);
                         combineCard.GetComponent<Animator>().enabled = false;
                     }
                 }
@@ -129,7 +126,6 @@ public class CardBoard : MonoBehaviour,IDropHandler
                 {
                     if(defenceCard.CardCombineLegendary[i] == SeasonTicketTypeFind(_seasonTicket))
                     {
-                        GameManager.Instance.CardDeckReturnAnimation(_seasonTicket);
                         combineCard.GetComponent<Animator>().enabled = false;
 
                     }
@@ -142,7 +138,6 @@ public class CardBoard : MonoBehaviour,IDropHandler
                 {
                     if(abilityCard.CardCombineLegendary[i] == SeasonTicketTypeFind(_seasonTicket))
                     {
-                        GameManager.Instance.CardDeckReturnAnimation(_seasonTicket);
                         combineCard.GetComponent<Animator>().enabled = false;
 
                     }
@@ -155,7 +150,6 @@ public class CardBoard : MonoBehaviour,IDropHandler
                 {
                     if(strenghCard.CardCombineLegendary[i] == SeasonTicketTypeFind(_seasonTicket))
                     {
-                        GameManager.Instance.CardDeckReturnAnimation(_seasonTicket);
                         combineCard.GetComponent<Animator>().enabled = false;
 
                     }
@@ -166,7 +160,6 @@ public class CardBoard : MonoBehaviour,IDropHandler
             break;
         }
 
-        GameManager.Instance.CardDeckReturnAnimation(combineCard);
 
 
 
