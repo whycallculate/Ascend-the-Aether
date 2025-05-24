@@ -2,8 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using CardObjectCommon_Features;
+using GameDates;
+using Item;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 namespace Deck
@@ -11,6 +12,7 @@ namespace Deck
     public class DeckUIManager : MonoBehaviour
     {
         [SerializeField] private GameObject deckItemPositionPrefab;
+        [SerializeField] private GameDate gameDateScriptableObject;
         [SerializeField] private Transform deckItenPositionContent;
         [SerializeField] private Transform deckItemScrollRectContent;
         [SerializeField] private Button DeckBackReturnButton;
@@ -22,15 +24,15 @@ namespace Deck
         {
             for (int i = 0; i < deckItemPositionCount; i++)
             {
-                DeckItemPosition newItemPosition = Instantiate(deckItemPositionPrefab,deckItenPositionContent).GetComponent<DeckItemPosition>();
+                DeckItemPosition newItemPosition = Instantiate(deckItemPositionPrefab, deckItenPositionContent).GetComponent<DeckItemPosition>();
                 itemPositions.Add(newItemPosition);
-                newItemPosition.name = newItemPosition.name.Replace("_Prefab(Clone)","");
+                newItemPosition.name = newItemPosition.name.Replace("_Prefab(Clone)", "");
                 newItemPosition.name = newItemPosition.name + $" {i}";
             }
         }
-        
+
         //Bu durum da hata oluşabilir GameManager.Instance.Equipments listesi dolu olmadığı durumda bunu önüne geçilmeli.
-        
+        //Equipment olan objeleri oluşturmamizi ve oluşturulan objelerin button'larına method tanımlamamızı sağlıyor.
         public void DeckAllItemObject()
         {
             RectTransform content = deckItemScrollRectContent.GetComponent<RectTransform>();
@@ -42,40 +44,100 @@ namespace Deck
             for (int i = 0; i < GameManager.Instance.Equipments.Count; i++)
             {
                 GameObject item = GameManager.Instance.Equipments[i];
-                item.GetComponent<CardMovement>().enabled = false;
-                item.SetActive(true);
-                item.transform.SetParent(deckItemScrollRectContent);
+                ItemUI itemUI = item.GetComponent<ItemUI>();
+                itemUI.CloseItemUIActive();
+                if (item != null)
+                {
+                    B(item);
+                }
+            }
+            positionIndex=0;
+        
+        }
 
-                Button itemButton = item.GetComponent<Button>();
-                if(itemButton.onClick == null)
+        int positionIndex = 0;
+        private void B(GameObject card)
+        {
+            bool query = gameDateScriptableObject.DecCards.Contains(card.transform.name);
+            if(query)
+            {
+                if(positionIndex < itemPositions.Count)
+                {
+                    DeckItemPosition deckItemPosition = itemPositions[FindCardForDeckPositionIndex(card)];
+                    deckItemPosition.SetDeckItemPosition();
+
+                    card.SetActive(true);
+                    card.GetComponent<CardMovement>().enabled = false;
+                    RectTransform rectTransform = card.GetComponent<RectTransform>();
+                    
+                    card.transform.SetParent(deckItemPosition.transform);
+                    card.transform.position = deckItemPosition.transform.position;
+
+                    Button cardButton = card.GetComponent<Button>();
+                    card.transform.localPosition = Vector3.zero;
+                    cardButton.onClick.AddListener(()=>
+                    {
+                        if (deckItemPosition != null)
+                        {
+                            deckItemPosition.RemoveDeckItemPosition();
+                            cardButton.transform.SetParent(deckItemScrollRectContent);
+                            AddItemToDeck(cardButton);
+
+                        }
+                    });
+
+                    positionIndex++;
+                }
+                else
+                {
+                    card.SetActive(true);
+                    card.GetComponent<CardMovement>().enabled = false;
+                    card.transform.SetParent(deckItemScrollRectContent);
+                    Button cardButton = card.GetComponent<Button>();
+                    cardButton.onClick.AddListener(()=>
+                    {
+                        AddItemToDeck(cardButton);
+                    });
+                    cardButton.onClick.Invoke();
+                }
+
+            }
+            else
+            {
+                card.GetComponent<CardMovement>().enabled = false;
+                card.SetActive(true);
+                card.transform.SetParent(deckItemScrollRectContent);
+
+                Button itemButton = card.GetComponent<Button>();
+                if (itemButton.onClick == null)
                 {
                     itemButton.onClick = new Button.ButtonClickedEvent();
                 }
 
                 itemButton.onClick.RemoveAllListeners();
-                itemButton.onClick.AddListener(()=>
+                itemButton.onClick.AddListener(() =>
                 {
-                    if(itemPositions.Count > 0)
+                    if (itemPositions.Count > 0)
                     {
                         CardObjectCommonFeatures card = FindItemScriptType(itemButton.gameObject);
-                        
+
                         var tuple = DequeueDeckItemPosition();
                         DeckItemPosition deckItemPosition = tuple.Item2;
 
-                        if(tuple.Item1)
+                        if (tuple.Item1)
                         {
                             card.DeckPosition = deckItemPosition;
-                            
-                            if(deckItemPosition !=null)
+
+                            if (deckItemPosition != null)
                             {
-                                if(!deckItemPosition.IsPositionFull)
+                                if (!deckItemPosition.IsPositionFull)
                                 {
                                     deckItemPosition.SetDeckItemPosition();
                                     RectTransform itemReckTransform = itemButton.GetComponent<RectTransform>();
                                     itemReckTransform.sizeDelta = deckItemPosition.GetDeckItemPositionSizeDelta();
-                                    item.transform.SetParent(deckItemPosition.transform);
-                                    item.transform.position = deckItemPosition.transform.position;
-                                    OutItemButtonFromDeck(itemButton,deckItemPosition);
+                                    card.transform.SetParent(deckItemPosition.transform);
+                                    card.transform.position = deckItemPosition.transform.position;
+                                    OutItemButtonFromDeck(itemButton, deckItemPosition);
 
                                 }
 
@@ -86,14 +148,27 @@ namespace Deck
                 });
             }
         }
-        
+
+        public int FindCardForDeckPositionIndex(GameObject card)
+        {
+            for (int i = 0; i < gameDateScriptableObject.DecCards.Count; i++)
+            {
+                if(card.name == gameDateScriptableObject.DecCards[i])
+                {
+                    if(!itemPositions[i].IsPositionFull) return i;
+                }
+            }
+            return -1;
+        }
+
+
         private CardObjectCommonFeatures FindItemScriptType(GameObject item)
         {
             return GameManager.Instance.FindCardType(item);
         }
 
 
-        private void OutItemButtonFromDeck(Button itemButton,DeckItemPosition deckItemPosition)
+        private void OutItemButtonFromDeck(Button itemButton, DeckItemPosition deckItemPosition)
         {
             if (itemButton.onClick == null)
             {
@@ -101,7 +176,7 @@ namespace Deck
             }
 
             itemButton.onClick.RemoveAllListeners();
-            itemButton.onClick.AddListener(()=>
+            itemButton.onClick.AddListener(() =>
             {
                 if (deckItemPosition != null)
                 {
@@ -109,10 +184,6 @@ namespace Deck
                     {
                         deckItemPosition.RemoveDeckItemPosition();
                         itemButton.transform.SetParent(deckItemScrollRectContent);
-                        if(index > 0)
-                        {
-                            index--;
-                        }
                         AddItemToDeck(itemButton);
                     }
                 }
@@ -123,7 +194,7 @@ namespace Deck
         private void AddItemToDeck(Button itemButton)
         {
             ItemButtonReset(itemButton);
-            itemButton.onClick.AddListener(()=>
+            itemButton.onClick.AddListener(() =>
             {
                 var tuple = DequeueDeckItemPosition();
                 DeckItemPosition deckItemPosition = tuple.Item2;
@@ -146,12 +217,12 @@ namespace Deck
                     }
                 }
             });
-           
+
         }
 
         private void ItemButtonReset(Button itemButton)
         {
-            if(itemButton.onClick == null)
+            if (itemButton.onClick == null)
             {
                 itemButton.onClick = new Button.ButtonClickedEvent();
             }
@@ -159,54 +230,64 @@ namespace Deck
             itemButton.onClick.RemoveAllListeners();
         }
 
-        void Update()
-        {
-            if(Input.GetKeyDown(KeyCode.Space))
-            {
-                print(A());
-            }
-        }
+       
 
         public void DeckBackReturnButtonFunction()
         {
-            gameObject.SetActive(false);
-            foreach (DeckItemPosition item in itemPositions)
+            
+            for (int j = 0; j < itemPositions.Count; j++)
             {
-                if( item != null)
+               if (itemPositions[j] != null)
                 {
-                    if(item.transform.childCount > 0)
+                    if (itemPositions[j].transform.childCount > 0)
                     {
-                        item.transform.GetChild(0).transform.SetParent(UIManager.Instance.DectGameObject.transform);
-
+                        itemPositions[j].RemoveDeckItemPosition();
+                        GameObject card = itemPositions[j].transform.GetChild(0).gameObject;
+                        card.transform.SetParent(UIManager.Instance.DectGameObject.transform);
+                        card.transform.position = Vector3.zero;
+                        card.SetActive(false);
+                        gameDateScriptableObject.DecCards[j] = card.name; 
                     }
-                    Destroy(item.gameObject);
-                }
+                    Destroy(itemPositions[j].gameObject);
+                } 
             }
+
+            for (int i = 0; i < deckItemScrollRectContent.childCount; i++)
+            {
+                Transform card = deckItemScrollRectContent.transform.GetChild(i);
+                card.SetParent(UIManager.Instance.DectGameObject.transform);
+                card.gameObject.SetActive(false);
+            }
+
+            
+            positionIndex = 0;
             itemPositions.Clear();
+            gameObject.SetActive(false);
+
         }
 
 
-        public Tuple<bool,DeckItemPosition> DequeueDeckItemPosition()
+        public Tuple<bool, DeckItemPosition> DequeueDeckItemPosition()
         {
-            if(index < itemPositions.Count)
+            if (index < itemPositions.Count)
             {
-                DeckItemPosition deckItemPosition = A();
-                
-                return Tuple.Create(true,deckItemPosition);
+                DeckItemPosition deckItemPosition = SetAndFindNotFullDeckPosition();
+
+                return Tuple.Create(true, deckItemPosition);
             }
             else
             {
                 DeckItemPosition deckItemPosition = null;
-                return Tuple.Create(false,deckItemPosition);
+                return Tuple.Create(false, deckItemPosition);
             }
         }
 
-        private DeckItemPosition A()
+        private DeckItemPosition SetAndFindNotFullDeckPosition()
         {
             DeckItemPosition deckItemPosition = null;
             for (int i = 0; i < itemPositions.Count; i++)
             {
-                if(itemPositions[i].IsPositionFull) continue;
+                if (itemPositions[i].IsPositionFull) continue;
                 else
                 {
                     deckItemPosition = itemPositions[i];
@@ -216,42 +297,15 @@ namespace Deck
             return deckItemPosition;
         }
 
-        public void SetDeckItenPositionFull()
+        public bool ControlDeckPositionFull()
         {
-            /*
-            if(itemPositions.Dequeue() != null)
-            {
-                DeckItemPosition deckItemPosition = itemPositions.Dequeue();
-                if(deckItemPosition != null)
-                {
-                    if(!deckItemPosition.IsPositionFull)
-                    {
-                        
-                        deckItemPosition.SetDeckItemPosition();
-                    }
-                    else
-                    {
-                        print(deckItemPosition.name + " dolu");
-                    }
-
-                }
-
-            }
-            */
-        }
-
-        public void RemoveDeckItenPositionFull()
-        {
-            /*
             for (int i = 0; i < itemPositions.Count; i++)
             {
-                DeckItemPosition deckItemPosition = itemPositions.Dequeue();
-                deckItemPosition.RemoveDeckItemPosition();
+                if(itemPositions[i].IsPositionFull) return true;
             }
-            */
-        }
 
-       
+            return false;
+        }
 
     }
 

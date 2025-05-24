@@ -20,88 +20,92 @@ public class UIManager : MonoBehaviour
             return instance;
         }
     }
+
+    [SerializeField] private GraphicRaycaster graphicRaycaster;
+    public GraphicRaycaster GraphicRaycaster => graphicRaycaster;
+
     [SerializeField] private GameObject canvas;
     public GameObject Canvas { get { return canvas; } }
     [SerializeField] private GameObject dectGameObject;
     public GameObject DectGameObject { get { return dectGameObject; } }
 
     [SerializeField] private CharacterUI characterUI;
-    public CharacterUI CharacterUI { get { return characterUI; }  set { characterUI = value; } }
+    public CharacterUI CharacterUI { get { return characterUI; } set { characterUI = value; } }
 
     [SerializeField] private Transform earnedGameObject;
-    public Transform EarnedGameObject { get { return earnedGameObject;}}
-    
+    public Transform EarnedGameObject { get { return earnedGameObject; } }
+
     [SerializeField] private Transform[] earnedCardsPositions;
-    public Transform[] EarnedCardsPositions { get { return earnedCardsPositions; }}
+    public Transform[] EarnedCardsPositions { get { return earnedCardsPositions; } }
 
     public RectTransform[] cardPos;
     [SerializeField] private Button nextTourButton;
-    public Button NextTourButton { get { return nextTourButton;}}
+    public Button NextTourButton { get { return nextTourButton; } }
 
     [SerializeField] private TextMeshProUGUI energyNumber_Text;
-    public TextMeshProUGUI EnergyNumber_Text {get { return energyNumber_Text;}}
+    public TextMeshProUGUI EnergyNumber_Text { get { return energyNumber_Text; } }
 
     [SerializeField] private GameObject mapPrefab;
-    public GameObject MapPrefab { get { return mapPrefab;}}
+    public GameObject MapPrefab { get { return mapPrefab; } }
 
-    [SerializeField]private GameObject levelsPanel;
-    public GameObject LevelsPanel { get { return levelsPanel;}}
+    [SerializeField] private GameObject levelsPanel;
+    public GameObject LevelsPanel { get { return levelsPanel; } }
 
     [SerializeField] private GameObject cardUpgradePanel;
-    public GameObject CardUpgradePanel { get { return cardUpgradePanel;}}
+    public GameObject CardUpgradePanel { get { return cardUpgradePanel; } }
 
     [SerializeField] private GameObject cardUpgradeContent;
-    public GameObject CardUpgradeContent { get { return cardUpgradeContent;}}
+    public GameObject CardUpgradeContent { get { return cardUpgradeContent; } }
 
     [SerializeField] private GameObject cardsScroll;
-    public GameObject CardsScroll { get { return cardsScroll;}}
+    public GameObject CardsScroll { get { return cardsScroll; } }
 
     [SerializeField] private Transform equipments;
-    public Transform Equipments => equipments; 
+    public Transform Equipments => equipments;
 
 
     #region  Card Development Table UI
 
     #region  Card Feature Adjust UI
-    
-    [SerializeField]private List<CardFeatureControl> cardFeatureGameObjects = new List<CardFeatureControl>();
-    public List<CardFeatureControl> CardFeaturesGameObjects { get { return cardFeatureGameObjects;}}
+
+    [SerializeField] private List<CardFeatureControl> cardFeatureGameObjects = new List<CardFeatureControl>();
+    public List<CardFeatureControl> CardFeaturesGameObjects { get { return cardFeatureGameObjects; } }
 
     [SerializeField] private GameObject cardDevelopmentTable;
-    public GameObject CardDevelopmentTable { get { return cardDevelopmentTable;}}
+    public GameObject CardDevelopmentTable { get { return cardDevelopmentTable; } }
 
     [SerializeField] private Transform cardFeatureParent;
-    public Transform CardFeatureParent { get { return cardFeatureParent;}}
+    public Transform CardFeatureParent { get { return cardFeatureParent; } }
 
     [SerializeField] private GameObject cardFeaturePreafab;
-    public GameObject CardFeaturePreafab { get {return cardFeaturePreafab;}}
-    
+    public GameObject CardFeaturePreafab { get { return cardFeaturePreafab; } }
+
     [SerializeField] private Transform selectCardParent;
-    public Transform SelecetCardParent { get { return selectCardParent;}}
+    public Transform SelecetCardParent { get { return selectCardParent; } }
 
     [SerializeField] private Button cardUpdateButton;
-    public Button CardUpdateButton { get { return cardUpdateButton;}}
+    public Button CardUpdateButton { get { return cardUpdateButton; } }
 
     [SerializeField] private Button cardCancelButton;
-    
+
     #endregion
 
     #region  Card Features Show UI
 
     [SerializeField] private List<CardFeatureControl> cardFeaturesShowGameObjects = new List<CardFeatureControl>();
-    public List<CardFeatureControl> CardFeaturesShowGameObjects { get { return cardFeaturesShowGameObjects;}}
+    public List<CardFeatureControl> CardFeaturesShowGameObjects { get { return cardFeaturesShowGameObjects; } }
 
     [SerializeField] private CardFeatureControl cardFeatureShowPrefab;
-    public CardFeatureControl CardFeatureShowPrefab {get { return cardFeatureShowPrefab;}}
+    public CardFeatureControl CardFeatureShowPrefab { get { return cardFeatureShowPrefab; } }
 
     [SerializeField] private Transform cardFeatureShowParent;
-    public Transform CardFeatureShowParent{get { return cardFeatureShowParent;}}
+    public Transform CardFeatureShowParent { get { return cardFeatureShowParent; } }
 
 
     #endregion
 
     [SerializeField] private TextMeshProUGUI crystalCount_Text;
-    public TextMeshProUGUI CrystalCount_Text { get { return crystalCount_Text;}}
+    public TextMeshProUGUI CrystalCount_Text { get { return crystalCount_Text; } }
 
 
     #endregion
@@ -115,7 +119,7 @@ public class UIManager : MonoBehaviour
     public Transform LevelsContent { get { return levelsContent; } }
 
     [SerializeField] private Transform[] mapLevels;
-    public Transform[] MapLevels { get { return mapLevels;}}
+    public Transform[] MapLevels { get { return mapLevels; } }
 
 
     #endregion
@@ -124,7 +128,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private Button backReturnButton;
     [SerializeField] private Transform buyCardParent;
-    public Transform BuyCardParent { get { return buyCardParent;}}
+    public Transform BuyCardParent { get { return buyCardParent; } }
 
     #endregion
 
@@ -137,77 +141,94 @@ public class UIManager : MonoBehaviour
     public MarketManager MarketPanel { get { return marketPanel; } }
 
     [SerializeField] private GameObject marketIconButton;
-    public GameObject MarketIcon_Button { get { return marketIconButton;}}
+    public GameObject MarketIcon_Button { get { return marketIconButton; } }
     [SerializeField] private MarketUI marketUIManager;
     public MarketUI MarketUIManager => marketUIManager;
 
     public void MarketIconButton()
     {
         marketPanel.gameObject.SetActive(true);
-        
+
     }
-    
+
+    #endregion
+
+
+    #region  Deck
+    [Header("CardDeck UI")]
+    [SerializeField] private GameObject cardDeckPanel;
+    [SerializeField] private Image cardDeckIconImage;
+    #endregion
+
+    #region  War
+
+
+    [Header("War")]
+    [SerializeField] private GameObject[] CloseUIGameObjectsBeforeWar;
+
     #endregion
 
 
     #region Awake Start Update SetActiveUi
-   
-    private void Awake() 
+
+    private void Awake()
     {
+        graphicRaycaster = GetComponent<GraphicRaycaster>();
+
         levelsPanel = mapPrefab.transform.GetChild(0).gameObject;
         cardUpgradePanel = mapPrefab.transform.GetChild(1).gameObject;
         cardUpgradeContent = cardUpgradePanel.transform.GetChild(0).transform.GetChild(0).transform.GetChild(0).gameObject;
         cardsScroll = cardUpgradePanel.transform.GetChild(0).gameObject;
         cardDevelopmentTable = cardUpgradePanel.transform.GetChild(1).gameObject;
-        
 
-        if(levelsPanel.activeSelf)
+
+        if (levelsPanel.activeSelf)
         {
             crystalCount_Text.text = GameManager.Instance.CrystalCount.ToString();
         }
 
-        
+
     }
 
-    private void Start() 
+    private void Start()
     {
-        if(cardCancelButton != null)
+        if (cardCancelButton != null)
         {
             cardCancelButton.onClick.AddListener(CardFeatureCancelButtonFunction);
         }
-        if(cardUpdateButton != null)
+        if (cardUpdateButton != null)
         {
             cardUpdateButton.onClick.AddListener(CardFeatureUpdateButtonFunction);
         }
     }
 
-    
+
     //tanimli olan ui objelerini aktifleştilme veya aktifleştirilmemesini sağliyor
-    
+
     public void SetActiveUI(string panelName)
     {
-        levelsPanel.SetActive(panelName.Equals(levelsPanel.name) );
-        cardUpgradePanel.SetActive(panelName.Equals(cardUpgradePanel.name) || panelName.Equals(cardDevelopmentTable.name) ||panelName.Equals(cardsScroll.name));
+        levelsPanel.SetActive(panelName.Equals(levelsPanel.name));
+        cardUpgradePanel.SetActive(panelName.Equals(cardUpgradePanel.name) || panelName.Equals(cardDevelopmentTable.name) || panelName.Equals(cardsScroll.name));
         cardDevelopmentTable.SetActive(panelName.Equals(cardDevelopmentTable.name));
         cardsScroll.SetActive(panelName.Equals(cardsScroll.name));
 
-        if(cardUpgradePanel.activeSelf)
+        if (cardUpgradePanel.activeSelf)
         {
             for (int i = 0; i < GameManager.Instance.Cards.Count; i++)
             {
                 GameManager.Instance.Cards[i].transform.SetParent(cardUpgradeContent.transform);
                 GameManager.Instance.Cards[i].SetActive(true);
-                
+
             }
-            
-            
+
+
 
             backReturnButton.gameObject.SetActive(true);
-            
-        }
-        
 
-        if(levelsPanel.activeSelf)
+        }
+
+
+        if (levelsPanel.activeSelf)
         {
             backReturnButton.gameObject.SetActive(false);
 
@@ -226,7 +247,7 @@ public class UIManager : MonoBehaviour
 
     #region  Card
     private int result;
-    
+
     //Kartin ugrade buttonuna basınca etkileşimi sağliyan method
     public void CardFeatureUpdateButtonFunction()
     {
@@ -266,12 +287,12 @@ public class UIManager : MonoBehaviour
     //kart geliştirme buttonu
     public void CardFeatureValueUpdate(bool isUpgrade)
     {
-        if(isUpgrade)
+        if (isUpgrade)
         {
             for (int i = 0; i < cardFeatureGameObjects.Count; i++)
             {
                 cardFeatureGameObjects[i].Amount = cardFeatureGameObjects[i].CartFeatureValue;
-                cardFeatureGameObjects[i].CartFeatureValue =   cardFeatureGameObjects[i].Amount;
+                cardFeatureGameObjects[i].CartFeatureValue = cardFeatureGameObjects[i].Amount;
                 cardFeatureGameObjects[i].FirstCarFeatureValue = cardFeatureGameObjects[i].CartFeatureValue;
                 cardFeatureGameObjects[i].CardFeatureValue_Text.text = cardFeatureGameObjects[i].CartFeatureValue.ToString();
                 cardFeaturesShowGameObjects[i].CardFeatureValueShow_Text.text = cardFeatureGameObjects[i].CartFeatureValue.ToString();
@@ -282,7 +303,7 @@ public class UIManager : MonoBehaviour
             for (int i = 0; i < cardFeatureGameObjects.Count; i++)
             {
                 CardFeatureControl cardFeatureShowControl = cardFeaturesShowGameObjects[i];
-                int _cardFeatureNumber = int.Parse(cardFeatureShowControl.CardFeatureValueShow_Text.text );
+                int _cardFeatureNumber = int.Parse(cardFeatureShowControl.CardFeatureValueShow_Text.text);
                 CardFeatureControl cardFeatureControl = cardFeatureGameObjects[i];
                 cardFeatureControl.CartFeatureValue = _cardFeatureNumber;
                 cardFeatureControl.CardFeatureValue_Text.text = _cardFeatureNumber.ToString();
@@ -295,7 +316,7 @@ public class UIManager : MonoBehaviour
     //kart geliştirme olayında  butonlari tiklanilebilirliğini kapatiyor
     public void CardFeatureValueButtonClose(string closeObjectName)
     {
-        if(closeObjectName == "All")
+        if (closeObjectName == "All")
         {
             for (int i = 0; i < cardFeatureGameObjects.Count; i++)
             {
@@ -304,11 +325,11 @@ public class UIManager : MonoBehaviour
             }
             cardUpdateButton.interactable = false;
         }
-        else if(closeObjectName == "Upgrade")
+        else if (closeObjectName == "Upgrade")
         {
             cardUpdateButton.interactable = false;
         }
-        else if(closeObjectName == "Feature")
+        else if (closeObjectName == "Feature")
         {
             for (int i = 0; i < cardFeatureGameObjects.Count; i++)
             {
@@ -316,15 +337,15 @@ public class UIManager : MonoBehaviour
                 cardFeatureGameObjects[i].SubtractButton.interactable = false;
             }
         }
-        
+
     }
 
-    
+
 
     //kart geliştirme olayında cancel butonuna basınca etkileşimi sağliyor
     public void CardFeatureCancelButtonFunction()
     {
-        GameManager.Instance.CrystalCount = SaveSystem.DataExtraction("crystalCount",0);   
+        GameManager.Instance.CrystalCount = SaveSystem.DataExtraction("crystalCount", 0);
         for (int i = 0; i < cardFeatureGameObjects.Count; i++)
         {
             cardFeatureGameObjects[i].gameObject.SetActive(false);
@@ -339,57 +360,57 @@ public class UIManager : MonoBehaviour
 
         crystalCount_Text.text = GameManager.Instance.CrystalCount.ToString();
 
-    }   
+    }
 
     //kart'in özelliklerinin adini ve değerini gösteren prefab'i oluşturuyor
-    public void CreateCardFeatureShowGameObject(string cardFeatureName,int cardFeatureValue)
+    public void CreateCardFeatureShowGameObject(string cardFeatureName, int cardFeatureValue)
     {
-        CardFeatureControl newCardFeatureShow = Instantiate(cardFeatureShowPrefab,cardFeatureShowParent);
+        CardFeatureControl newCardFeatureShow = Instantiate(cardFeatureShowPrefab, cardFeatureShowParent);
         newCardFeatureShow.transform.localScale = Vector3.one;
-        newCardFeatureShow.CardFeatureShow(cardFeatureValue,true,cardFeatureName);
-        cardFeaturesShowGameObjects.Add(newCardFeatureShow); 
-        CreateCardFeatureGameObject(cardFeatureName,cardFeatureValue);
+        newCardFeatureShow.CardFeatureShow(cardFeatureValue, true, cardFeatureName);
+        cardFeaturesShowGameObjects.Add(newCardFeatureShow);
+        CreateCardFeatureGameObject(cardFeatureName, cardFeatureValue);
     }
 
 
     //kart özelliklerini artırıp azaltmamızı sağlıyan prefabi oluşturmamizi sağliyor    
-    public void CreateCardFeatureGameObject(string cardFeatureName,int cardFeatureValue)
+    public void CreateCardFeatureGameObject(string cardFeatureName, int cardFeatureValue)
     {
-        CardFeatureControl newCardFeatureGameObject = Instantiate(cardFeaturePreafab.GetComponent<CardFeatureControl>(),cardFeatureParent);
-        newCardFeatureGameObject.name = "Card"+cardFeatureName.ToUpper()+"Feature";
-        newCardFeatureGameObject.CardFeatureUIInitialize(cardFeatureName,cardFeatureValue);
+        CardFeatureControl newCardFeatureGameObject = Instantiate(cardFeaturePreafab.GetComponent<CardFeatureControl>(), cardFeatureParent);
+        newCardFeatureGameObject.name = "Card" + cardFeatureName.ToUpper() + "Feature";
+        newCardFeatureGameObject.CardFeatureUIInitialize(cardFeatureName, cardFeatureValue);
         cardFeatureGameObjects.Add(newCardFeatureGameObject);
     }
 
     #endregion
 
     #region 
-    
+
     //change level buttonuna basinca karakter caninin yenimlem buttonu için method
     public void CharacterHealtRenewal_Function()
     {
-        if(GameManager.Instance.character != null)
+        if (GameManager.Instance.character != null)
         {
             print("boş değil");
-            if(GameManager.Instance.character.currentHealt < 100)
+            if (GameManager.Instance.character.currentHealt < 100)
             {
                 print("100'den küçük");
-                double lifeValueAdd =GameManager.Instance.character.currentHealt * 0.25;    
-                if((lifeValueAdd + GameManager.Instance.character.currentHealt) < 100)
+                double lifeValueAdd = GameManager.Instance.character.currentHealt * 0.25;
+                if ((lifeValueAdd + GameManager.Instance.character.currentHealt) < 100)
                 {
-                    GameManager.Instance.CardCharacterInteraction("healtbar","+",Convert.ToInt32(lifeValueAdd));
+                    GameManager.Instance.CardCharacterInteraction("healtbar", "+", Convert.ToInt32(lifeValueAdd));
                     print("doğru hesap : " + lifeValueAdd);
                 }
-                else if( (lifeValueAdd + GameManager.Instance.character.currentHealt) >= 100)
+                else if ((lifeValueAdd + GameManager.Instance.character.currentHealt) >= 100)
                 {
-                    double subtract =0d;
+                    double subtract = 0d;
                     subtract = (GameManager.Instance.character.currentHealt + lifeValueAdd) - GameManager.Instance.character.currentHealt;
 
-                   
+
                     print(subtract);
-                    
-                    GameManager.Instance.CardCharacterInteraction("healtbar","+",Convert.ToInt32(subtract));
-                
+
+                    GameManager.Instance.CardCharacterInteraction("healtbar", "+", Convert.ToInt32(subtract));
+
                 }
                 print(GameManager.Instance.character.currentHealt);
             }
@@ -398,11 +419,11 @@ public class UIManager : MonoBehaviour
                 print("100'den küçük değil");
             }
         }
-        
+
         CardAndHealtButtonUIOpenOrClose(false);
-        
+
         GameManager.Instance.CharacterCurrentLevelIndex += GameManager.Instance.CurrentLevelIndex;
-        SaveSystem.DataSave("levelIndex",GameManager.Instance.CharacterCurrentLevelIndex);
+        SaveSystem.DataSave("levelIndex", GameManager.Instance.CharacterCurrentLevelIndex);
         GameManager.Instance.levelProgress(false);
     }
 
@@ -416,9 +437,9 @@ public class UIManager : MonoBehaviour
         CardAndHealtButtonUIOpenOrClose(false);
         SetActiveUI(cardsScroll.name);
         GameManager.Instance.CharacterCurrentLevelIndex += GameManager.Instance.CurrentLevelIndex;
-        SaveSystem.DataSave("levelIndex",GameManager.Instance.CharacterCurrentLevelIndex);
+        SaveSystem.DataSave("levelIndex", GameManager.Instance.CharacterCurrentLevelIndex);
         GameManager.Instance.levelProgress(false);
-         GameManager.Instance.PrepareCardsForUpgrade();
+        GameManager.Instance.PrepareCardsForUpgrade();
     }
 
     //kart geliştirme ve can yenileme buttonlarini aktifleştirmek veya aktif dişi bırakmamizi sağliyan method
@@ -426,7 +447,7 @@ public class UIManager : MonoBehaviour
     {
         cardDevelopmenButton.gameObject.SetActive(openOrClose);
         characterHealtRenewalButton.gameObject.SetActive(openOrClose);
-        
+
     }
 
     //geri dönme buttonu kazandiğimiz kartları gösterilen yerde kullanılıyor
@@ -445,9 +466,8 @@ public class UIManager : MonoBehaviour
 
 
     #region  CardDeck UI and Functions
-    [Header("CardDeck UI")]
-    [SerializeField] private GameObject cardDeckPanel;
     
+
     public void CardDeckButtonFunction()
     {
         cardDeckPanel.SetActive(true);
@@ -456,5 +476,19 @@ public class UIManager : MonoBehaviour
 
 
     #endregion
-   
+
+
+    #region  Savaş başlamadan önce yapilicak işlemlerin methodlari
+
+    public void StartWarUIClose()
+    {
+        foreach (GameObject item in CloseUIGameObjectsBeforeWar)
+        {
+            item.SetActive(false);
+        }
+    }
+
+    #endregion
+
+
 }

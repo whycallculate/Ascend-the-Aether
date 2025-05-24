@@ -1052,10 +1052,9 @@ GameObject:
   - component: {fileID: 7864681293787401865}
   - component: {fileID: 8685910503031301816}
   - component: {fileID: 4035376992093245682}
-  - component: {fileID: 8485603702786290987}
-  - component: {fileID: 171868029107251137}
   - component: {fileID: 357023226242328133}
   - component: {fileID: 2194526014784846592}
+  - component: {fileID: 3316839190421962617}
   m_Layer: 5
   m_Name: Card
   m_TagString: Untagged
@@ -1103,7 +1102,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6602198251127517691}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -1142,6 +1141,11 @@ MonoBehaviour:
   cardNameText: {fileID: 19978801000743354}
   cardDescription: {fileID: 373732228383219899}
   energyNumber_Text: {fileID: 7492376515684132507}
+  chieldGameObjects:
+  - {fileID: 1247918721360013968}
+  - {fileID: 961816428278341269}
+  - {fileID: 1769953289693768636}
+  - {fileID: 4771359831516989058}
 --- !u!114 &4035376992093245682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1186,39 +1190,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!225 &8485603702786290987
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6602198251127517691}
-  m_Enabled: 0
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
---- !u!95 &171868029107251137
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6602198251127517691}
-  m_Enabled: 0
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 3036841534a9f434298e84d208247bc0, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &357023226242328133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1248,6 +1219,20 @@ MonoBehaviour:
   itemNameText: {fileID: 1374725461857720616}
   itemPriceText: {fileID: 706567660707525046}
   itemClickUI: {fileID: 1118840463037185290}
+--- !u!114 &3316839190421962617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6602198251127517691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9a80458867d4e640b198edfa55fbfb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cardAnimationControl: {fileID: 0}
+  canvas: {fileID: 0}
 --- !u!1 &8939380549784655113
 GameObject:
   m_ObjectHideFlags: 0

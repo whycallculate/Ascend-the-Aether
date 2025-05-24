@@ -9,6 +9,8 @@ namespace GameDates
     {
         [SerializeField] private List<string> deckCards = new List<string>();
         public List<string> DecCards { get { return deckCards; } }
+        [SerializeField] private List<string> buyItems = new List<string>();
+        public List<string> BuyItems => buyItems;
 
     }
 }

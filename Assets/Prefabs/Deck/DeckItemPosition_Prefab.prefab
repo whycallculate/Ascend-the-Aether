@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6499417626159784832}
   - component: {fileID: 2802790768456544071}
   - component: {fileID: -3564830659777035084}
+  - component: {fileID: -6497823837460211425}
   m_Layer: 5
   m_Name: DeckItemPosition_Prefab
   m_TagString: Untagged
@@ -88,3 +89,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac6f1190161f2524f8f1716fc9edf78f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPositionFull: 0
+--- !u!114 &-6497823837460211425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5839892340372458782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 1
+  m_ChildControlHeight: 1
+  m_ChildScaleWidth: 1
+  m_ChildScaleHeight: 1
+  m_ReverseArrangement: 0

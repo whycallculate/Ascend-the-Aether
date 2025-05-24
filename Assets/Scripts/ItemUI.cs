@@ -14,13 +14,22 @@ namespace Item
     
         public void SetActiveItemUI(bool active,string itemName,int itemPrice)
         {
-            itemNameText.gameObject.SetActive(active);
-            itemPriceText.gameObject.SetActive(active);
+            if(itemName != "" && itemName != null && itemPrice != 0 && itemPrice > 0 )
+            {
+                itemNameText.gameObject.SetActive(active);
+                itemPriceText.gameObject.SetActive(active);
+            }
             if(active)
             {
                 SetItemName(itemName);
                 SetItemPrice(itemPrice);
             }
+        }
+        public void CloseItemUIActive()
+        {
+            itemNameText.gameObject.SetActive(false);
+            itemPriceText.gameObject.SetActive(false);
+            itemClickUI.gameObject.SetActive(false);
         }
 
         public void SetItemName(string itemName)

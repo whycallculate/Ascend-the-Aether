@@ -5,19 +5,16 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 public class CardMovement : MonoBehaviour,IPointerDownHandler,IBeginDragHandler,IEndDragHandler,IDragHandler,IPointerEnterHandler,IPointerExitHandler,IDropHandler
-{   
+{
+    [SerializeField] private CardAnimationControl cardAnimationControl;
     private CardTypeEnum cardType;
     public CardTypeEnum CardType {get {return cardType;} set {cardType = value;} }
     private CardLegendaryEnum[] combineCardLegendary;
     public CardLegendaryEnum[] CombineCardLengendary { get { return combineCardLegendary; } set { combineCardLegendary = value;}}
     [SerializeField] private Canvas canvas;
     private RectTransform rectTransform;
-
-    private RectTransform startParent;
     
     private Button cardButton;
-
-    public CanvasGroup canvasGroup;
 
 
     private void Awake()
@@ -25,6 +22,7 @@ public class CardMovement : MonoBehaviour,IPointerDownHandler,IBeginDragHandler,
         rectTransform = GetComponent<RectTransform>();
         cardButton = GetComponent<Button>();
         canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
+        if (cardAnimationControl == null) cardAnimationControl = GetComponent<CardAnimationControl>(); 
     }
     
 
@@ -40,14 +38,15 @@ public class CardMovement : MonoBehaviour,IPointerDownHandler,IBeginDragHandler,
 
     public void OnDrag(PointerEventData eventData)
     {
+
         eventData.pointerDrag.transform.localScale = Vector3.one;
-        eventData.pointerDrag.GetComponent<Animator>().enabled = false;
 
         if(GameManager.Instance.enemy != null)
         {
             if (cardButton.interactable)
             {
-                rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
+                cardAnimationControl.IsStartAnimation = true;
+                transform.position = Input.mousePosition;
             }
             
         }
@@ -66,23 +65,12 @@ public class CardMovement : MonoBehaviour,IPointerDownHandler,IBeginDragHandler,
     
     public void OnPointerEnter(PointerEventData eventData)
     {
-        /*
-        if(eventData.pointerEnter.GetComponent<CardUI>() != null)
-        {
-            GameManager.Instance.CardSelectedBeginAnimation(eventData.pointerEnter);
-        }
-        */
+        
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        /*
-        if(eventData.pointerEnter.GetComponent<CardUI>() != null)
-        {
-
-            GameManager.Instance.CardSelectedLeftAnimation(eventData.pointerEnter);
-        }
-        */
+        
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -92,11 +80,13 @@ public class CardMovement : MonoBehaviour,IPointerDownHandler,IBeginDragHandler,
             return;
         }
 
-        if(!eventData.pointerEnter.CompareTag("CardBoard"))
+        if (!eventData.pointerEnter.CompareTag("CardBoard"))
         {
             GameObject card = eventData.pointerDrag;
             CardBackPositionMove(ref card);
         }
+       
+        
     }
 
     

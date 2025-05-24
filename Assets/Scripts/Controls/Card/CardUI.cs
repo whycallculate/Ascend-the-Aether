@@ -9,17 +9,19 @@ public class CardUI : MonoBehaviour
     #region  card ui
 
     [SerializeField] private Image cardImage;
-    public Image CardImage { get { return cardImage; }}
+    public Image CardImage { get { return cardImage; } }
     [SerializeField] private TextMeshProUGUI cardNameText;
     public TextMeshProUGUI CardNameText { get { return cardNameText; } }
     [SerializeField] private TextMeshProUGUI cardDescription;
-    public TextMeshProUGUI CardDescription { get { return cardDescription; }}
+    public TextMeshProUGUI CardDescription { get { return cardDescription; } }
     [SerializeField] private TextMeshProUGUI energyNumber_Text;
-    public TextMeshProUGUI EnergyNumber_Text { get { return energyNumber_Text;} set { energyNumber_Text = value; }}
+    public TextMeshProUGUI EnergyNumber_Text { get { return energyNumber_Text; } set { energyNumber_Text = value; } }
+
+    [SerializeField] private GameObject[] chieldGameObjects;
 
     #endregion
 
-    public void CardUIInitialize(Sprite cardSprite,string cardName,string _cardDescription,int cardEnery)
+    public void CardUIInitialize(Sprite cardSprite, string cardName, string _cardDescription, int cardEnery)
     {
         cardImage.sprite = cardSprite;
         cardNameText.text = cardName;
@@ -29,7 +31,7 @@ public class CardUI : MonoBehaviour
 
     public void CardUpgradeInitialize(int cardEnery)
     {
-        if(energyNumber_Text != null)
+        if (energyNumber_Text != null)
         {
             energyNumber_Text.text = cardEnery.ToString();
         }
@@ -45,15 +47,15 @@ public class CardUI : MonoBehaviour
         GetComponent<Animator>().enabled = false;
         gameObject.SetActive(false);
 
-        if(GameManager.Instance.DeadEnemyCount == GameManager.Instance.enemys.Count)
+        if (GameManager.Instance.DeadEnemyCount == GameManager.Instance.enemys.Count)
         {
-            if(GameManager.Instance.FinishLevel)
+            if (GameManager.Instance.FinishLevel)
             {
-                GameManager.Instance.WhatOfKindCharacter(2,4);
+                GameManager.Instance.WhatOfKindCharacter(2, 4);
             }
-            else if(!GameManager.Instance.FinishLevel)
+            else if (!GameManager.Instance.FinishLevel)
             {
-                GameManager.Instance.WhatOfKindCharacter(2,3);
+                GameManager.Instance.WhatOfKindCharacter(2, 3);
 
             }
         }
@@ -63,10 +65,28 @@ public class CardUI : MonoBehaviour
     {
         for (int i = 0; i < GameManager.Instance.hand.Count; i++)
         {
-            if(GameManager.Instance.hand[i].gameObject.name != gameObject.name)
+            if (GameManager.Instance.hand[i].gameObject.name != gameObject.name)
             {
-                GameManager.Instance.hand[i].GetComponent<Animator>().enabled = false;  
+                GameManager.Instance.hand[i].GetComponent<Animator>().enabled = false;
             }
+        }
+    }
+
+    public virtual void ChieldUIElementClose()
+    {
+        GetComponent<Image>().enabled = false;
+        for (int i = 0; i < chieldGameObjects.Length; i++)
+        {
+            chieldGameObjects[i].SetActive(false);
+        }
+    }
+
+    public virtual void ChieldUIElementOpen()
+    {
+        GetComponent<Image>().enabled = true;
+        for (int i = 0; i < chieldGameObjects.Length; i++)
+        {
+            chieldGameObjects[i].SetActive(true);
         }
     }
 }

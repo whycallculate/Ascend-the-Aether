@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using GameDates;
 using Item;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,6 +11,8 @@ namespace Market
     {
         [SerializeField] private GameObject bagPanel;
         [SerializeField] private GameObject shopPanel;
+
+        [SerializeField] private GameDate gameDateScriptableObject;
 
         [SerializeField] private Transform shopItemContent;
         [SerializeField] private Transform bagItemContent;
@@ -47,7 +50,7 @@ namespace Market
             SetRefreshButtonActive(active);
 
             SetBuyButtonInteractable(false);
-            
+
         }
 
         //Bag butonuna tıkladıktan sonra bag sayfasının açılıp içerisinde ki item'ları ayarlayan method.
@@ -55,8 +58,9 @@ namespace Market
         {
             bool active = bagPanel.activeSelf == true ? false : true;
             MarketManager.Instance.MarketItemAdjustment.ShopItemsReset();
+
             ItemClickValueReset();
-            
+
             SetActiveBagPanel(active);
             SetActiveShopPanel(false);
             MarketManager.Instance.MarketItemAdjustment.BagItemAdjusment(bagItemContent);
@@ -65,30 +69,30 @@ namespace Market
             SetRefreshButtonActive(false);
 
             SetSellButtonInteractable(false);
-            
+            ItemInformationOpen();
         }
 
         private void ItemClickValueReset()
         {
-            if(shopPanel.gameObject.activeSelf)
+            if (shopPanel.gameObject.activeSelf)
             {
                 for (int i = 0; i < MarketManager.Instance.ShopItems.Count; i++)
                 {
-                    ItemController shopItemController =  MarketManager.Instance.ShopItems[i].GetComponent<ItemController>();
+                    ItemController shopItemController = MarketManager.Instance.ShopItems[i].GetComponent<ItemController>();
                     shopItemController.ItemClickAdjust(false);
-                    ItemUI shopItemUI =  shopItemController.GetComponent<ItemUI>();
+                    ItemUI shopItemUI = shopItemController.GetComponent<ItemUI>();
                     shopItemUI.SetItemClickUI(false);
                 }
             }
-            else if(bagPanel.gameObject.activeSelf)
+            else if (bagPanel.gameObject.activeSelf)
             {
                 for (int i = 0; i < MarketManager.Instance.BagEquipments.Count; i++)
                 {
-                    if(MarketManager.Instance.BagEquipments[i] != null)
+                    if (MarketManager.Instance.BagEquipments[i] != null)
                     {
                         ItemController bagEquipments = MarketManager.Instance.BagEquipments[i].GetComponent<ItemController>();
                         bagEquipments.ItemClickAdjust(false);
-                        ItemUI bagItemUI =  bagEquipments.GetComponent<ItemUI>();
+                        ItemUI bagItemUI = bagEquipments.GetComponent<ItemUI>();
                         bagItemUI.SetItemClickUI(false);
                     }
                 }
@@ -99,11 +103,11 @@ namespace Market
 
         public void TransactionButtonUIControl(bool value)
         {
-            if(shopPanel.activeSelf)
+            if (shopPanel.activeSelf)
             {
                 SetBuyButtonInteractable(value);
             }
-            else if(bagPanel.activeSelf)
+            else if (bagPanel.activeSelf)
             {
                 SetSellButtonInteractable(value);
             }
@@ -116,7 +120,7 @@ namespace Market
 
         public void SetSellButtonInteractable(bool interactable)
         {
-            sellButton.interactable  = interactable;
+            sellButton.interactable = interactable;
         }
 
         public void SetBuyButtonActive(bool active)
@@ -126,7 +130,7 @@ namespace Market
 
         public void SetBuyButtonInteractable(bool interactable)
         {
-            buyButton.interactable  = interactable;
+            buyButton.interactable = interactable;
         }
 
 
@@ -137,13 +141,13 @@ namespace Market
 
         public void SellButtonFunction()
         {
-            
-            if(MarketManager.Instance.BagEquipments.Count > 0)
+
+            if (MarketManager.Instance.BagEquipments.Count > 0)
             {
                 int result = 0;
                 for (int i = 0; i < MarketManager.Instance.BagEquipments.Count; i++)
                 {
-                    if(MarketManager.Instance.BagEquipments[i].GetComponent<ItemController>() != null)
+                    if (MarketManager.Instance.BagEquipments[i].GetComponent<ItemController>() != null)
                     {
                         ItemController itemController = MarketManager.Instance.BagEquipments[i].GetComponent<ItemController>();
                         Destroy(itemController.gameObject);
@@ -165,7 +169,7 @@ namespace Market
         {
             int itemsPrice = ItemPriceCalculation();
             bool isBuy = GameManager.Instance.CrystalCount > itemsPrice;
-            if(isBuy)
+            if (isBuy)
             {
                 ItemProperyAdjusting();
                 GameManager.Instance.CrystalCoinLose(itemsPrice);
@@ -175,7 +179,7 @@ namespace Market
                 print("satin alma başarisiz");
             }
 
-            
+
         }
 
         private int ItemPriceCalculation()
@@ -183,7 +187,7 @@ namespace Market
             int price = 0;
             for (int i = 0; i < MarketManager.Instance.ShopItems.Count; i++)
             {
-                ItemController itemController =MarketManager.Instance.ShopItems[i].GetComponent<ItemController>();
+                ItemController itemController = MarketManager.Instance.ShopItems[i].GetComponent<ItemController>();
                 price += itemController.ItemPrice;
             }
             return price;
@@ -193,11 +197,13 @@ namespace Market
         {
             for (int i = 0; i < MarketManager.Instance.ShopItems.Count; i++)
             {
-                ItemController itemController =MarketManager.Instance.ShopItems[i].GetComponent<ItemController>();
-                itemController.SetItemPosition(Vector3.zero,UIManager.Instance.BuyCardParent);
-                itemController.BuyItemUIClose();         
-                itemController.SetItemActive(false);     
-                AddBuyItemEquipmets(itemController);  
+                MarketManager.Instance.Shop.Remove(MarketManager.Instance.ShopItems[i].gameObject);
+                GameManager.Instance.Equipments.Add(MarketManager.Instance.ShopItems[i].gameObject);
+                ItemController itemController = MarketManager.Instance.ShopItems[i].GetComponent<ItemController>();
+                itemController.SetItemPosition(Vector3.zero, UIManager.Instance.BuyCardParent);
+                itemController.BuyItemUIClose();
+                itemController.SetItemActive(false);
+                AddBuyItemEquipmets(itemController);
                 MarketManager.Instance.BuyItemSave();
             }
 
@@ -215,7 +221,7 @@ namespace Market
         public string MarketPanelNameControl()
         {
             return shopPanel.activeSelf ? "Shop" : "Bag";
-            
+
         }
 
         //market de ki refresh butonu için bu fonksiyon çalışınca shop da ki item nesneleri yenileniyor.
@@ -227,34 +233,76 @@ namespace Market
             MarketManager.Instance.MarketItemAdjustment.ShopItemsReset();
             MarketManager.Instance.MarketItemAdjustment.ShopItemResfresh(shopItemContent);
         }
-    
+
         public void MarketBacReturn()
         {
             MarketManager.Instance.MarketItemAdjustment.ShopItemsReset();
-            //gameObject.SetActive(false);
 
-            for (int i = 0; i < MarketManager.Instance.Shop.Count; i++)
-            {
-                Destroy(MarketManager.Instance.Shop[i].gameObject);
-            }
+            DestroyCreatedItemForShopPanel();
 
 
-            for (int i = 0; i < GameManager.Instance.Equipments.Count; i++)
-            {
-                GameObject equipments = GameManager.Instance.Equipments[i].gameObject;
-                equipments.SetActive(false);
-                equipments.transform.position = Vector2.zero;
-                equipments.transform.SetParent(UIManager.Instance.Equipments);
-            }
-            
+            CloseItemControl();
 
             MarketManager.Instance.Shop.Clear();
             MarketManager.Instance.BagEquipments.Clear();
 
+            SetMarketElementActive(false);
+            ItemInformationClose();
             gameObject.SetActive(false);
-            
+
         }
 
+        public void SetMarketElementActive(bool value)
+        {
+            shopPanel.SetActive(value);
+            bagPanel.SetActive(value);
+            sellButton.gameObject.SetActive(value);
+            buyButton.gameObject.SetActive(value);
+            refreshButton.gameObject.SetActive(value);
+        }
+
+        //Marketde bag sayfasında ki item ekipman objelerinin item adini ve item fiyatı aktif etmemizi sağliyor.
+        public void ItemInformationOpen()
+        {
+            for (int i = 0; i < GameManager.Instance.Equipments.Count; i++)
+            {
+                ItemController item = GameManager.Instance.Equipments[i].GetComponent<ItemController>();
+                ItemUI itemUI = GameManager.Instance.Equipments[i].GetComponent<ItemUI>();
+                itemUI.SetActiveItemUI(true, item.gameObject.name, item.ItemPrice);
+            }
+        }
+
+        //Marketde bag sayfasında ki item ekipman objelerinin item adini ve item fiyatı pasif etmemizi sağliyor.
+        public void ItemInformationClose()
+        {
+            for (int i = 0; i < GameManager.Instance.Equipments.Count; i++)
+            {
+                ItemUI itemUI = GameManager.Instance.Equipments[i].GetComponent<ItemUI>();
+                itemUI.CloseItemUIActive();
+            }
+        }
+
+        public void DestroyCreatedItemForShopPanel()
+        {
+            for (int i = 0; i < MarketManager.Instance.Shop.Count; i++)
+            {
+                Destroy(MarketManager.Instance.Shop[i].gameObject);
+            }
+        }
+
+        public void CloseItemControl()
+        {
+            for (int i = 0; i < GameManager.Instance.Equipments.Count; i++)
+            {
+                GameObject equipments = GameManager.Instance.Equipments[i].gameObject;
+                ItemUI itemUI = GameManager.Instance.Equipments[i].GetComponent<ItemUI>();
+                itemUI.SetItemClickUI(false);
+                equipments.transform.position = Vector2.zero;
+                equipments.transform.SetParent(UIManager.Instance.Equipments);
+                equipments.SetActive(false);
+
+            }
+        }
 
     }
 

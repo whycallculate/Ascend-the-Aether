@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Game Dates
   m_EditorClassIdentifier: 
   deckCards:
-  - Attack_4
+  - Attack_5
+  - Ability_3
+  - Strengh_2
   - Attack_1
-  - Defence_3
-  - Ability_1
-  - Strengh_1
-  - Defence_1
+  - Ability_3
+  - Attack_1
+  buyItems: []

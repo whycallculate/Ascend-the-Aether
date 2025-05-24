@@ -390,6 +390,11 @@ MonoBehaviour:
   cardNameText: {fileID: 5421168617562260671}
   cardDescription: {fileID: 2146803146077863676}
   energyNumber_Text: {fileID: 7443380924829842802}
+  chieldGameObjects:
+  - {fileID: 3731775832850131847}
+  - {fileID: 7331337772041918347}
+  - {fileID: 4458377426479993114}
+  - {fileID: 5547228760245522139}
 --- !u!114 &7184015179532494204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -471,8 +476,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9a80458867d4e640b198edfa55fbfb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardAnimationControl: {fileID: 0}
   canvas: {fileID: 0}
-  canvasGroup: {fileID: 0}
 --- !u!225 &1225687716178400377
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -547,8 +552,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2edfa9114a621ee4abdbfcb4a32d5787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveTargetPositions: []
-  cardAnimation_Controller: {fileID: 0}
+  isStartAnimation: 1
 --- !u!1 &4458377426479993114
 GameObject:
   m_ObjectHideFlags: 0

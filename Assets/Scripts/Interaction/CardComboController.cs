@@ -1,29 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
+using CardAnimationPositions;
 using UnityEngine;
 
 public class CardComboController 
 {
-    public void AttackCardCombo()
+    public void AttackCardCombo(CardAnimationPositionData cardAnimationPositionData, CardAnimationControl card)
     {
-        GameManager.Instance.enemy.EnemyAI.TakeShield(10);
-        GameManager.Instance.enemy.EnemyAI.TakeDamage(10);
+        card.CardReturnMovementAnimation(cardAnimationPositionData);
     }
 
-    public void DefenceCardCombo()
+    public void DefenceCardCombo(CardAnimationPositionData cardAnimationPositionData, CardAnimationControl card)
     {
-        Debug.Log("Defence combo");
+        card.CardReturnMovementAnimation(cardAnimationPositionData);
     }
 
-    public void AbilityCardCombo()
+    public void AbilityCardCombo(CardAnimationPositionData cardAnimationPositionData, CardAnimationControl card)
     {
 
-        Debug.Log("Ability combo");
+        card.CardReturnMovementAnimation(cardAnimationPositionData);
     }
 
-    public void StrenghCardCombo()
+    public void StrenghCardCombo(CardAnimationPositionData cardAnimationPositionData, CardAnimationControl card)
     {
-        Debug.Log("Strengh combo");
+        card.CardReturnMovementAnimation(cardAnimationPositionData);
     }
 
 }

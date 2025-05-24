@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 
 public class InteractionAreaControl : MonoBehaviour,IDropHandler
 {
+    [SerializeField]private CardAnimationController cardAnimationController;
     private CardTypeControl cardTypeControl;
     private CardComboController cardComboController;
     private CardInteractionControl cardInteractionControl;
@@ -16,11 +17,13 @@ public class InteractionAreaControl : MonoBehaviour,IDropHandler
         if (cardTypeControl == null)
             cardTypeControl = new CardTypeControl();
 
-        if(cardComboController == null)
+        if (cardComboController == null)
             cardComboController = new CardComboController();
 
-        if(cardInteractionControl == null)
+        if (cardInteractionControl == null)
             cardInteractionControl = new CardInteractionControl();
+
+        if (cardAnimationController == null) cardAnimationController = GameObject.FindWithTag("CardAnimationController").GetComponent<CardAnimationController>();
     
     }
 
@@ -28,8 +31,11 @@ public class InteractionAreaControl : MonoBehaviour,IDropHandler
     public void OnDrop(PointerEventData eventData)
     {
         var tuple = cardTypeControl.FindCardType(eventData.pointerDrag);
-        
+        eventData.pointerDrag.transform.SetParent(transform);
         TupleValueControl(tuple);
+        List<RaycastResult> raycastResults = new List<RaycastResult>();
+
+        UIManager.Instance.GraphicRaycaster.Raycast(eventData, raycastResults);
 
 
     }
@@ -45,11 +51,11 @@ public class InteractionAreaControl : MonoBehaviour,IDropHandler
                 
                 if(value)
                 {
-                    cardComboController.AttackCardCombo();
+                    cardComboController.AttackCardCombo(cardAnimationController.CardAnimationPositionControllers.CardReturnPositionDates[0],tuple.Item1.GetComponent<CardAnimationControl>());
                 } 
                 else
                 {
-                    cardInteractionControl.AttackCardInteraction();
+                    cardInteractionControl.AttackCardInteraction(cardAnimationController.CardAnimationPositionControllers.CardReturnPositionDates[0],tuple.Item1.GetComponent<CardAnimationControl>());
                 }
 
                 return value;
@@ -60,11 +66,11 @@ public class InteractionAreaControl : MonoBehaviour,IDropHandler
                 
                 if(value)
                 {
-                    cardComboController.DefenceCardCombo();
+                    cardComboController.DefenceCardCombo(cardAnimationController.CardAnimationPositionControllers.CardReturnPositionDates[0],tuple.Item2.GetComponent<CardAnimationControl>());
                 } 
                 else
                 {
-                    cardInteractionControl.DefenceCardInteraction();
+                    cardInteractionControl.DefenceCardInteraction(cardAnimationController.CardAnimationPositionControllers.CardReturnPositionDates[0],tuple.Item2.GetComponent<CardAnimationControl>());
                 }
                 return value;
             }
@@ -74,11 +80,11 @@ public class InteractionAreaControl : MonoBehaviour,IDropHandler
                 
                 if(value)
                 {
-                    cardComboController.AbilityCardCombo();
+                    cardComboController.AbilityCardCombo(cardAnimationController.CardAnimationPositionControllers.CardReturnPositionDates[0],tuple.Item3.GetComponent<CardAnimationControl>());
                 } 
                 else
                 {
-                    cardInteractionControl.AbilityCardInteraction();
+                    cardInteractionControl.AbilityCardInteraction(cardAnimationController.CardAnimationPositionControllers.CardReturnPositionDates[0],tuple.Item3.GetComponent<CardAnimationControl>());
                 }
                 return value;
             }
@@ -88,11 +94,11 @@ public class InteractionAreaControl : MonoBehaviour,IDropHandler
                 
                 if(value)
                 {
-                    cardComboController.StrenghCardCombo();
+                    cardComboController.StrenghCardCombo(cardAnimationController.CardAnimationPositionControllers.CardReturnPositionDates[0],tuple.Item4.GetComponent<CardAnimationControl>());
                 } 
                 else
                 {
-                    cardInteractionControl.StrenghCardInteraction();
+                    cardInteractionControl.StrenghCardInteraction(cardAnimationController.CardAnimationPositionControllers.CardReturnPositionDates[0],tuple.Item4.GetComponent<CardAnimationControl>());
                 }
                 return value;
             }

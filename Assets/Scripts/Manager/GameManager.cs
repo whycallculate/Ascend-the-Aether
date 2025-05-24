@@ -9,6 +9,7 @@ using LevelTypeEnums;
 using Products;
 using GameDates;
 using CardObjectCommon_Features;
+using Item;
 public class GameManager : MonoBehaviour
 {
     #region skeleton
@@ -101,6 +102,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private List<string> cardsName = new List<string>();
     public List<string> CardsName {get {return cardsName;}}
+
+    [SerializeField] private GameObject itemStartPosition;
     
     private bool cardCombineStart = false;
     public bool CardCombineStart {get {return cardCombineStart;} set {cardCombineStart = value;}}
@@ -171,7 +174,7 @@ public class GameManager : MonoBehaviour
         
     }
 
-    
+
     #region Start And Update Function
 
     private void Start()
@@ -182,11 +185,18 @@ public class GameManager : MonoBehaviour
 
         CreateBuyItem();
 
+        for (int i = 0; i < equipments.Count; i++)
+        {
+            equipments[i].GetComponent<ItemUI>().CloseItemUIActive();
+        }
+
+        
+
+
         
     }
 
-    [SerializeField] private CardAnimationControl card;
-
+    [SerializeField] private int index;
 
     private void Update() 
     {
@@ -201,6 +211,15 @@ public class GameManager : MonoBehaviour
                 if(hit.collider.gameObject.GetComponent<EnemyController>() != null)
                 {
                     enemy = hit.collider.gameObject.GetComponent<EnemyController>();
+
+                    if (enemy != null)
+                    {
+                        foreach (var card in hand)
+                        {
+                            card.GetComponent<Button>().interactable = true;
+                        }
+                    }
+
                     UIManager.Instance.NextTourButton.interactable = true;
                     
                     SelectableCard(false);
@@ -223,9 +242,9 @@ public class GameManager : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.Space))
         {
-
-            cardAnimation_Controller.cardReturnMovementAnimation(card,0,45);
-           
+            //CrystalCoinWin(20000);
+            //cardAnimation_Controller.cardReturnMovementAnimation(card,0,45);
+            cardAnimation_Controller.CardMovementAnimationControlFunction();
         }
 
     }
@@ -263,7 +282,7 @@ public class GameManager : MonoBehaviour
             if (resourcesCard != null)
             {
                 GameObject _object = Instantiate(resourcesCard, UIManager.Instance.EarnedGameObject.transform);
-                _object.AddComponent<ProductControl>().gameObject.GetComponent<ProductControl>().ProductEnum = ProductEnum.Earned;
+                //_object.AddComponent<ProductControl>().gameObject.GetComponent<ProductControl>().ProductEnum = ProductEnum.Earned;
                 
                 _object.name = earnedCardsNames[i].Split("/")[3];
                 _object.transform.localScale = Vector3.one;
@@ -275,7 +294,7 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < UIManager.Instance.DectGameObject.transform.childCount; i++)
         {
-            if (UIManager.Instance.DectGameObject.transform.GetChild(i).gameObject.tag != "CardPos")
+            if (UIManager.Instance.DectGameObject.transform.GetChild(i).GetComponent<CardObjectCommonFeatures>() != null)
             {
                 equipments.Add(UIManager.Instance.DectGameObject.transform.GetChild(i).gameObject);
             }
@@ -360,7 +379,7 @@ public class GameManager : MonoBehaviour
 
     public void DrawCards()
     {
-        if(deck.Count <= 0)
+        if (deck.Count <= 0)
         {
             print("0");
         }
@@ -368,27 +387,47 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < handSize; i++)
         {
-            if(deck.Count > 0) 
+            if (deck.Count > 0)
             {
                 int randomIndex = Random.Range(0, deck.Count);
                 GameObject drawnCard = deck[randomIndex];
+                drawnCard.GetComponent<Button>().interactable = false;
+                drawnCard.transform.SetParent(itemStartPosition.transform);
+                drawnCard.transform.position = Vector3.zero;
                 drawnCard.SetActive(true);
+
+                CardUI cardObjectCommonFeatures = drawnCard.GetComponent<CardUI>();
+                cardObjectCommonFeatures.ChieldUIElementClose();
+
                 hand.Add(drawnCard);
                 deck.Remove(drawnCard);
-            
+
             }
         }
 
-        for (int i = 0; i < hand.Count; i++)
+        cardAnimation_Controller.SetAnimationCardsToList(hand);
+
+
+        
+        
+        StartCoroutine(A());
+    }
+
+    private IEnumerator A()
+    {
+        yield return new WaitForSeconds(1);
+        foreach (var item in hand)
         {
-            cardAnimation_Controller.cardMovementAnimation(hand[i].GetComponent<CardAnimationControl>(),i,45);
+            item.GetComponent<Image>().enabled = true;
+            CardUI cardObjectCommonFeatures = item.GetComponent<CardUI>();
+                cardObjectCommonFeatures.ChieldUIElementOpen();
         }
-        //CardsPositionMoveAnimation();
+        cardAnimation_Controller.CardMovementAnimationControlFunction();
     }
 
     public void HandToDeck()
     {
-        foreach(GameObject card  in hand)
+        foreach (GameObject card in hand)
         {
             deck.Add(card);
             card.SetActive(false);
@@ -406,8 +445,12 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.NextTourButton.interactable = false;
         StartCoroutine(enemy.MakeMove());
 
+        
+
         enemy = null;
     }
+
+
 
     public void SwitchTurnToPlayer()
     {
@@ -431,10 +474,11 @@ public class GameManager : MonoBehaviour
             levelObjects[i].NextBackLevelOpen(characterCurrentLevelIndex);
         }
         CardPositionReset();
-        if(character != null)
+        if (character != null)
         {
-            character.CharacterTraits_Function("energy","+",5);
+            character.CharacterTraits_Function("energy", "+", 5);
         }
+       
     }
 
 
@@ -1246,7 +1290,24 @@ public class GameManager : MonoBehaviour
         }
         
     }
-    
+
+
+    public void ReturnCardObjectsOldPosition()
+    {
+        for (int i = 0; i < equipments.Count; i++)
+        {
+            if (equipments[i].GetComponent<CardObjectCommonFeatures>() != null)
+            {
+                print(equipments[i].name);
+            }
+        }
+    }
+
+    public void ReturnCardObjectOldPosition(GameObject card)
+    {
+        card.transform.SetParent(itemStartPosition.transform);
+    }
+
 
    
     #endregion

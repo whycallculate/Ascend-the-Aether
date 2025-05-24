@@ -18,6 +18,7 @@ public class StrengthCardController : CardObjectCommonFeatures
 
     private void Awake() 
     {
+        cardImage = GetComponent<Image>();
         CardLoading();
         cardMovement = GetComponent<CardMovement>();
         if(cardMovement != null)

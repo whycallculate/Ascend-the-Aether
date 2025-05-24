@@ -95,59 +95,6 @@ public class MarketManager : MonoBehaviour
 
     }
 
-    void Update()
-    {
-        
-        /*
-        if(Input.GetKeyDown(KeyCode.V))
-        {
-            GameManager.Instance.CrystalCoinWin(12000);
-
-        }
-
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            string a = SaveSystem.DataExtraction("buyItems","");
-            string[] b = a.Split(","); 
-            foreach (var item in b)
-            {
-                print(item);
-            }
-        }
-
-
-        if(Input.GetKeyDown(KeyCode.X))
-        {
-            List<string> path = new List<string>();
-            for (int i = 0; i < shopItems.Count; i++)
-            {
-                path.Add(FindItemPrefabPath(shopItems[i].gameObject));
-            }
-
-            string _path = string.Join(",",path);
-            SaveSystem.DataSave("buyItems", _path);
-        }
-        */
-
-        if(Input.GetKeyDown(KeyCode.X))
-        {
-            
-            GameManager.Instance.CrystalCoinWin(20000);
-        }
-        if(Input.GetKeyDown(KeyCode.Z))
-        {
-            
-            string[] c = SaveSystem.DataExtraction("buyItems","").Split(",");
-            foreach (var item in c)
-            {
-                print(item);
-            }
-            
-        }
-    }
-
-
-
     public void AddShopItem(ItemController item)
     {
         if(!shopItems.Contains(item))
@@ -295,7 +242,7 @@ public class MarketManager : MonoBehaviour
 
     
 
-    private string FindItemPrefabPath(GameObject _item)
+    public string FindItemPrefabPath(GameObject _item)
     {
         switch(_item.tag)
         {
