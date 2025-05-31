@@ -142,7 +142,7 @@ namespace Item
         }
 
 
-        public void BuyItemUIClose()
+        public void ItemUIClose()
         {
             isClick = false;
             itemUI.SetItemClickUI(false);

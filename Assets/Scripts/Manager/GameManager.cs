@@ -129,11 +129,16 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<GameObject> equipments = new List<GameObject>();
     public List<GameObject> Equipments {get {return equipments;} set { equipments = value;}}
 
+    [SerializeField] CardAnimationController cardAnimation_Controller;
+    public CardAnimationController CardAnimationController => cardAnimation_Controller;
+
     [SerializeField] private List<string> cardDeckNames = new List<string>();
     public List<string> CardDeckNames {get {return cardDeckNames;}}
 
     private int allCardCount = 0;
     private int randomNumber = 0;
+    
+
 
 
 
@@ -150,20 +155,20 @@ public class GameManager : MonoBehaviour
                 deck[i].GetComponent<CardMovement>().enabled = false;
             }
         }
-        
+
         AllCardLoad();
-        if(SaveSystem.DataQuery("crystalCount"))
+        if (SaveSystem.DataQuery("crystalCount"))
         {
-            crystalCount = SaveSystem.DataExtraction("crystalCount",0);
+            crystalCount = SaveSystem.DataExtraction("crystalCount", 0);
         }
-        
-        SaveSystem.DataSave("crystalCount",crystalCount);
+
+        SaveSystem.DataSave("crystalCount", crystalCount);
         refCrystalCount = crystalCount;
 
-        if(SaveSystem.DataQuery("levelIndex") && SaveSystem.DataQuery("levelType"))
+        if (SaveSystem.DataQuery("levelIndex") && SaveSystem.DataQuery("levelType"))
         {
-            characterCurrentLevelType = SaveSystem.DataExtraction("levelType","");
-            characterCurrentLevelIndex = SaveSystem.DataExtraction("levelIndex",0);
+            characterCurrentLevelType = SaveSystem.DataExtraction("levelType", "");
+            characterCurrentLevelIndex = SaveSystem.DataExtraction("levelIndex", 0);
             LevelOpening();
         }
 
@@ -171,7 +176,7 @@ public class GameManager : MonoBehaviour
 
 
 
-        
+
     }
 
 
@@ -240,11 +245,12 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             //CrystalCoinWin(20000);
             //cardAnimation_Controller.cardReturnMovementAnimation(card,0,45);
-            cardAnimation_Controller.CardMovementAnimationControlFunction();
+            //cardAnimation_Controller.CardMovementAnimationControlFunction();
+            print(Screen.width + "-" + Screen.height );
         }
 
     }
@@ -410,12 +416,12 @@ public class GameManager : MonoBehaviour
 
         
         
-        StartCoroutine(A());
+        StartCoroutine(CardMovementAnimationPlay());
     }
 
-    private IEnumerator A()
+    private IEnumerator CardMovementAnimationPlay()
     {
-        yield return new WaitForSeconds(1);
+        yield return null;
         foreach (var item in hand)
         {
             item.GetComponent<Image>().enabled = true;
@@ -1340,7 +1346,7 @@ public class GameManager : MonoBehaviour
 
 
 
-    [SerializeField] CardAnimationController cardAnimation_Controller;
+    
 
     #region  Map
     

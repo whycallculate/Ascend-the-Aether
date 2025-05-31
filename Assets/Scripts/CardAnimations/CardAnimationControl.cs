@@ -4,23 +4,27 @@ using UnityEngine;
 using DG.Tweening;
 using CardAnimationPositions;
 using UnityEngine.EventSystems;
-public class CardAnimationControl : MonoBehaviour,IPointerClickHandler
+using CardObjectCommon_Features;
+public class CardAnimationControl : MonoBehaviour, IPointerClickHandler
 {
+    CardObjectCommonFeatures card;
     private RectTransform rectTransform;
     private int carAnimationPositionIndex = 0;
-    public int CardAnimationPositionIndex { get { return carAnimationPositionIndex;} set { carAnimationPositionIndex = value;}}
+    public int CardAnimationPositionIndex { get { return carAnimationPositionIndex; } set { carAnimationPositionIndex = value; } }
 
-    [SerializeField] private bool isStartAnimation = true;
-    public bool IsStartAnimation { get { return isStartAnimation; } set { isStartAnimation = value; } }
-     
+    [SerializeField] private bool isCardMovementStartAnimation = false;
+    public bool IsCardMovementStartAnimation { get { return isCardMovementStartAnimation; } set { isCardMovementStartAnimation = value; } }
+
+
     private bool isDeckAnimation = false;
-    public bool IsDeckAnimation { get { return isDeckAnimation; }}
-    private bool isReturnBagAnimation = false;
+    public bool IsDeckAnimation { get { return isDeckAnimation; } }
 
     void Start()
     {
         DOTween.SetTweensCapacity(1000, 1000);
         rectTransform = GetComponent<RectTransform>();
+        card = GetComponent<CardObjectCommonFeatures>();
+        isCardMovementStartAnimation = false;
     }
 
 
@@ -28,7 +32,8 @@ public class CardAnimationControl : MonoBehaviour,IPointerClickHandler
 
     public void CarMovementAnimation(CardAnimationPositionData cardAnimationPositionData)
     {
-        if (isStartAnimation)
+        
+        if (IsCardMovementStartAnimation)
         {
             isDeckAnimation = false;
 
@@ -55,14 +60,17 @@ public class CardAnimationControl : MonoBehaviour,IPointerClickHandler
                 else
                 {
                     currentSequence.Append(rectTransform.DOAnchorPos(target, .1f).SetEase(Ease.InSine)
-                        .OnComplete(() => isDeckAnimation = true));
+                        .OnComplete(() =>
+                        {
+                            isDeckAnimation = true;
+                        }));
                 }
             }
-            
+
         }
     }
 
-   
+
 
 
     /// <summary>
@@ -70,7 +78,7 @@ public class CardAnimationControl : MonoBehaviour,IPointerClickHandler
     /// </summary>
     public void CardReturnMovementAnimation(CardAnimationPositionData cardAnimationPositionData)
     {
-        if (isStartAnimation)
+        if (IsCardMovementStartAnimation)
         {
             isDeckAnimation = false;
 
@@ -93,27 +101,27 @@ public class CardAnimationControl : MonoBehaviour,IPointerClickHandler
                         GameManager.Instance.ReturnCardObjectOldPosition(gameObject);
                         gameObject.SetActive(false);
                     });
-                
+
 
             }
 
 
-            
+
         }
     }
 
-    
 
 
-    private bool ListLastControl(int index,int arrayLength)
+
+    private bool ListLastControl(int index, int arrayLength)
     {
         return index != arrayLength - 1;
     }
-    
+
     private bool isClick = false;
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (isStartAnimation)
+        if (IsCardMovementStartAnimation)
         {
             isClick = !isClick;
             if (isClick)
@@ -125,5 +133,11 @@ public class CardAnimationControl : MonoBehaviour,IPointerClickHandler
                 rectTransform.DOAnchorPosY(0, .1f);
             }
         }
+    }
+
+    public void SetCardPositionParent(Transform parent)
+    {
+        card.cardAnimationPositionParent = parent;
+        transform.SetParent(parent);
     }
 }

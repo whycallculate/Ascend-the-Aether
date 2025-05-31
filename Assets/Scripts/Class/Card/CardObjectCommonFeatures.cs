@@ -24,6 +24,9 @@ namespace CardObjectCommon_Features
         public CardLegendaryEnum[] CardCombineLegendary { get { return cardCombineLegendary; } set { cardCombineLegendary = value; } }
 
         protected RectTransform rectTransform;
+
+        public Transform cardAnimationPositionParent;
+
         public Vector2 cardPosition;
 
         [SerializeField] private DeckItemPosition deckPosition;

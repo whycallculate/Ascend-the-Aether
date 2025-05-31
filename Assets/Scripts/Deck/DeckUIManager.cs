@@ -44,49 +44,37 @@ namespace Deck
             for (int i = 0; i < GameManager.Instance.Equipments.Count; i++)
             {
                 GameObject item = GameManager.Instance.Equipments[i];
-                ItemUI itemUI = item.GetComponent<ItemUI>();
-                itemUI.CloseItemUIActive();
+                GameManager.Instance.CardAnimationController.CardMovementAnimationClose(item);
+               
                 if (item != null)
                 {
-                    B(item);
+                    SaveCardControlPositionAdjust(item);
                 }
             }
-            positionIndex=0;
+
+            DecItemsInformationUIClose();
+            positionIndex =0;
         
         }
 
+        public void DecItemsInformationUIClose()
+        {
+            for (int i = 0; i < GameManager.Instance.Equipments.Count; i++)
+            {
+                GameManager.Instance.Equipments[i].GetComponent<ItemUI>().CloseItemUIActive();
+            }
+        }
+
+
         int positionIndex = 0;
-        private void B(GameObject card)
+        private void SaveCardControlPositionAdjust(GameObject card)
         {
             bool query = gameDateScriptableObject.DecCards.Contains(card.transform.name);
             if(query)
             {
                 if(positionIndex < itemPositions.Count)
                 {
-                    DeckItemPosition deckItemPosition = itemPositions[FindCardForDeckPositionIndex(card)];
-                    deckItemPosition.SetDeckItemPosition();
-
-                    card.SetActive(true);
-                    card.GetComponent<CardMovement>().enabled = false;
-                    RectTransform rectTransform = card.GetComponent<RectTransform>();
-                    
-                    card.transform.SetParent(deckItemPosition.transform);
-                    card.transform.position = deckItemPosition.transform.position;
-
-                    Button cardButton = card.GetComponent<Button>();
-                    card.transform.localPosition = Vector3.zero;
-                    cardButton.onClick.AddListener(()=>
-                    {
-                        if (deckItemPosition != null)
-                        {
-                            deckItemPosition.RemoveDeckItemPosition();
-                            cardButton.transform.SetParent(deckItemScrollRectContent);
-                            AddItemToDeck(cardButton);
-
-                        }
-                    });
-
-                    positionIndex++;
+                    PlacementToEquipmentCardDeckPosition(card);
                 }
                 else
                 {
@@ -94,6 +82,11 @@ namespace Deck
                     card.GetComponent<CardMovement>().enabled = false;
                     card.transform.SetParent(deckItemScrollRectContent);
                     Button cardButton = card.GetComponent<Button>();
+
+                    if (cardButton.onClick == null) cardButton.onClick = new Button.ButtonClickedEvent();
+
+                    cardButton.onClick.RemoveAllListeners();
+
                     cardButton.onClick.AddListener(()=>
                     {
                         AddItemToDeck(cardButton);
@@ -147,6 +140,38 @@ namespace Deck
                     }
                 });
             }
+        }
+
+        private void PlacementToEquipmentCardDeckPosition(GameObject card)
+        {
+            DeckItemPosition deckItemPosition = itemPositions[FindCardForDeckPositionIndex(card)];
+            deckItemPosition.SetDeckItemPosition();
+
+            card.SetActive(true);
+            card.GetComponent<CardMovement>().enabled = false;
+
+            card.transform.SetParent(deckItemPosition.transform);
+            card.transform.position = deckItemPosition.transform.position;
+
+            Button cardButton = card.GetComponent<Button>();
+            card.transform.localPosition = Vector3.zero;
+
+            if (cardButton.onClick == null) cardButton.onClick = new Button.ButtonClickedEvent();
+
+            cardButton.onClick.RemoveAllListeners();
+
+            cardButton.onClick.AddListener(() =>
+            {
+                if (deckItemPosition != null)
+                {
+                    deckItemPosition.RemoveDeckItemPosition();
+                    cardButton.transform.SetParent(deckItemScrollRectContent);
+                    AddItemToDeck(cardButton);
+
+                }
+            });
+
+            positionIndex++;
         }
 
         public int FindCardForDeckPositionIndex(GameObject card)

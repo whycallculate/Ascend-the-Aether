@@ -18,6 +18,8 @@ TagManager:
   - Canvas
   - CardBoard
   - CardPos
+  - CardPositionController
+  - CardAnimationController
   layers:
   - Default
   - TransparentFX

@@ -43,13 +43,13 @@ namespace Market
         //Shop sayfasına random bir şekilde oluşturmayı sağliyor.    
         public void CreateWithItemRatio(Transform parentObject, int _itemsCount)
         {
+            
             int shopItemCount = _itemsCount;
             int i = 0;
             int ordinaryCount = 0;
             int rareCount = 0;
             int legendaryCount = 0;
 
-            GameObject shopItem = null;
 
             // Eğer toplam eklenecek item 10'dan azsa, rarity oranı uygulama
             if (shopItemCount < 10)
@@ -58,9 +58,8 @@ namespace Market
                 {
                     int randomIndex = Random.Range(0, GameManager.Instance.GameAllCards.Count);
                     ItemController item = GameManager.Instance.GameAllCards[randomIndex].GetComponent<ItemController>();
-                    shopItem = CreateItem(parentObject, item, randomIndex);
-                    ShopItemButtonFunction(shopItem.GetComponent<Button>());
-                    i++;
+                    int a = 0;
+                    CreateShopItem(parentObject, ref i, ref a, randomIndex, item);
                 }
                 return;
             }
@@ -77,26 +76,27 @@ namespace Market
 
                 if (item.ItemRarityEnum == ItemRarityEnum.OrdinaryCard && ordinaryCount < ordinaryMaxCount)
                 {
-                    shopItem = CreateItem(parentObject, item, randomIndex);
-                    ShopItemButtonFunction(shopItem.GetComponent<Button>());
-                    i++;
-                    ordinaryCount++;
+                    CreateShopItem(parentObject, ref i, ref ordinaryCount, randomIndex, item);
                 }
                 else if (item.ItemRarityEnum == ItemRarityEnum.RareCard && rareCount < rareMaxCount)
                 {
-                    shopItem = CreateItem(parentObject, item, randomIndex);
-                    ShopItemButtonFunction(shopItem.GetComponent<Button>());
-                    i++;
-                    rareCount++;
+                    CreateShopItem(parentObject, ref i, ref rareCount, randomIndex, item);
                 }
                 else if (item.ItemRarityEnum == ItemRarityEnum.LegendaryCard && legendaryCount < legendaryMaxCount)
                 {
-                    shopItem = CreateItem(parentObject, item, randomIndex);
-                    ShopItemButtonFunction(shopItem.GetComponent<Button>());
-                    i++;
-                    legendaryCount++;
+                    CreateShopItem(parentObject, ref i, ref legendaryCount, randomIndex, item);
                 }
             }
+        }
+
+        private GameObject CreateShopItem(Transform parentObject, ref int i, ref int count, int randomIndex, ItemController item)
+        {
+            GameObject shopItem = CreateItem(parentObject, item, randomIndex);
+            GameManager.Instance.CardAnimationController.CardMovementAnimationClose(shopItem);
+            ShopItemButtonFunction(shopItem.GetComponent<Button>());
+            i++;
+            count++;
+            return shopItem;
         }
 
         //Verilen random verilen bir kart objesini oluşturması.
@@ -124,13 +124,14 @@ namespace Market
 
         private GameObject SetEquipmentsPostion(Transform parentObject,int index)
         {
-            GameObject item = SetActiveEquipment(parentObject,index);
+            GameObject item = SetActiveBagEquipment(parentObject,index);
+            GameManager.Instance.CardAnimationController.CardMovementAnimationClose(item);
             item.SetActive(true);
 
             return item;
         }
         
-        private GameObject SetActiveEquipment(Transform parentObject,int index)
+        private GameObject SetActiveBagEquipment(Transform parentObject,int index)
         {
             GameObject item = GameManager.Instance.Equipments[index];
 

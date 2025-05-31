@@ -169,6 +169,10 @@ public class UIManager : MonoBehaviour
     #endregion
 
 
+    [SerializeField] private Transform cardPosition;
+    public Transform CardPosition { get { return cardPosition;}}
+
+
     #region Awake Start Update SetActiveUi
 
     private void Awake()
@@ -466,11 +470,12 @@ public class UIManager : MonoBehaviour
 
 
     #region  CardDeck UI and Functions
-    
+
 
     public void CardDeckButtonFunction()
     {
         cardDeckPanel.SetActive(true);
+        
     }
 
 

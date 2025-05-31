@@ -8,28 +8,24 @@ public class CardInteractionControl
 
     public void AttackCardInteraction(CardAnimationPositionData cardAnimationPositionData, CardAnimationControl card)
     {
-        card.CardReturnMovementAnimation(cardAnimationPositionData);
+        //card.CardReturnMovementAnimation(cardAnimationPositionData);
     }
 
-    public void AttackCardInteraction(CardAnimationControl[] card)
-    {
-
-    }
     
 
     public void DefenceCardInteraction(CardAnimationPositionData cardAnimationPositionData, CardAnimationControl card)
     {
-        card.CardReturnMovementAnimation(cardAnimationPositionData);
+        //card.CardReturnMovementAnimation(cardAnimationPositionData);
     }
 
     public void AbilityCardInteraction(CardAnimationPositionData cardAnimationPositionData, CardAnimationControl card)
     {
-        card.CardReturnMovementAnimation(cardAnimationPositionData);
+        //card.CardReturnMovementAnimation(cardAnimationPositionData);
     }
 
     public void StrenghCardInteraction(CardAnimationPositionData cardAnimationPositionData, CardAnimationControl card)
     {
-        card.CardReturnMovementAnimation(cardAnimationPositionData);
+        //card.CardReturnMovementAnimation(cardAnimationPositionData);
     }
 
 }

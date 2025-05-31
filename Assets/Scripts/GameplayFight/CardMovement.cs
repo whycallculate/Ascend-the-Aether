@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Card_Enum;
+using CardObjectCommon_Features;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -13,7 +14,7 @@ public class CardMovement : MonoBehaviour,IPointerDownHandler,IBeginDragHandler,
     public CardLegendaryEnum[] CombineCardLengendary { get { return combineCardLegendary; } set { combineCardLegendary = value;}}
     [SerializeField] private Canvas canvas;
     private RectTransform rectTransform;
-    
+
     private Button cardButton;
 
 
@@ -45,7 +46,6 @@ public class CardMovement : MonoBehaviour,IPointerDownHandler,IBeginDragHandler,
         {
             if (cardButton.interactable)
             {
-                cardAnimationControl.IsStartAnimation = true;
                 transform.position = Input.mousePosition;
             }
             
@@ -79,41 +79,46 @@ public class CardMovement : MonoBehaviour,IPointerDownHandler,IBeginDragHandler,
         {
             return;
         }
-
+        
         if (!eventData.pointerEnter.CompareTag("CardBoard"))
         {
             GameObject card = eventData.pointerDrag;
-            CardBackPositionMove(ref card);
+            CardBackPositionMove( card);
         }
+        
        
         
     }
 
-    
 
-    private void CardBackPositionMove(ref GameObject card)
+
+    private void CardBackPositionMove(GameObject card)
     {
-        
+        /*
         switch(card.tag)
         {
 
             case "AttackCard":
-                card.GetComponent<RectTransform>().anchoredPosition =  card.GetComponent<AttackCardController>().cardPosition;
+                rectTransform.anchoredPosition =  card.GetComponent<AttackCardController>().cardPosition;
             break;
 
             case "DefenceCard":
-                card.GetComponent<RectTransform>().anchoredPosition =  card.GetComponent<DefenceCardController>().cardPosition;
+                rectTransform.anchoredPosition =  card.GetComponent<DefenceCardController>().cardPosition;
             break;
             
             case "AbilityCard":
-                card.GetComponent<RectTransform>().anchoredPosition =  card.GetComponent<AbilityCardController>().cardPosition;
+                rectTransform.anchoredPosition =  card.GetComponent<AbilityCardController>().cardPosition;
             break;
             
             case "StrenghCard":
-                card.GetComponent<RectTransform>().anchoredPosition =  card.GetComponent<StrengthCardController>().cardPosition;
+                rectTransform.anchoredPosition =  card.GetComponent<StrengthCardController>().cardPosition;
             break;
         
         }
+        */
+        CardObjectCommonFeatures _card = card.GetComponent<CardObjectCommonFeatures>();
+        transform.SetParent(_card.cardAnimationPositionParent);
+        rectTransform.anchoredPosition = _card.cardPosition;
     }
 
     

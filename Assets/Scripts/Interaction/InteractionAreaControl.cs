@@ -37,7 +37,10 @@ public class InteractionAreaControl : MonoBehaviour,IDropHandler
 
         UIManager.Instance.GraphicRaycaster.Raycast(eventData, raycastResults);
 
-
+        foreach (var item in raycastResults)
+        {
+            print(item.gameObject.name);
+        }
     }
 
     private bool TupleValueControl(Tuple<AttackCardController,DefenceCardController,AbilityCardController,StrengthCardController> tuple)

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Item;
 using UnityEngine;
 
 namespace Deck
@@ -10,7 +11,7 @@ namespace Deck
 
         void OnEnable()
         {
-            if(deckUIManager == null)
+            if (deckUIManager == null)
             {
                 deckUIManager = GetComponent<DeckUIManager>();
             }
@@ -18,6 +19,8 @@ namespace Deck
             deckUIManager.DeckItemPositionAbjust(6);
 
             deckUIManager.DeckAllItemObject();
+            
+            
         }
         
 

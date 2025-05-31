@@ -38,7 +38,6 @@ public  class EnemyAI : MonoBehaviour
         {
             damage = (int)(newDamage * enemyDiff * power * extraDmg);
         }
-        Debug.Log(damage);
 
         if (GameManager.Instance.character.shieldCurrent <= 0)
         {

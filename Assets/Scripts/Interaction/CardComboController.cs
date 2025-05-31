@@ -7,23 +7,30 @@ public class CardComboController
 {
     public void AttackCardCombo(CardAnimationPositionData cardAnimationPositionData, CardAnimationControl card)
     {
-        card.CardReturnMovementAnimation(cardAnimationPositionData);
+
+        //card.CardReturnMovementAnimation(cardAnimationPositionData);
+    }
+
+    public void AttackCardCombo(CardAnimationPositionData cardAnimationPositionData, CardAnimationControl[] cards)
+    {
+        
+        //card.CardReturnMovementAnimation(cardAnimationPositionData);
     }
 
     public void DefenceCardCombo(CardAnimationPositionData cardAnimationPositionData, CardAnimationControl card)
     {
-        card.CardReturnMovementAnimation(cardAnimationPositionData);
+        //card.CardReturnMovementAnimation(cardAnimationPositionData);
     }
 
     public void AbilityCardCombo(CardAnimationPositionData cardAnimationPositionData, CardAnimationControl card)
     {
 
-        card.CardReturnMovementAnimation(cardAnimationPositionData);
+        //card.CardReturnMovementAnimation(cardAnimationPositionData);
     }
 
     public void StrenghCardCombo(CardAnimationPositionData cardAnimationPositionData, CardAnimationControl card)
     {
-        card.CardReturnMovementAnimation(cardAnimationPositionData);
+        //card.CardReturnMovementAnimation(cardAnimationPositionData);
     }
 
 }

@@ -22,7 +22,7 @@ public class CardAnimationController : MonoBehaviour
             cardAnimations[i] = cards[i].GetComponent<CardAnimationControl>();
         }
 
-        
+
     }
 
     //Kart'ların hareket animayou yapmasını sağlayan bir method
@@ -36,7 +36,9 @@ public class CardAnimationController : MonoBehaviour
         int index = 0;
         while (index < cardAnimations.Length)
         {
-            cardAnimations[index].transform.SetParent(cardAnimationPositionController.CardPositionDates[index].cardPositionParent);
+            cardAnimations[index].SetCardPositionParent(cardAnimationPositionController.CardPositionDates[index].cardPositionParent);
+
+            //transform.SetParent(cardAnimationPositionController.CardPositionDates[index].cardPositionParent);
             cardAnimations[index].CarMovementAnimation(cardAnimationPositionController.CardPositionDates[index]);
 
             yield return new WaitUntil(() => cardAnimations[index].IsDeckAnimation);
@@ -56,12 +58,18 @@ public class CardAnimationController : MonoBehaviour
         int index = 0;
         while (index < cardAnimations.Length)
         {
-            cardAnimations[index].transform.SetParent(cardAnimationPositionController.CardPositionDates[index].cardPositionParent);
+            cardAnimations[index].SetCardPositionParent(cardAnimationPositionController.CardPositionDates[index].cardPositionParent);
             cardAnimations[index].CarMovementAnimation(cardAnimationPositionController.CardPositionDates[index]);
 
             yield return new WaitUntil(() => cardAnimations[index].IsDeckAnimation);
             index++;
         }
+    }
+
+    public void CardMovementAnimationClose(GameObject card)
+    {
+        card.GetComponent<CardAnimationControl>().IsCardMovementStartAnimation = false;
+
     }
 
 

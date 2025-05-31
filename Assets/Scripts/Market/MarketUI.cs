@@ -69,7 +69,7 @@ namespace Market
             SetRefreshButtonActive(false);
 
             SetSellButtonInteractable(false);
-            ItemInformationOpen();
+            ItemsInformationOpen();
         }
 
         private void ItemClickValueReset()
@@ -199,10 +199,12 @@ namespace Market
             {
                 MarketManager.Instance.Shop.Remove(MarketManager.Instance.ShopItems[i].gameObject);
                 GameManager.Instance.Equipments.Add(MarketManager.Instance.ShopItems[i].gameObject);
+
                 ItemController itemController = MarketManager.Instance.ShopItems[i].GetComponent<ItemController>();
                 itemController.SetItemPosition(Vector3.zero, UIManager.Instance.BuyCardParent);
-                itemController.BuyItemUIClose();
+                itemController.ItemUIClose();
                 itemController.SetItemActive(false);
+
                 AddBuyItemEquipmets(itemController);
                 MarketManager.Instance.BuyItemSave();
             }
@@ -247,7 +249,7 @@ namespace Market
             MarketManager.Instance.BagEquipments.Clear();
 
             SetMarketElementActive(false);
-            ItemInformationClose();
+            ItemsInformationClose();
             gameObject.SetActive(false);
 
         }
@@ -262,7 +264,7 @@ namespace Market
         }
 
         //Marketde bag sayfasında ki item ekipman objelerinin item adini ve item fiyatı aktif etmemizi sağliyor.
-        public void ItemInformationOpen()
+        public void ItemsInformationOpen()
         {
             for (int i = 0; i < GameManager.Instance.Equipments.Count; i++)
             {
@@ -273,7 +275,7 @@ namespace Market
         }
 
         //Marketde bag sayfasında ki item ekipman objelerinin item adini ve item fiyatı pasif etmemizi sağliyor.
-        public void ItemInformationClose()
+        public void ItemsInformationClose()
         {
             for (int i = 0; i < GameManager.Instance.Equipments.Count; i++)
             {
@@ -281,6 +283,8 @@ namespace Market
                 itemUI.CloseItemUIActive();
             }
         }
+
+
 
         public void DestroyCreatedItemForShopPanel()
         {
@@ -295,8 +299,11 @@ namespace Market
             for (int i = 0; i < GameManager.Instance.Equipments.Count; i++)
             {
                 GameObject equipments = GameManager.Instance.Equipments[i].gameObject;
-                ItemUI itemUI = GameManager.Instance.Equipments[i].GetComponent<ItemUI>();
-                itemUI.SetItemClickUI(false);
+
+                /*ItemUI itemUI = GameManager.Instance.Equipments[i].GetComponent<ItemUI>();
+                itemUI.SetItemClickUI(false);*/
+                ItemController itemController = equipments.GetComponent<ItemController>();
+
                 equipments.transform.position = Vector2.zero;
                 equipments.transform.SetParent(UIManager.Instance.Equipments);
                 equipments.SetActive(false);

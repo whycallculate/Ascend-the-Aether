@@ -445,6 +445,7 @@ MonoBehaviour:
   cardType: 2
   cardLegendary: 3
   cardCombineLegendary: 02000000
+  cardAnimationPositionParent: {fileID: 0}
   cardPosition: {x: 0, y: 0}
   deckPosition: {fileID: 0}
   energyCost: 1
@@ -541,7 +542,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2edfa9114a621ee4abdbfcb4a32d5787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isStartAnimation: 1
+  isCardMovementStartAnimation: 0
 --- !u!1 &5373972285137040186
 GameObject:
   m_ObjectHideFlags: 0
