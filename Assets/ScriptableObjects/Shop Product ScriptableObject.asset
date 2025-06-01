@@ -28,20 +28,5 @@ MonoBehaviour:
   rareProductCountMax: 0
   ordinaryProductCount: 0
   ordinaryProductCountMax: 0
-  productPriceNames:
-  - ability
-  - Ability_2
-  - Ability_3
-  - attack
-  - Attack_1
-  - Attack_4
-  - Attack_5
-  - Defence_1
-  - Defence_2
-  - Defence_3
-  - Strengh_1
-  - Strengh_2
-  - Strengh_3
-  - Strengh_4
-  - Strengh_5
-  productPrices: e5000000f00000007c00000014010000d3000000eb020000bd020000460300006b000000690100008a00000087000000b000000083010000f4000000
+  productPriceNames: []
+  productPrices: 

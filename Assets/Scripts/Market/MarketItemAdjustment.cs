@@ -92,7 +92,9 @@ namespace Market
         private GameObject CreateShopItem(Transform parentObject, ref int i, ref int count, int randomIndex, ItemController item)
         {
             GameObject shopItem = CreateItem(parentObject, item, randomIndex);
-            GameManager.Instance.CardAnimationController.CardMovementAnimationClose(shopItem);
+            GameManager.Instance.CardAnimationController.CardMovementAnimationStop(shopItem);
+            var tuple =  MarketManager.Instance.MarketItemScriptableObject.GetItemPriceAndName(item.name);
+            item.ItemFirstCreated(tuple.Item1,tuple.Item2);
             ShopItemButtonFunction(shopItem.GetComponent<Button>());
             i++;
             count++;
@@ -116,7 +118,12 @@ namespace Market
             for (int i = 0; i < GameManager.Instance.Equipments.Count; i++)
             {
                 Button button = SetEquipmentsPostion(parentObject,i).GetComponent<Button>();
+                ItemController itemController = GameManager.Instance.Equipments[i].GetComponent<ItemController>();
 
+                var tuple =  MarketManager.Instance.MarketItemScriptableObject.GetItemPriceAndName(itemController.gameObject.name);
+
+                itemController.ItemFirstCreated(tuple.Item1,tuple.Item2);
+                
                 BagItemButtonFunction(button);
 
             }
@@ -125,7 +132,7 @@ namespace Market
         private GameObject SetEquipmentsPostion(Transform parentObject,int index)
         {
             GameObject item = SetActiveBagEquipment(parentObject,index);
-            GameManager.Instance.CardAnimationController.CardMovementAnimationClose(item);
+            GameManager.Instance.CardAnimationController.CardMovementAnimationStop(item);
             item.SetActive(true);
 
             return item;
@@ -181,18 +188,18 @@ namespace Market
         {
             for (int i = 0; i < GameManager.Instance.GameAllCards.Count; i++)
             {
-                FindItemRarity(GameManager.Instance.GameAllCards[i]);
+                FindItemRarity(GameManager.Instance.GameAllCards[i],GameManager.Instance.GameAllCards.Count);
             }
         }
 
 
-        private void FindItemRarity(GameObject item)
+        private void FindItemRarity(GameObject item,int equipmentCount)
         {
             ItemController itemController = ItemRarirty(item);
-            SetItemPrice(itemController);
+            SetItemPrice(itemController,equipmentCount);
         }
 
-        private void SetItemPrice(ItemController itemController)
+        private void SetItemPrice(ItemController itemController,int equipmentCount)
         {
             ItemUI itemUI = itemController.GetComponent<ItemUI>();
             int itemPrice = 0;
@@ -214,8 +221,7 @@ namespace Market
             itemController.ItemPrice = itemPrice;
 
 
-            MarketManager.Instance.MarketItemScriptableObject.AddItem(itemController.gameObject.name,itemPrice);
-            itemUI.SetActiveItemUI(true,itemController.gameObject.name,itemPrice);
+            MarketManager.Instance.MarketItemScriptableObject.AddItem(itemController.gameObject.name,itemPrice,equipmentCount);
         }
 
         private ItemController ItemRarirty(GameObject item)

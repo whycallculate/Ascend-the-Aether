@@ -25,6 +25,17 @@ namespace Item
                 SetItemPrice(itemPrice);
             }
         }
+
+        public void OpenItemInfoUI(string itemName, int itemPrice)
+        {
+            itemNameText.gameObject.SetActive(true);
+            itemPriceText.gameObject.SetActive(true);
+
+            SetItemName(itemName);
+            SetItemPrice(itemPrice);
+        }
+
+
         public void CloseItemUIActive()
         {
             itemNameText.gameObject.SetActive(false);

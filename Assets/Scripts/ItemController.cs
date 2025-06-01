@@ -7,18 +7,28 @@ namespace Item
 {
     public class ItemController : MonoBehaviour
     {
-        private ItemUI itemUI;
+        [SerializeField] private ItemUI itemUI;
         [SerializeField] private ItemRarityEnum itemRarity;
         public ItemRarityEnum ItemRarityEnum { get { return itemRarity; } set { itemRarity = value; } }
         [SerializeField] private int itemPrice;
-        public int ItemPrice { get { return itemPrice;} set {itemPrice = value;}}    
+        public int ItemPrice { get { return itemPrice; } set { itemPrice = value; } }
 
         private bool isClick = false;
         private string oldMarketPanelName = "";
 
-        void Awake()
+
+        void OnEnable()
         {
-            itemUI = GetComponent<ItemUI>();
+            ItemComponentValueIdentification();
+        }
+
+        public void ItemComponentValueIdentification()
+        {
+            if (itemUI == null)
+            {
+                itemUI = GetComponent<ItemUI>();
+            }
+
         }
 
         public void shopItemButtonClick(string marketPanleName)
@@ -36,36 +46,36 @@ namespace Item
             }
 
 
-            if(MarketManager.Instance.ShopItems.Count <= 1)
+            if (MarketManager.Instance.ShopItems.Count <= 1)
             {
 
                 if (oldMarketPanelName != "")
                 {
-                    if(marketPanleName != oldMarketPanelName)
+                    if (marketPanleName != oldMarketPanelName)
                     {
                         isClick = false;
-                        
+
                     }
-                    
+
                 }
 
-                
-                if(!isClick)
+
+                if (!isClick)
                 {
                     MarketManager.Instance.MarketUI.TransactionButtonUIControl(true);
                     itemUI.SetItemClickUI(true);
                 }
-                else if(isClick & MarketManager.Instance.ShopItems.Count > 0)
+                else if (isClick & MarketManager.Instance.ShopItems.Count > 0)
                 {
                     itemUI.SetItemClickUI(false);
                 }
-                else if(isClick && MarketManager.Instance.ShopItems.Count ==0)
+                else if (isClick && MarketManager.Instance.ShopItems.Count == 0)
                 {
                     MarketManager.Instance.MarketUI.TransactionButtonUIControl(false);
                     itemUI.SetItemClickUI(false);
                 }
 
-                
+
 
             }
             isClick = !isClick;
@@ -88,36 +98,36 @@ namespace Item
             }
 
 
-            if(MarketManager.Instance.BagEquipments.Count <= 1)
+            if (MarketManager.Instance.BagEquipments.Count <= 1)
             {
 
                 if (oldMarketPanelName != "")
                 {
-                    if(marketPanleName != oldMarketPanelName)
+                    if (marketPanleName != oldMarketPanelName)
                     {
                         isClick = false;
-                        
+
                     }
-                    
+
                 }
 
-                
-                if(!isClick)
+
+                if (!isClick)
                 {
                     MarketManager.Instance.MarketUI.TransactionButtonUIControl(true);
                     itemUI.SetItemClickUI(true);
                 }
-                else if(isClick & MarketManager.Instance.BagEquipments.Count > 0)
+                else if (isClick & MarketManager.Instance.BagEquipments.Count > 0)
                 {
                     itemUI.SetItemClickUI(false);
                 }
-                else if(isClick && MarketManager.Instance.BagEquipments.Count ==0)
+                else if (isClick && MarketManager.Instance.BagEquipments.Count == 0)
                 {
                     MarketManager.Instance.MarketUI.TransactionButtonUIControl(false);
                     itemUI.SetItemClickUI(false);
                 }
 
-                
+
 
             }
 
@@ -127,13 +137,13 @@ namespace Item
 
         public void ItemClickAdjust(bool isClick)
         {
-            this.isClick = isClick; 
+            this.isClick = isClick;
         }
 
-        public void SetItemPosition(Vector3 pos,Transform parent)
+        public void SetItemPosition(Vector3 pos, Transform parent)
         {
             transform.SetParent(parent);
-            transform.position = pos; 
+            transform.position = pos;
         }
 
         public void SetItemActive(bool active)
@@ -147,6 +157,20 @@ namespace Item
             isClick = false;
             itemUI.SetItemClickUI(false);
         }
+
+        //shop sayfasinda oluşturulan kart'ın nametext ve pricetext'ne değer atamamizi sağliyor.
+        public void ItemPropertAndUIValueAdjust(string _itemName, int _itemPrice)
+        {
+            itemPrice = _itemPrice;
+            itemUI.OpenItemInfoUI(_itemName, itemPrice);
+        }
+
+        public void ItemFirstCreated(string _itemName,int _itemPrice)
+        {
+            
+            ItemPropertAndUIValueAdjust(_itemName,_itemPrice);
+        }            
+
     }
 
 

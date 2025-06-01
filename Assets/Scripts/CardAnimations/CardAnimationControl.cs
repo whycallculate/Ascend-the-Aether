@@ -12,7 +12,7 @@ public class CardAnimationControl : MonoBehaviour, IPointerClickHandler
     private int carAnimationPositionIndex = 0;
     public int CardAnimationPositionIndex { get { return carAnimationPositionIndex; } set { carAnimationPositionIndex = value; } }
 
-    [SerializeField] private bool isCardMovementStartAnimation = false;
+    [SerializeField] private bool isCardMovementStartAnimation = true;
     public bool IsCardMovementStartAnimation { get { return isCardMovementStartAnimation; } set { isCardMovementStartAnimation = value; } }
 
 
@@ -24,7 +24,7 @@ public class CardAnimationControl : MonoBehaviour, IPointerClickHandler
         DOTween.SetTweensCapacity(1000, 1000);
         rectTransform = GetComponent<RectTransform>();
         card = GetComponent<CardObjectCommonFeatures>();
-        isCardMovementStartAnimation = false;
+        //isCardMovementStartAnimation = true;
     }
 
 
@@ -32,7 +32,7 @@ public class CardAnimationControl : MonoBehaviour, IPointerClickHandler
 
     public void CarMovementAnimation(CardAnimationPositionData cardAnimationPositionData)
     {
-        
+
         if (IsCardMovementStartAnimation)
         {
             isDeckAnimation = false;
@@ -113,11 +113,6 @@ public class CardAnimationControl : MonoBehaviour, IPointerClickHandler
 
 
 
-    private bool ListLastControl(int index, int arrayLength)
-    {
-        return index != arrayLength - 1;
-    }
-
     private bool isClick = false;
     public void OnPointerClick(PointerEventData eventData)
     {
@@ -140,4 +135,16 @@ public class CardAnimationControl : MonoBehaviour, IPointerClickHandler
         card.cardAnimationPositionParent = parent;
         transform.SetParent(parent);
     }
+
+
+    public void CardMovementAnimationPlay()
+    {
+        isCardMovementStartAnimation = true;
+    }
+
+    public void CardMovementAnimationStop()
+    {
+        isCardMovementStartAnimation = false;
+    }
+
 }

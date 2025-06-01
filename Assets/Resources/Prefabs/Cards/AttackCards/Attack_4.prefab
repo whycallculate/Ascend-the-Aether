@@ -377,8 +377,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80b75f7fb768c3c41b300d394fd8e2ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemRarity: 0
-  itemPrice: 0
+  itemUI: {fileID: 5723172273506582593}
+  itemRarity: 3
+  itemPrice: 816
 --- !u!114 &5723172273506582593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1118,7 +1119,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 1486
+  m_text: 816
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

@@ -172,6 +172,7 @@ MonoBehaviour:
   cardType: 4
   cardLegendary: 2
   cardCombineLegendary: 
+  cardAnimationPositionParent: {fileID: 0}
   cardPosition: {x: 0, y: 0}
   deckPosition: {fileID: 0}
   energyCost: 3
@@ -240,8 +241,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80b75f7fb768c3c41b300d394fd8e2ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemRarity: 0
-  itemPrice: 0
+  itemUI: {fileID: -4730309078287516402}
+  itemRarity: 2
+  itemPrice: 205
 --- !u!114 &-4730309078287516402
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -269,7 +271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2edfa9114a621ee4abdbfcb4a32d5787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isStartAnimation: 1
+  isCardMovementStartAnimation: 0
 --- !u!1 &1261656918569283703
 GameObject:
   m_ObjectHideFlags: 0
@@ -1179,7 +1181,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 411
+  m_text: 205
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

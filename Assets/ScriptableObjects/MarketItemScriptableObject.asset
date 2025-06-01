@@ -15,5 +15,20 @@ MonoBehaviour:
   minOrdinaryItemPrice: 0
   minRareItemPrice: 0
   minLegendaryItemPrice: 0
-  itemNames: []
-  itemPrices: 
+  itemNames:
+  - ability
+  - Ability_2
+  - Ability_3
+  - attack
+  - Attack_1
+  - Attack_4
+  - Attack_5
+  - Defence_1
+  - Defence_2
+  - Defence_3
+  - Strengh_1
+  - Strengh_2
+  - Strengh_3
+  - Strengh_4
+  - Strengh_5
+  itemPrices: 58010000ac01000089000000c9000000e100000081030000e90200001005000012010000ca01000010010000e3000000c50000004d02000077010000

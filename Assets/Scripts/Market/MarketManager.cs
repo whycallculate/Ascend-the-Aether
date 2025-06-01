@@ -76,17 +76,8 @@ public class MarketManager : MonoBehaviour
 
 
 
-        if(marketItemScriptableObject.ItemNames.Count != GameManager.Instance.GameAllCards.Count)
-        {
             marketItemAdjustment.ItemPrice();
-        }
-        else
-        {
-            for (int i = 0; i < marketItemScriptableObject.ItemPrices.Count; i++)
-            {
-                GameManager.Instance.GameAllCards[i].GetComponent<ItemController>().ItemPrice = marketItemScriptableObject.ItemPrices[i];
-            }
-        }
+        
 
         if(marketTransaction == null)
         {

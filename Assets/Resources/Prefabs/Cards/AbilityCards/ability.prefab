@@ -561,7 +561,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 332
+  m_text: 367
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -948,6 +948,7 @@ MonoBehaviour:
   cardType: 3
   cardLegendary: 2
   cardCombineLegendary: 
+  cardAnimationPositionParent: {fileID: 0}
   cardPosition: {x: 0, y: 0}
   deckPosition: {fileID: 0}
   energyCost: 1
@@ -1002,8 +1003,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80b75f7fb768c3c41b300d394fd8e2ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemUI: {fileID: -1987728882238804739}
   itemRarity: 2
-  itemPrice: 0
+  itemPrice: 367
 --- !u!114 &-1987728882238804739
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1031,7 +1033,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2edfa9114a621ee4abdbfcb4a32d5787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isStartAnimation: 1
+  isCardMovementStartAnimation: 0
 --- !u!1 &5610679370408123403
 GameObject:
   m_ObjectHideFlags: 0

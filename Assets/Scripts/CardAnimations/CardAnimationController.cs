@@ -29,6 +29,7 @@ public class CardAnimationController : MonoBehaviour
 
     public void CardMovementAnimationControlFunction()
     {
+        CardsMovementAnimationPlay(cardAnimations);
         StartCoroutine(CardMovementInumerator());
     }
     private IEnumerator CardMovementInumerator()
@@ -38,7 +39,6 @@ public class CardAnimationController : MonoBehaviour
         {
             cardAnimations[index].SetCardPositionParent(cardAnimationPositionController.CardPositionDates[index].cardPositionParent);
 
-            //transform.SetParent(cardAnimationPositionController.CardPositionDates[index].cardPositionParent);
             cardAnimations[index].CarMovementAnimation(cardAnimationPositionController.CardPositionDates[index]);
 
             yield return new WaitUntil(() => cardAnimations[index].IsDeckAnimation);
@@ -66,12 +66,18 @@ public class CardAnimationController : MonoBehaviour
         }
     }
 
-    public void CardMovementAnimationClose(GameObject card)
+    public void CardMovementAnimationStop(GameObject card)
     {
-        card.GetComponent<CardAnimationControl>().IsCardMovementStartAnimation = false;
-
+        card.GetComponent<CardAnimationControl>().CardMovementAnimationStop();
     }
 
+    public void CardsMovementAnimationPlay(CardAnimationControl[] cardAnimationControls)
+    {
+        foreach (CardAnimationControl cardAnimationControl in cardAnimationControls)
+        {
+            cardAnimationControl.CardMovementAnimationPlay();
+        }
+    }
 
 }
 

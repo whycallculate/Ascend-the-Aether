@@ -44,7 +44,7 @@ namespace Deck
             for (int i = 0; i < GameManager.Instance.Equipments.Count; i++)
             {
                 GameObject item = GameManager.Instance.Equipments[i];
-                GameManager.Instance.CardAnimationController.CardMovementAnimationClose(item);
+                GameManager.Instance.CardAnimationController.CardMovementAnimationStop(item);
                
                 if (item != null)
                 {

@@ -40,16 +40,20 @@ namespace Market
         {
             bool active = shopPanel.activeSelf == true ? false : true;
 
-            ItemClickValueReset();
+            ShopItemClickValueReset();
 
             SetActiveShopPanel(active);
             SetActiveBagPanel(false);
+
             MarketManager.Instance.MarketItemAdjustment.ShopItemAdjustment(shopItemContent);
+
             SetBuyButtonActive(active);
             SetSellButtonActive(false);
+
             SetRefreshButtonActive(active);
 
             SetBuyButtonInteractable(false);
+
 
         }
 
@@ -59,17 +63,23 @@ namespace Market
             bool active = bagPanel.activeSelf == true ? false : true;
             MarketManager.Instance.MarketItemAdjustment.ShopItemsReset();
 
-            ItemClickValueReset();
+            BagItemClickValueReset();
 
             SetActiveBagPanel(active);
             SetActiveShopPanel(false);
+
             MarketManager.Instance.MarketItemAdjustment.BagItemAdjusment(bagItemContent);
+
             SetBuyButtonActive(false);
+
             SetSellButtonActive(active);
-            SetRefreshButtonActive(false);
 
             SetSellButtonInteractable(false);
-            ItemsInformationOpen();
+
+            SetRefreshButtonActive(false);
+
+            //ItemsInformationOpen();
+
         }
 
         private void ItemClickValueReset()
@@ -98,6 +108,41 @@ namespace Market
                 }
             }
             MarketManager.Instance.ClearShopItem();
+            MarketManager.Instance.ClearBagItem();
+        }
+
+
+        public void ShopItemClickValueReset()
+        {
+            if (shopPanel.gameObject.activeSelf)
+            {
+                for (int i = 0; i < MarketManager.Instance.ShopItems.Count; i++)
+                {
+                    ItemController shopItemController = MarketManager.Instance.ShopItems[i].GetComponent<ItemController>();
+                    shopItemController.ItemClickAdjust(false);
+                    ItemUI shopItemUI = shopItemController.GetComponent<ItemUI>();
+                    shopItemUI.SetItemClickUI(false);
+                }
+            }
+            MarketManager.Instance.ClearShopItem();
+        }
+
+
+        public void BagItemClickValueReset()
+        {
+            if (bagPanel.gameObject.activeSelf)
+            {
+                for (int i = 0; i < MarketManager.Instance.BagEquipments.Count; i++)
+                {
+                    if (MarketManager.Instance.BagEquipments[i] != null)
+                    {
+                        ItemController bagEquipments = MarketManager.Instance.BagEquipments[i].GetComponent<ItemController>();
+                        bagEquipments.ItemClickAdjust(false);
+                        ItemUI bagItemUI = bagEquipments.GetComponent<ItemUI>();
+                        bagItemUI.SetItemClickUI(false);
+                    }
+                }
+            }
             MarketManager.Instance.ClearBagItem();
         }
 
@@ -270,7 +315,7 @@ namespace Market
             {
                 ItemController item = GameManager.Instance.Equipments[i].GetComponent<ItemController>();
                 ItemUI itemUI = GameManager.Instance.Equipments[i].GetComponent<ItemUI>();
-                itemUI.SetActiveItemUI(true, item.gameObject.name, item.ItemPrice);
+                itemUI.OpenItemInfoUI(item.gameObject.name, item.ItemPrice);
             }
         }
 

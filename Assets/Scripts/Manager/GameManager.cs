@@ -247,10 +247,9 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            //CrystalCoinWin(20000);
+            CrystalCoinWin(20000);
             //cardAnimation_Controller.cardReturnMovementAnimation(card,0,45);
             //cardAnimation_Controller.CardMovementAnimationControlFunction();
-            print(Screen.width + "-" + Screen.height );
         }
 
     }
@@ -387,7 +386,7 @@ public class GameManager : MonoBehaviour
     {
         if (deck.Count <= 0)
         {
-            print("0");
+            throw new System.Exception("GameManegar 389 satir deck.Count değeri 0'a ve sifirdan küçük");
         }
         hand.Clear();
 
@@ -416,7 +415,7 @@ public class GameManager : MonoBehaviour
 
         
         
-        StartCoroutine(CardMovementAnimationPlay());
+        
     }
 
     private IEnumerator CardMovementAnimationPlay()
@@ -484,7 +483,9 @@ public class GameManager : MonoBehaviour
         {
             character.CharacterTraits_Function("energy", "+", 5);
         }
-       
+
+
+        StartCoroutine(CardMovementAnimationPlay());
     }
 
 
@@ -1452,7 +1453,6 @@ public class GameManager : MonoBehaviour
     //harita da ki ilerideki leveleri aktif etmemizi sağliyor
     public void NextMapLevel()
     {
-        print("çalişiyor");
         isLevelChange = false;
         int maxLevelIndexCount = UIManager.Instance.LevelsContent.childCount;
         if(mapLevelIndex != maxLevelIndexCount)
