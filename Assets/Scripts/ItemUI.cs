@@ -12,27 +12,16 @@ namespace Item
         [SerializeField] private TextMeshProUGUI itemPriceText;
         [SerializeField] private Image itemClickUI;
 
-        public void SetActiveItemUI(bool active, string itemName, int itemPrice)
-        {
-            if (itemName != "" && itemName != null && itemPrice != 0 && itemPrice > 0)
-            {
-                itemNameText.gameObject.SetActive(active);
-                itemPriceText.gameObject.SetActive(active);
-            }
-            if (active)
-            {
-                SetItemName(itemName);
-                SetItemPrice(itemPrice);
-            }
-        }
+
 
         public void OpenItemInfoUI(string itemName, int itemPrice)
         {
             itemNameText.gameObject.SetActive(true);
             itemPriceText.gameObject.SetActive(true);
-
             SetItemName(itemName);
             SetItemPrice(itemPrice);
+            
+
         }
 
 
@@ -45,11 +34,17 @@ namespace Item
 
         public void SetItemName(string itemName)
         {
+            if (!itemNameText.gameObject.activeSelf) itemNameText.gameObject.SetActive(true);
+
             itemNameText.text = itemName;
         }
         public void SetItemPrice(int itempPrice)
         {
+
+            if (!itemPriceText.gameObject.activeSelf) itemPriceText.gameObject.SetActive(true);
+
             itemPriceText.text = itempPrice.ToString();
+
         }
 
         public void SetItemClickUI(bool click)

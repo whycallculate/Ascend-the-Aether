@@ -140,7 +140,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 174
+  m_text: 107
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1219,7 +1219,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemUI: {fileID: 5982119564965124885}
   itemRarity: 1
-  itemPrice: 174
+  itemPrice: 107
 --- !u!114 &5982119564965124885
 MonoBehaviour:
   m_ObjectHideFlags: 0

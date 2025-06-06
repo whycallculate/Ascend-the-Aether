@@ -17,7 +17,7 @@ namespace Item
         private string oldMarketPanelName = "";
 
 
-        void OnEnable()
+        void Awake()
         {
             ItemComponentValueIdentification();
         }
@@ -162,6 +162,7 @@ namespace Item
         public void ItemPropertAndUIValueAdjust(string _itemName, int _itemPrice)
         {
             itemPrice = _itemPrice;
+            ItemComponentValueIdentification();
             itemUI.OpenItemInfoUI(_itemName, itemPrice);
         }
 

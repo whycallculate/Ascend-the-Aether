@@ -873,8 +873,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemUI: {fileID: -5190307766004180732}
-  itemRarity: 1
-  itemPrice: 274
+  itemRarity: 0
+  itemPrice: 232
 --- !u!114 &-5190307766004180732
 MonoBehaviour:
   m_ObjectHideFlags: 0

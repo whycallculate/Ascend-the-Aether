@@ -10,6 +10,7 @@ using Products;
 using GameDates;
 using CardObjectCommon_Features;
 using Item;
+using Market;
 public class GameManager : MonoBehaviour
 {
     #region skeleton
@@ -197,12 +198,14 @@ public class GameManager : MonoBehaviour
 
         
 
+        
+
 
         
     }
 
     [SerializeField] private int index;
-
+    [SerializeField] private MarketItemScriptableObject marketItemScriptableObject;
     private void Update() 
     {
         if (Input.GetMouseButtonDown(0))

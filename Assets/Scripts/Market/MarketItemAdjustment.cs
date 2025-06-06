@@ -43,73 +43,119 @@ namespace Market
         //Shop sayfasına random bir şekilde oluşturmayı sağliyor.    
         public void CreateWithItemRatio(Transform parentObject, int _itemsCount)
         {
-            
+            Dictionary<string, ItemController> keyValues = new Dictionary<string, ItemController>();
+            HashSet<string> usedNames = new HashSet<string>();
+
             int shopItemCount = _itemsCount;
             int i = 0;
-            int ordinaryCount = 0;
-            int rareCount = 0;
-            int legendaryCount = 0;
 
+            List<ItemController> ordinaryItems = new List<ItemController>();
+            List<ItemController> rareItems = new List<ItemController>();
+            List<ItemController> legendaryItems = new List<ItemController>();
 
-            // Eğer toplam eklenecek item 10'dan azsa, rarity oranı uygulama
-            if (shopItemCount < 10)
+            foreach (GameObject card in GameManager.Instance.GameAllCards)
             {
-                while (i < shopItemCount)
+                ItemController item = card.GetComponent<ItemController>();
+
+                if (item == null) continue;
+
+                switch (item.ItemRarityEnum)
                 {
-                    int randomIndex = Random.Range(0, GameManager.Instance.GameAllCards.Count);
-                    ItemController item = GameManager.Instance.GameAllCards[randomIndex].GetComponent<ItemController>();
-                    int a = 0;
-                    CreateShopItem(parentObject, ref i, ref a, randomIndex, item);
+
+                    case ItemRarityEnum.OrdinaryCard:
+                        ordinaryItems.Add(item);
+                        break;
+                    case ItemRarityEnum.RareCard:
+                        rareItems.Add(item);
+                        break;
+                    case ItemRarityEnum.LegendaryCard:
+                        legendaryItems.Add(item);
+                        break;
                 }
-                return;
+
+
             }
 
-            // 10 veya daha fazlaysa, oranları uygula
-            int ordinaryMaxCount = (shopItemCount * 70) / 100;
-            int rareMaxCount = (shopItemCount * 20) / 100;
-            int legendaryMaxCount = (shopItemCount * 10) / 100;
 
-            while (i < shopItemCount)
+            int ordinaryMax = shopItemCount < 10 ? shopItemCount : (shopItemCount * 70) / 100;
+            int rareMax = shopItemCount < 10 ? 1 : (shopItemCount * 20) / 100;
+            int legendaryMax = shopItemCount < 10 ? 0 : (shopItemCount * 10) / 100;
+
+            int ordinaryCreateItem = 0;
+            int rareCreateItem = 0;
+            int legendaryCreateItem = 0;
+
+            i += AddItemsFromList(usedNames, parentObject, ordinaryItems, ordinaryMax,ordinaryCreateItem,3);
+            i += AddItemsFromList(usedNames, parentObject, rareItems, rareMax,rareCreateItem,3);
+            i += AddItemsFromList(usedNames, parentObject, legendaryItems, legendaryMax,legendaryCreateItem,3);
+
+            
+
+           
+        }
+
+        private int AddItemsFromList(HashSet<string> usedNames, Transform parent, List<ItemController> itemList, int maxCount,int createCount,int createdMaxCount)
+        {
+            int added = 0;
+            int attempts = 0;
+            int maxTries = 500;
+
+            while (added < maxCount && attempts < maxTries)
             {
-                int randomIndex = Random.Range(0, GameManager.Instance.GameAllCards.Count);
-                ItemController item = GameManager.Instance.GameAllCards[randomIndex].GetComponent<ItemController>();
+                
 
-                if (item.ItemRarityEnum == ItemRarityEnum.OrdinaryCard && ordinaryCount < ordinaryMaxCount)
+                if (itemList.Count == 0) break;
+
+                int randomIndex = Random.Range(0, itemList.Count);
+
+                ItemController itemPrefab = itemList[randomIndex];
+
+                if (usedNames.Contains(itemPrefab.name))
                 {
-                    CreateShopItem(parentObject, ref i, ref ordinaryCount, randomIndex, item);
+                    if (createCount >= createdMaxCount)
+                    {
+                        attempts++;
+                        continue;
+                    }
+                    
                 }
-                else if (item.ItemRarityEnum == ItemRarityEnum.RareCard && rareCount < rareMaxCount)
+
+                ItemController createdItem = CreateShopItem(parent,itemPrefab);
+
+                if (createdItem != null)
                 {
-                    CreateShopItem(parentObject, ref i, ref rareCount, randomIndex, item);
+                    added++;
+                    usedNames.Add(createdItem.name);
                 }
-                else if (item.ItemRarityEnum == ItemRarityEnum.LegendaryCard && legendaryCount < legendaryMaxCount)
-                {
-                    CreateShopItem(parentObject, ref i, ref legendaryCount, randomIndex, item);
-                }
+
+                createCount++;
+                attempts++;
             }
+
+            return added;
         }
 
-        private GameObject CreateShopItem(Transform parentObject, ref int i, ref int count, int randomIndex, ItemController item)
+        private ItemController CreateShopItem(Transform parentObject, ItemController item)
         {
-            GameObject shopItem = CreateItem(parentObject, item, randomIndex);
-            GameManager.Instance.CardAnimationController.CardMovementAnimationStop(shopItem);
-            var tuple =  MarketManager.Instance.MarketItemScriptableObject.GetItemPriceAndName(item.name);
-            item.ItemFirstCreated(tuple.Item1,tuple.Item2);
-            ShopItemButtonFunction(shopItem.GetComponent<Button>());
-            i++;
-            count++;
-            return shopItem;
+            ItemController createdItem = GameObject.Instantiate(item, parentObject);
+            createdItem.name = item.name;
+            createdItem.GetComponent<CardMovement>().enabled = false;
+            GameManager.Instance.CardAnimationController.CardMovementAnimationStop(createdItem.gameObject);
+            var tuple = MarketManager.Instance.MarketItemScriptableObject.GetItemPriceAndName(item.name);
+            createdItem.ItemFirstCreated(tuple.Item1, tuple.Item2);
+            ShopItemButtonFunction(createdItem.GetComponent<Button>());
+            return createdItem;
+
         }
 
-        //Verilen random verilen bir kart objesini oluşturması.
-        private GameObject CreateItem(Transform parentObject,ItemController itemController,int randomIndex)
+        private GameObject CreateItem(Transform parentObject, ItemController itemController)
         {
-            GameObject itemPrefab= itemController.gameObject;
-            GameObject createdItemObject = GameObject.Instantiate(itemPrefab,parentObject);
-            createdItemObject.name = itemPrefab.name;
-            createdItemObject.GetComponent<CardMovement>().enabled = false;
-            MarketManager.Instance.AddItemShopList(createdItemObject,10);
-            return createdItemObject;
+            GameObject itemPrefab = itemController.gameObject;
+                GameObject createdItemObject = GameObject.Instantiate(itemPrefab, parentObject);
+                createdItemObject.name = itemPrefab.name;
+                createdItemObject.GetComponent<CardMovement>().enabled = false;
+                MarketManager.Instance.AddItemShopList(createdItemObject, 10);
+                return createdItemObject;
         }
 
 
@@ -149,6 +195,7 @@ namespace Market
             return item;
         }
 
+        //Bag sayfasında ki item'ın butonun componentin önceki event'i sıfırlamamizi sağliyor.
         private void BagItemButtonFunction(Button button)
         {
             if (button.onClick == null)
@@ -156,17 +203,19 @@ namespace Market
                 button.onClick = new Button.ButtonClickedEvent();
             }
             button.onClick.RemoveAllListeners();
-            
+
 
             button.onClick.AddListener(delegate
             {
-                ItemController item = button.GetComponent<ItemController>(); 
+                ItemController item = button.GetComponent<ItemController>();
                 string marketPanelName = MarketManager.Instance.MarketUI.MarketPanelNameControl();
                 item.bagItemButtonClick(marketPanelName);
 
             });
         }
 
+        
+        //Shop sayfasında ki item'ın butonun componentin önceki event'i sıfırlamamizi sağliyor.
         private void ShopItemButtonFunction(Button button)
         {
             if (button.onClick == null)
@@ -174,11 +223,11 @@ namespace Market
                 button.onClick = new Button.ButtonClickedEvent();
             }
             button.onClick.RemoveAllListeners();
-            
+
 
             button.onClick.AddListener(delegate
             {
-                ItemController item = button.GetComponent<ItemController>(); 
+                ItemController item = button.GetComponent<ItemController>();
                 string marketPanelName = MarketManager.Instance.MarketUI.MarketPanelNameControl();
                 item.shopItemButtonClick(marketPanelName);
             });
@@ -199,80 +248,83 @@ namespace Market
             SetItemPrice(itemController,equipmentCount);
         }
 
-        private void SetItemPrice(ItemController itemController,int equipmentCount)
+        //Shop sayfasında ki item'ın nadirliğine göre price değerini set etmemizi sağliyor.
+        private void SetItemPrice(ItemController itemController, int equipmentCount)
         {
             ItemUI itemUI = itemController.GetComponent<ItemUI>();
             int itemPrice = 0;
-            switch(itemController.ItemRarityEnum)
+            switch (itemController.ItemRarityEnum)
             {
-                case ItemRarityEnum.OrdinaryCard :
-                    itemPrice = Random.Range(100,300);
-                break;
+                case ItemRarityEnum.OrdinaryCard:
+                    itemPrice = Random.Range(100, 300);
+                    break;
                 case ItemRarityEnum.RareCard:
-                    itemPrice = Random.Range(200,500);
-                break;
+                    itemPrice = Random.Range(200, 500);
+                    break;
                 case ItemRarityEnum.LegendaryCard:
-                    itemPrice = Random.Range(500,1500);
-                break;
+                    itemPrice = Random.Range(500, 1500);
+                    break;
                 default:
-                break;
-            } 
-            
+                    break;
+            }
+
             itemController.ItemPrice = itemPrice;
 
 
-            MarketManager.Instance.MarketItemScriptableObject.AddItem(itemController.gameObject.name,itemPrice,equipmentCount);
+            MarketManager.Instance.MarketItemScriptableObject.AddItem(itemController.gameObject.name, itemPrice, equipmentCount);
         }
 
+         //Shop da ki olan bir item'ın türüne ve nadirliğine göre rarity'sini set etmemizi sağlıyor.
         private ItemController ItemRarirty(GameObject item)
         {
             ItemController itemController = item.GetComponent<ItemController>();
-            switch(item.tag)
+            switch (item.tag)
             {
                 case "AttackCard":
-                    SetItemRarity(itemController,item.GetComponent<AttackCardController>().CardLegendary);
-                break;
+                    SetItemRarity(itemController, item.GetComponent<AttackCardController>().CardLegendary);
+                    break;
                 case "DefenceCard":
-                    SetItemRarity(itemController,item.GetComponent<DefenceCardController>().CardLegendary);
-                break;
+                    SetItemRarity(itemController, item.GetComponent<DefenceCardController>().CardLegendary);
+                    break;
                 case "AbilityCard":
-                    SetItemRarity(itemController,item.GetComponent<AbilityCardController>().CardLegendary);
-                break;
+                    SetItemRarity(itemController, item.GetComponent<AbilityCardController>().CardLegendary);
+                    break;
                 case "StrenghCard":
-                    SetItemRarity(itemController,item.GetComponent<StrengthCardController>().CardLegendary);
-                break;
+                    SetItemRarity(itemController, item.GetComponent<StrengthCardController>().CardLegendary);
+                    break;
                 default:
-                break;
+                    break;
             }
 
             return itemController;
         }
 
-        private void SetItemRarity(ItemController item,CardLegendaryEnum cardRarity)
+        //Shop da ki olan bir item'ın nadirliğine göre rarity'sini set etmemizi sağlıyor.
+        private void SetItemRarity(ItemController item, CardLegendaryEnum cardRarity)
         {
-            ItemRarityEnum itemRarity =  ItemRarityEnum.None;
-            switch(cardRarity)
+            ItemRarityEnum itemRarity = ItemRarityEnum.None;
+            switch (cardRarity)
             {
-                case CardLegendaryEnum.OrdinaryCard :
+                case CardLegendaryEnum.OrdinaryCard:
                     itemRarity = ItemRarityEnum.OrdinaryCard;
-                break;
-                
-                case CardLegendaryEnum.RareCard :
+                    break;
+
+                case CardLegendaryEnum.RareCard:
                     itemRarity = ItemRarityEnum.RareCard;
-                break;
-                
-                case CardLegendaryEnum.LegendaryCard :
+                    break;
+
+                case CardLegendaryEnum.LegendaryCard:
                     itemRarity = ItemRarityEnum.LegendaryCard;
-                break;
+                    break;
                 default:
-                break;
+                    break;
             }
 
             item.ItemRarityEnum = itemRarity;
         }
 
         
-        
+        //Shop sayfasındayken oluşturulan item'ları temizlememizi sağliyor.
         public void ShopItemsReset()
         {
             MarketManager.Instance.ShopItems.Clear();

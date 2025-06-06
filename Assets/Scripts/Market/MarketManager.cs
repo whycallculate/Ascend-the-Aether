@@ -76,7 +76,7 @@ public class MarketManager : MonoBehaviour
 
 
 
-            marketItemAdjustment.ItemPrice();
+        marketItemAdjustment.ItemPrice();
         
 
         if(marketTransaction == null)
