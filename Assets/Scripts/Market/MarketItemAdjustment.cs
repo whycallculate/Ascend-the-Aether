@@ -18,11 +18,7 @@ namespace Market
             {
                 CreateWithItemRatio(parentObject,10);
             }
-            else
-            {
-                CreateWithItemRatio(parentObject,missingCount);
-
-            }
+            
         }
 
 
@@ -81,20 +77,16 @@ namespace Market
             int rareMax = shopItemCount < 10 ? 1 : (shopItemCount * 20) / 100;
             int legendaryMax = shopItemCount < 10 ? 0 : (shopItemCount * 10) / 100;
 
-            int ordinaryCreateItem = 0;
-            int rareCreateItem = 0;
-            int legendaryCreateItem = 0;
 
-            i += AddItemsFromList(usedNames, parentObject, ordinaryItems, ordinaryMax,ordinaryCreateItem,3);
-            i += AddItemsFromList(usedNames, parentObject, rareItems, rareMax,rareCreateItem,3);
-            i += AddItemsFromList(usedNames, parentObject, legendaryItems, legendaryMax,legendaryCreateItem,3);
+            i += AddItemsFromList(usedNames, parentObject, ordinaryItems, ordinaryMax);
+            i += AddItemsFromList(usedNames, parentObject, rareItems, rareMax);
+            i += AddItemsFromList(usedNames, parentObject, legendaryItems, legendaryMax);
 
             
-
-           
+    
         }
 
-        private int AddItemsFromList(HashSet<string> usedNames, Transform parent, List<ItemController> itemList, int maxCount,int createCount,int createdMaxCount)
+        private int AddItemsFromList(HashSet<string> usedNames, Transform parent, List<ItemController> itemList, int maxCount)
         {
             int added = 0;
             int attempts = 0;
@@ -102,7 +94,7 @@ namespace Market
 
             while (added < maxCount && attempts < maxTries)
             {
-                
+
 
                 if (itemList.Count == 0) break;
 
@@ -110,25 +102,25 @@ namespace Market
 
                 ItemController itemPrefab = itemList[randomIndex];
 
-                if (usedNames.Contains(itemPrefab.name))
+                if (CreateItemNameCountControl(usedNames,itemPrefab.name) > 2)
                 {
-                    if (createCount >= createdMaxCount)
-                    {
-                        attempts++;
-                        continue;
-                    }
                     
+                    attempts++;
+                    continue;
+
                 }
 
-                ItemController createdItem = CreateShopItem(parent,itemPrefab);
+                
+                
+                ItemController createdItem = CreateShopItem(parent, itemPrefab);
 
                 if (createdItem != null)
                 {
                     added++;
                     usedNames.Add(createdItem.name);
+                    MarketManager.Instance.AddItemShopList(createdItem.gameObject, 10);
                 }
 
-                createCount++;
                 attempts++;
             }
 
@@ -148,14 +140,19 @@ namespace Market
 
         }
 
-        private GameObject CreateItem(Transform parentObject, ItemController itemController)
+        
+
+        private int  CreateItemNameCountControl(HashSet<string> createdItemNames,string createdItemName)
         {
-            GameObject itemPrefab = itemController.gameObject;
-                GameObject createdItemObject = GameObject.Instantiate(itemPrefab, parentObject);
-                createdItemObject.name = itemPrefab.name;
-                createdItemObject.GetComponent<CardMovement>().enabled = false;
-                MarketManager.Instance.AddItemShopList(createdItemObject, 10);
-                return createdItemObject;
+            int createdItemNameCount = 0;
+            for (int i = 0; i < createdItemNames.Count; i++)
+            {
+                if (createdItemNames.Contains(createdItemName))
+                {
+                    createdItemNameCount++;
+                }
+            }
+            return createdItemNameCount;
         }
 
 
@@ -163,13 +160,13 @@ namespace Market
         {
             for (int i = 0; i < GameManager.Instance.Equipments.Count; i++)
             {
-                Button button = SetEquipmentsPostion(parentObject,i).GetComponent<Button>();
+                Button button = SetEquipmentsPostion(parentObject, i).GetComponent<Button>();
                 ItemController itemController = GameManager.Instance.Equipments[i].GetComponent<ItemController>();
 
-                var tuple =  MarketManager.Instance.MarketItemScriptableObject.GetItemPriceAndName(itemController.gameObject.name);
+                var tuple = MarketManager.Instance.MarketItemScriptableObject.GetItemPriceAndName(itemController.gameObject.name);
 
-                itemController.ItemFirstCreated(tuple.Item1,tuple.Item2);
-                
+                itemController.ItemFirstCreated(tuple.Item1, tuple.Item2);
+
                 BagItemButtonFunction(button);
 
             }
